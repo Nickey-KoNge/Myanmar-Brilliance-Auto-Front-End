@@ -1,0 +1,53 @@
+/* src/components/ui/PageHeader/pageheader.module.css */
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  background-color: #252526; 
+  padding: 1rem 1.5rem; 
+  border-radius: 20px;
+}
+
+.titleWrapper {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.titleIconWrapper {
+  background-color: #A33B3B;
+  border-radius: 8px;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  font-size: 1.2rem;
+}
+
+.titleTextWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0rem;
+}
+
+.title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.description {
+  font-size: 0.8rem;
+  color: #aaaaaa;
+  margin: 0;
+}
+
+.actionArea {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}

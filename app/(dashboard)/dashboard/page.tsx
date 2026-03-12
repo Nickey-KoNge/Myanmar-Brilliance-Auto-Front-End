@@ -2,18 +2,45 @@ import React from "react";
 import styles from "./page.module.css";
 import { SummaryCard } from "../../features/dashboard/components/SummaryCard";
 import { AlertsTable } from "../../features/dashboard/components/AlertsTable";
-import { faCar, faChartLine, faTags } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCalendarAlt,
+  faCar,
+  faChartLine,
+  faDotCircle,
+  faLaptop,
+  faTags,
+} from "@fortawesome/free-solid-svg-icons";
+import { PageHeader } from "../../components/ui/PageHeader/pageheader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function DashboardPage() {
+  const renderLiveButtonArea = (
+    <div className={styles.headerActionArea}>
+      {/* Calendar Button */}
+      <button className={styles.calendarIconBtn}>
+        <FontAwesomeIcon
+          icon={faCalendarAlt}
+          className={styles.calendarIcon}
+        />
+      </button>
+
+      {/* Analytical Live Button */}
+      <button className={styles.liveBtn}>
+        {/* ::before နဲ့ အစက်လေးကို CSS ထဲမှာ ထည့်ထားတဲ့အတွက် <FontAwesomeIcon> မလိုတော့ပါဘူး */}
+        ANALYTICAL LIVE
+      </button>
+    </div>
+  );
   return (
     <>
-      {/* Top Action Bar */}
-      <div className={styles.dashboardHeader}>
-        <div></div> {/* Empty div to push button to right */}
-        <button className={styles.liveBtn}>ANALYTICAL LIVE</button>
-      </div>
+      <PageHeader
+        titleData={{
+          icon: <FontAwesomeIcon icon={faLaptop} />,
+          text: "Dashboard",
+        }}
+        actionNode={renderLiveButtonArea}
+      />
 
-      {/* Row 1: Summary Cards */}
       <div className={styles.topRow}>
         <SummaryCard
           title="TOTAL RENTAL UNITS"

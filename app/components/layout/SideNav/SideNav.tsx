@@ -3,7 +3,7 @@ import React from "react";
 import styles from "./SideNav.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faDesktop,
+  faLaptop,
   faUsers,
   faBuilding,
   faWrench,
@@ -24,11 +24,11 @@ export const SideNav = () => {
       </div>
       <div className={styles.menu}>
         <div className={`${styles.menuItem} ${styles.active}`}>
-          <FontAwesomeIcon icon={faDesktop} className={styles.icon} />
+          <FontAwesomeIcon icon={faLaptop} className={styles.icon} />
           Dashboard
         </div>
 
-        <div className={styles.sectionTitle}>Inventory</div>
+        <div className={styles.sectionTitle}>Master Data</div>
         <NavItem icon={faUsers} label="Personnel" />
         <NavItem icon={faBuilding} label="Entity" />
         <NavItem icon={faWrench} label="Spare-part" />

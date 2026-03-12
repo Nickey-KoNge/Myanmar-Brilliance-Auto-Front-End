@@ -44,4 +44,8 @@ button {
   --text-main: #D1D1D1;
   --text-muted: #888888;
   --border-color: #333333;
+  --font-size-xl: 1.5rem;
+  --font-size-l: 1.25rem;
+  --font-size-m: 1rem;
+  --font-size-s: 0.75rem;
 }

@@ -1,11 +1,11 @@
 .topbar {
-  height: 70px;
-  background-color: #1a1a1a;
-  border-bottom: 1px solid #2a2a2a;
+  height: 80px;
+  background-color: #252526;
+  border-bottom: 1px solid #402626;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 2rem;
+  padding: 0 3rem;
 }
 
 .companyInfo {
@@ -16,19 +16,32 @@
   font-size: 1.1rem;
 }
 
+.logobrand {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  font-weight: 900;
+  font-size: var(--font-size-xl);
+  letter-spacing: 1px;
+  color: #ffffff;
+}
+
 .companyInfo span {
   color: #b03a3e;
+  margin-left: 0.5rem;
 }
 
 .logoIcon {
-  width: 35px;
-  height: 35px;
+  width: 50px;
+  height: 50px;
   background-color: #310d0d;
   color: #b03a3e;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 .actions {
@@ -37,33 +50,58 @@
   gap: 1.5rem;
 }
 
-.actionBtn {
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid #2a2a2a;
-  width: 35px;
-  height: 35px;
-  border-radius: 8px;
-  color: #fff;
+.togglediv {
+  background-color: #050505;
+  border-radius: 10px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 0 1.5rem;
+  border: 1px solid #402626;
+}
+
+.iconBtn {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  color: #ffffff;
+  transition: color 0.3s ease;
+  font-size: 20px; /* 👈 ဒီနေရာမှာ 20px သတ်မှတ်လိုက်ပါ */
+}
+
+.alertBtn {
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #a33b3b;
+  transition: color 0.3s ease;
+  font-size: 20px;
+}
+
+.iconBtn:hover {
+  color: #dbdbdb;
 }
 
 .badge {
   position: absolute;
-  top: -5px;
-  right: -5px;
-  background-color: #b03a3e;
-  color: white;
-  font-size: 0.6rem;
-  width: 16px;
-  height: 16px;
+  top: -6px;
+  right: -8px;
+  background-color: #310D0D;
+  color: #d1d1d1;
+  font-size: 1rem;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: bold;
 }
 
 .userProfile {
@@ -74,18 +112,19 @@
 }
 
 .avatar {
-  width: 35px;
-  height: 35px;
+  width: 50px;
+  height: 50px;
   background-color: #310d0d;
   color: #b03a3e;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 .userName {
-  font-size: 0.85rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #ddd;
 }
