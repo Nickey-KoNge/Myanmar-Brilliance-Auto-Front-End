@@ -13,7 +13,7 @@
 }
 
 .pageContent {
-  padding: 1.5rem 2rem;
+  padding: 1.5rem;
   overflow-y: auto;
   height: calc(100vh - 70px); /* Minus Topbar height */
 }

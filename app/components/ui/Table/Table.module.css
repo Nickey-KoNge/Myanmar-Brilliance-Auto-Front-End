@@ -1,0 +1,131 @@
+.gridContainer {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 1.5rem;
+}
+
+.gridBox {
+  background: #252526;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  min-height: calc(100vh - 120px);
+}
+
+.gridBoxTitle {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #2d2d30;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  font-family: "Arial", sans-serif;
+  color: #e0e0e0;
+  margin-bottom: 1rem;
+}
+
+/* Header */
+.table thead {
+  background: #3b3b41;
+  text-align: left;
+  font-weight: 600;
+}
+
+.table thead th {
+  padding: 12px 16px;
+  font-size: 14px;
+}
+
+/* Body rows */
+.table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.table tbody tr:nth-child(even) {
+  background: #29292d;
+}
+
+.table tbody tr:hover {
+  background: #404047;
+}
+
+/* Table cells */
+.table td {
+  padding: 12px 16px;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+/* Staff info: avatar + name */
+.staffInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.staffInfo img {
+  border-radius: 50%;
+}
+
+/* Action button */
+.deleteBtn {
+  background: none;
+  border: none;
+  color: #ff4d4f;
+  cursor: pointer;
+  font-size: 16px;
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+
+.deleteBtn:hover {
+  color: #ff7875;
+  transform: scale(1.1);
+}
+
+/* Optional: make table scrollable on small screens */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+/* Pagination container */
+.pagination {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 16px;
+  font-size: 14px;
+  color: #e0e0e0;
+  justify-content: center;
+}
+
+/* Spans inside pagination */
+.pagination .spanText {
+  color: #a33b3b;
+  font-weight: 600;
+}
+
+/* Pagination buttons */
+.pagination button {
+  background: none;
+  border: none;
+  color: #e0e0e0;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 8px;
+  transition: color 0.2s ease;
+}
+
+.pagination button:hover {
+  color: #a33b3b;
+}
+
+/* Optional: spacing for arrows */
+.pagination button svg {
+  margin: 0 4px;
+}
