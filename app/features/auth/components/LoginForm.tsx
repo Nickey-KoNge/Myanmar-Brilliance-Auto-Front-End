@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import styles from "./LoginForm.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -8,9 +8,9 @@ import {
   faLock,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-
 import { useForm, SubmitHandler } from "react-hook-form";
-
+import axios from "axios";
+import Cookies from "js-cookie";
 import { Input } from "@/app/components/ui/Input/Input";
 import { Button } from "@/app/components/ui/Button/Button";
 import { Checkbox } from "@/app/components/ui/Checkbox/Checkbox";
@@ -30,9 +30,49 @@ export const LoginForm = () => {
   } = useForm<LoginInputs>();
   const router = useRouter();
 
-  const onSubmit: SubmitHandler<LoginInputs> = (data) => {
-    console.log("Form Submitted Data: this is test ", data);
-    router.push("/dashboard");
+  // Login status နှင့် error များကိုပြရန် state များ
+  const [isLoading, setIsLoading] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+
+  const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
+    setIsLoading(true);
+    setServerError(null);
+
+    try {
+      // ၁။ Backend သို့ Login request ပို့ခြင်း
+      const response = await axios.post(
+        "http://localhost:3306/credentials/login",
+        {
+          email: data.email,
+          password: data.password,
+        },
+      );
+
+      console.log(data.email);
+
+      // ၂။ Response မှ Token များကို ရယူခြင်း
+      const { access_token, refresh_token } = response.data.data;
+      console.log(access_token);
+      console.log(refresh_token);
+
+      // ၃။ Cookies ထဲတွင် သိမ်းဆည်းခြင်း
+      Cookies.set("access_token", access_token, {
+        expires: 10 / 1440,
+        secure: true,
+      });
+
+      Cookies.set("refresh_token", refresh_token, { expires: 7, secure: true });
+
+      console.log("Login Successful!");
+      router.push("/dashboard");
+    } catch (err: any) {
+      const message =
+        err.response?.data?.message ||
+        "Login failed. Please check your credentials.";
+      setServerError(Array.isArray(message) ? message[0] : message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -50,6 +90,19 @@ export const LoginForm = () => {
       <h2 className={styles.title}>
         MYANMAR BRILLIANCE <span>AUTO</span>
       </h2>
+
+      {serverError && (
+        <p
+          style={{
+            color: "#ff4d4d",
+            fontSize: "0.85rem",
+            marginBottom: "1rem",
+            textAlign: "center",
+          }}
+        >
+          {serverError}
+        </p>
+      )}
 
       <form style={{ width: "100%" }} onSubmit={handleSubmit(onSubmit)}>
         <Input
@@ -93,8 +146,9 @@ export const LoginForm = () => {
         <Button
           type="submit"
           icon={<FontAwesomeIcon icon={faChargingStation} />}
+          disabled={isLoading}
         >
-          SIGN IN
+          {isLoading ? "SIGNING IN..." : "SIGN IN"}
         </Button>
       </form>
 
