@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 export const apiClient = axios.create({
-  baseURL: "http://localhost:3306",
+  baseURL: "http://localhost:3000",
 });
 
 // ၁။ Request Interceptor
