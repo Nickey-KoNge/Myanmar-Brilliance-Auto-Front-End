@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 export const apiClient = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "http://localhost:3001",
 });
 
 // ၁။ Request Interceptor
@@ -40,7 +40,7 @@ apiClient.interceptors.response.use(
       try {
         // Refresh API ခေါ်ခြင်း
         const res = await axios.post(
-          "http://localhost:3306/credentials/refresh",
+          "http://localhost:3001/credentials/refresh",
           {
             refresh_token: refreshToken,
           },

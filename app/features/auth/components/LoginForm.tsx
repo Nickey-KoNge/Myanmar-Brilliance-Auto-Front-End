@@ -41,7 +41,7 @@ export const LoginForm = () => {
     try {
       // ၁။ Backend သို့ Login request ပို့ခြင်း
       const response = await axios.post(
-        "http://localhost:3306/credentials/login",
+        "http://localhost:3001/credentials/login",
         {
           email: data.email,
           password: data.password,
