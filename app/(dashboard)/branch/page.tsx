@@ -1,14 +1,19 @@
-'use client'
-import { PageHeader } from '@/app/components/ui/PageHeader/pageheader'
-import { faAdd, faBrain, faCodeBranch, faCommentNodes, faRoute } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Button } from '@/app/components/ui/Button/Button'
-import  {useEffect } from 'react'
-import React from 'react'
-import TableSearchLayout from './TableSearchLayout'
-import SearchModal from './components/Search/SearchModal'
-import DynamicTable from './components/Table/Table'
-
+"use client";
+import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
+import {
+  faAdd,
+  faBrain,
+  faCodeBranch,
+  faCommentNodes,
+  faRoute,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button } from "@/app/components/ui/Button/Button";
+import { useEffect } from "react";
+import React from "react";
+import TableSearchLayout from "./TableSearchLayout";
+import SearchModal from "./components/Search/SearchModal";
+import DynamicTable from "./components/Table/Table";
 
 export default function BranchPage() {
   const [branchData, setBranchData] = React.useState<any[]>([]);
