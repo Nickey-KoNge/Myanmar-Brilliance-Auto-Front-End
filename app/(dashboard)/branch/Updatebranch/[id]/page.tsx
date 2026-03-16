@@ -48,7 +48,7 @@ export default function UpdateBranch() {
     const fetchBranchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/master-company/branches/${id}`,
+          `http://localhost:3001/master-company/branches/${id}`,
         );
         const result = await response.json();
         console.log("Branch Data:", result.data);
@@ -80,7 +80,7 @@ export default function UpdateBranch() {
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/master-company/branches/${id}`,
+        `http://localhost:3001/master-company/branches/${id}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },

@@ -23,7 +23,6 @@ export default function BranchPage() {
       const result = await response.json();
       console.log("API Response:", result); // Log the entire API response
 
-<<<<<<< HEAD
       if (result && result.data && Array.isArray(result.data.data)) {
         setBranchData(result.data.data); // Extract the nested data array
         console.log("Branch Data Set:", result.data.data); // Log the extracted data
@@ -34,29 +33,6 @@ export default function BranchPage() {
     } catch (error) {
       console.error("Error fetching branch data:", error);
       setBranchData([]); // Set an empty array in case of an error
-=======
- const [branchData, setBranchData] = React.useState<any[]>([]);
-    const fetchBranchData = async () => {
-        try {
-            const response = await fetch('http://localhost:3001/master-company/branches');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const result = await response.json();
-            console.log('API Response:', result); // Log the entire API response
-
-            if (result && result.data && Array.isArray(result.data.data)) {
-                setBranchData(result.data.data); // Extract the nested data array
-                console.log('Branch Data Set:', result.data.data); // Log the extracted data
-            } else {
-                console.error('Invalid API response structure:', result);
-                setBranchData([]); // Set an empty array if the structure is invalid
-            }
-        } catch (error) {
-            console.error('Error fetching branch data:', error);
-            setBranchData([]); // Set an empty array in case of an error
-        }
->>>>>>> bb2461706e90cef0e5f8dc5dc3be619bdae5e419
     }
   };
 
@@ -100,11 +76,3 @@ export default function BranchPage() {
     </>
   );
 }
-<<<<<<< HEAD
-=======
-
-
-
-
-
->>>>>>> bb2461706e90cef0e5f8dc5dc3be619bdae5e419
