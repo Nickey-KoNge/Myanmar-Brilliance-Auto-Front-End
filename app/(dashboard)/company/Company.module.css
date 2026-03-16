@@ -1,0 +1,191 @@
+.container {
+  padding: 24px;
+  color: #e6e6e6;
+}
+
+/* GRID LAYOUT */
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  margin-top: 20px;
+}
+
+/* TABLE CARD */
+
+.tableCard {
+  background: linear-gradient(180deg, #1d1e21, #18191c);
+  border-radius: 14px;
+  padding: 22px;
+  border: 1px solid #2b2c30;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.tableTitle {
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #9a9a9a;
+  margin-bottom: 18px;
+  font-weight: 600;
+}
+
+/* TABLE */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  font-size: 12px;
+  color: #8c8c8c;
+  text-align: left;
+  padding: 14px 12px;
+  background: #24252a;
+}
+
+.table td {
+  padding: 14px 12px;
+  font-size: 13px;
+  border-top: 1px solid #2a2b2f;
+  color: #d8d8d8;
+}
+
+.table tbody tr {
+  transition: 0.2s ease;
+}
+
+.table tbody tr:hover {
+  background: #222327;
+}
+
+/* COMPANY CELL */
+
+.companyCell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.companyLogo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #c73c3c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.companyName {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* ACTION ICON */
+
+.deleteIcon {
+  color: #ff5b5b;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.deleteIcon:hover {
+  color: #ff2b2b;
+  transform: scale(1.1);
+}
+
+/* PAGINATION */
+
+.pagination {
+  margin-top: 20px;
+  font-size: 12px;
+  color: #9a9a9a;
+  text-align: center;
+}
+
+.pagination span {
+  color: #ff5757;
+  font-weight: 600;
+}
+
+/* RIGHT PANEL */
+
+.sidePanel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* SEARCH CARD */
+
+.searchCard {
+  background: linear-gradient(180deg, #1d1e21, #18191c);
+  border-radius: 14px;
+  padding: 20px;
+  border: 1px solid #2b2c30;
+}
+
+.searchCard h3 {
+  font-size: 13px;
+  color: #cfcfcf;
+  margin-bottom: 16px;
+}
+
+.dateRow {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+  width: 48%;
+}
+
+/* RECENT CARD */
+
+.recentCard {
+  background: linear-gradient(180deg, #1d1e21, #18191c);
+  border-radius: 14px;
+  padding: 20px;
+  border: 1px solid #2b2c30;
+}
+
+.recentTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #d8d8d8;
+}
+
+/* RECORDS */
+
+.recordItem {
+  font-size: 13px;
+  margin-bottom: 8px;
+  color: #a6a6a6;
+}
+
+.recordItem span {
+  font-weight: 600;
+}
+
+.active {
+  color: #3ecf8e;
+}
+
+.inactive {
+  color: #ff5b5b;
+}
+
+.lastEdit {
+  margin-top: 14px;
+  font-size: 12px;
+  color: #9a9a9a;
+}
+
+.lastEdit span {
+  color: #ff5757;
+}
