@@ -1,0 +1,11 @@
+
+.tableSearchLayout {
+ display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 16px;
+}
+.tableArea{
+    /* max-width: 850px; */
+    min-width: 0;
+}
+
