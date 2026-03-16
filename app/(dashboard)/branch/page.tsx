@@ -15,7 +15,7 @@ export default function BranchPage() {
  const [branchData, setBranchData] = React.useState<any[]>([]);
     const fetchBranchData = async () => {
         try {
-            const response = await fetch('http://localhost:3000/master-company/branches');
+            const response = await fetch('http://localhost:3001/master-company/branches');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
