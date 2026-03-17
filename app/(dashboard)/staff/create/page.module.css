@@ -1,0 +1,249 @@
+:root {
+  --bg-main: #252526;
+  --bg-head: #3b3b41;
+  --bg-input: #101010;
+
+  --border-input: #402626;
+
+  --text-main: #d1d1d1;
+  --text-muted: #5b5b5b;
+
+  --accent: #a33b3b;
+  --danger: #ff4d4f;
+
+  --padding: 1rem;
+  --radius: 0.5rem;
+  --gap: 1rem;
+  --transition: all 0.3s ease;
+}
+
+/* Utility */
+.cuttingLine {
+  border: none;
+  height: 0.5px;
+  background: var(--accent);
+  margin: 0.5rem 0;
+}
+
+.textDanger {
+  color: var(--accent);
+}
+
+.bgDanger {
+  background: var(--accent);
+  display: inline-block;
+  padding: var(--padding);
+  border-radius: var(--radius);
+}
+
+.pill {
+  width: 2px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+/* Header */
+.headerActionArea {
+  display: flex;
+  gap: var(--gap);
+}
+
+/* Buttons */
+.btn {
+  min-width: 120px;
+  min-height: 45px;
+  font-weight: bold;
+  border-radius: var(--radius);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0 var(--padding);
+  transition: var(--transition);
+}
+
+.btnSuccess {
+  background: var(--accent);
+  color: var(--text-main);
+}
+
+.btnSuccess:hover {
+  background: var(--danger);
+}
+
+.btnCancel {
+  background: var(--bg-input);
+  color: var(--text-main);
+}
+
+.btnCancel:hover {
+  background: var(--bg-head);
+}
+
+/* Layout */
+.formGridContainer {
+  display: grid;
+  grid-template-columns: 1fr 1.75fr;
+  gap: var(--gap);
+}
+
+.formGridBox {
+  padding: var(--padding);
+  background: var(--bg-main);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.gridBoxTitle {
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Filters */
+.filterContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+}
+
+.filterItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* Input */
+.inputWrapper {
+  position: relative;
+}
+
+.inputWrapper input,
+.inputWrapper select {
+  width: 100%;
+  height: 40px;
+  padding: 0.5rem;
+  padding-right: 2rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-input);
+  background: var(--bg-input);
+  color: var(--text-main);
+  font-size: 0.9rem;
+  transition: var(--transition);
+
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.inputWrapper input:focus,
+.inputWrapper select:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.inputWrapper input::placeholder {
+  color: var(--text-muted);
+}
+
+.inputWrapper select::-ms-expand {
+  display: none;
+}
+
+.inputWrapper input::-webkit-clear-button,
+.inputWrapper input::-webkit-inner-spin-button,
+.inputWrapper input::-webkit-outer-spin-button,
+.inputWrapper input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.inputWrapper input[type="date"] {
+  position: relative;
+}
+
+.inputWrapper input[type="date"]::-webkit-calendar-picker-indicator {
+  appearance: none;
+  -webkit-appearance: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.inputIcon {
+  position: absolute;
+  right: 0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  z-index: 1;
+}
+
+/* Profile Image CSS */
+.imageUploadWrapper {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  margin: 0 auto;
+}
+
+.imageUploadBox {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius);
+  border: 1px solid var(--accent);
+  background: var(--bg-input);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition);
+}
+
+.imageUploadBox:hover {
+  background: var(--bg-main);
+}
+
+.previewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.defaultIcon {
+  font-size: 3rem;
+  color: var(--text-muted);
+}
+
+.cameraButton {
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  background: var(--accent);
+  color: var(--text-main);
+  border-radius: var(--radius);
+  padding: calc(var(--padding) / 2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.cameraButton:hover {
+  background: var(--danger);
+}
