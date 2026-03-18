@@ -14,9 +14,13 @@ import React from "react";
 import TableSearchLayout from "./TableSearchLayout";
 import SearchModal from "./components/Search/SearchModal";
 import DynamicTable from "./components/Table/Table";
+import { useRouter } from "next/navigation";
 
 export default function BranchPage() {
+  const router = useRouter();
   const [branchData, setBranchData] = React.useState<any[]>([]);
+
+
   const fetchBranchData = async () => {
     try {
       const response = await fetch(
@@ -43,7 +47,7 @@ export default function BranchPage() {
 
   useEffect(() => {
     fetchBranchData();
-  }, [branchData]);
+  }, []);
 
   console.log("Fetched Branch Data:", branchData);
 
@@ -53,11 +57,17 @@ export default function BranchPage() {
   //     {id:3, name:"Branch 3", location:"Naypyitaw", DOB:"1988-12-10",location1:"Naypyitaw",location2:"Earth",manager:"Jim Doe", vehicles:[{id:4, name:"Vehicle 4"}, {id:5, name:"Vehicle 5"}]},
   // ]
 
+
+ // remove deleted branch from table data without refetching
+  const handleDeleteSuccess=(id:string)=>{
+    setBranchData((prevData)=>prevData.filter((row)=>row.id!==id));
+  }
+
   const renderLiveButtonArea = (
     <div>
       {/* Add New Branch Button */}
 
-      <Button>
+      <Button onClick={()=>router.push("/branch/Addbranch")}>
         <FontAwesomeIcon icon={faAdd} />
         Add New Branch
       </Button>
@@ -75,9 +85,11 @@ export default function BranchPage() {
       />
 
       <TableSearchLayout
-        table={<DynamicTable data={branchData} title="Branch" />}
+        table={<DynamicTable data={branchData} title="Branch" onDeleteSuccess={handleDeleteSuccess} />}
         search={<SearchModal title="Branch" />}
       />
+
+      
     </>
   );
 }

@@ -1,6 +1,6 @@
 .container {
   width: 100%;
-  background: #1e1e1e;
+  background: #252526;
   border-radius: 1.25rem;
   padding: 24px;
   border: 1px solid #2a2a2a;
@@ -33,11 +33,11 @@
 .col {
   text-align: left;
   padding: 12px 16px;
-  font-size: 11px;
+  font-size: var(--font-size-s);
   color: #888;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  font-weight: 500;
+
   white-space: nowrap;
 }
 
@@ -54,15 +54,15 @@
 .colData {
   padding: 16px;
   border-bottom: 1px solid #2a2a2a;
-  font-size: 13px;
+  font-size: var(--font-size-s);
   color: #d4d4d4;
   white-space: nowrap;
 }
 
 /* TITLE */
 .title {
-  font-size: 15px;
-  font-weight: 600;
+  font-size: var(--font-size-m);
+ 
   margin-bottom: 20px;
   text-align: center;
   color: #e0e0e0;
@@ -88,11 +88,8 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--font-size-m);
   color: #fff;
-  transition:
-    background 0.15s ease,
-    transform 0.1s ease;
 }
 
 .deleteBtn:hover {

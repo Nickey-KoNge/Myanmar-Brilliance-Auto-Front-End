@@ -1,21 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./Table.module.css";
 import { useRouter } from "next/navigation";
+import DeleteModal from "../Delete/DeleteModal";
 
 export default function DynamicTable({
   data,
   title,
+  onDeleteSuccess,
 }: {
   data: any[];
   title: string;
+  onDeleteSuccess:(id:string)=>void;
 }) {
   const router = useRouter();
+
+  const [showDeleteModal, setShowDeleteModal] =useState(false);
+  const [selectedRow, setSelectedRow] = useState<string|any>(null);
+
+  
+  const closeModal=()=>{
+  
+    setShowDeleteModal(false)
+    setSelectedRow(null);
+  };
+
+  const openDeleteModal=(rowId:string)=>{
+    setSelectedRow(rowId);
+    setShowDeleteModal(true);
+  }
+
+
 
   if (!Array.isArray(data) || data.length === 0)
     return <p>No data available</p>;
 
   const columns = Object.keys(data[0] || {}).filter(
-    (col) => col !== "id" && col !== "company_id",
+    (col) => col !== "id" && col !=="company_id" ,
   );
 
   return (
@@ -46,36 +66,27 @@ export default function DynamicTable({
                   </td>
                 ))}
 
-                {/* {typeof row[col] === "object" ? (
-                      Array.isArray(row[col]) ? (
-                        row[col]
-                          .map((item) =>
-                            typeof item === "object"
-                              ? Object.entries(item)
-                                  .filter(([key]) => key !== "id") // Exclude "id"
-                                  .map(([_, value]) => value) // Only show values
-                                  .join(", ")
-                              : item
-                          )
-                          .join("; ")
-                      ) : (
-                        Object.entries(row[col] || {})
-                          .filter(([key]) => key !== "id") // Exclude "id"
-                          .map(([_, value]) => value) // Only show values
-                          .join(", ")
-                      )
-                    ) : (
-                      row[col]
-                    )} */}
-
+            
                 <td className={styles.actions}>
-                  <button className={styles.deleteBtn}>🗑</button>
+                  <button className={styles.deleteBtn}
+                    onClick={(e)=>{
+                    e.stopPropagation();//prevent for row click
+               
+                    openDeleteModal(row.id);
+                    
+
+                   
+                  }}>🗑</button>
                 </td>
+                   
               </tr>
             ))}
           </tbody>
         </table>
+       
       </div>
+      {showDeleteModal && <DeleteModal isOpen={showDeleteModal} onClose={closeModal} id={selectedRow} onDeleteSuccess={onDeleteSuccess} />}
+  
     </div>
   );
 }
