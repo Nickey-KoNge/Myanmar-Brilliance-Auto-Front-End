@@ -1,0 +1,310 @@
+:root {
+  --bg-main: #252526;
+  --bg-table: #2d2d30;
+  --bg-head: #3b3b41;
+  --bg-row-alt: #29292d;
+  --bg-row-hover: #404047;
+  --bg-input: #101010;
+  --bg-btn: #1a1a1b;
+
+  --border-input: #402626;
+
+  --text-main: #d1d1d1;
+  --text-muted: #5b5b5b;
+
+  --accent: #a33b3b;
+  --danger: #ff4d4f;
+  --success: #38a539;
+
+  --radius: 0.75rem;
+
+  --padding: 1rem;
+}
+
+/* Utilities */
+.cuttingLine {
+  border: none;
+  height: 0.5px;
+  background: var(--accent);
+  margin: 0.5rem 0;
+}
+
+.headerbarButton {
+  background: var(--accent);
+  color: var(--text-main);
+  font-weight: bold;
+  border-radius: var(--radius);
+  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 45px;
+  padding: 0 1rem;
+  transition: all 0.3s ease;
+}
+
+.headerbarButton:hover {
+  background-color: var(--danger);
+}
+
+/* Layout */
+.gridContainer {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 1.5rem;
+}
+
+.gridBox {
+  background: var(--bg-main);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  min-height: max-content;
+}
+
+.spacer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.gridBoxTitle {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+/* Table */
+.table {
+  width: 100%;
+  border-spacing: 0;
+  background: var(--bg-table);
+  font-size: 14px;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.table th,
+.table td {
+  padding: 1rem;
+  text-align: start;
+}
+
+.table thead {
+  background: var(--bg-head);
+  color: var(--text-muted);
+}
+
+.table tr:nth-child(even) {
+  background: var(--bg-row-alt);
+}
+
+.table tr:hover {
+  background: var(--bg-row-hover);
+}
+
+.staffInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.staffInfo img {
+  border-radius: 50%;
+}
+
+/* Actions */
+.deleteBtn {
+  border: none;
+  background: none;
+  color: var(--danger);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.deleteBtn:hover {
+  transform: scale(1.2);
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  color: var(--text-muted);
+}
+
+.spanText {
+  color: var(--accent);
+  font-weight: bold;
+  margin: 0 4px;
+}
+
+.pageActions button {
+  background: var(--bg-btn);
+  border: none;
+  color: white;
+  margin-left: 8px;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: var(--radius);
+  transition: 0.25s;
+}
+
+.pageActions button:hover {
+  background: var(--accent);
+}
+
+/* Search */
+.searchContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Shared two-column row for date pickers and select filters */
+.filterRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  font-size: 12px;
+  color: var(--text-main);
+}
+
+/* Inputs */
+.inputWrapper {
+  position: relative;
+  background: var(--bg-input);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  margin: 0.5rem 0;
+}
+
+.inputWrapper input,
+.inputWrapper select {
+  width: 100%;
+  height: 42px;
+  padding: 0 1rem;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  outline: none;
+  appearance: none;
+}
+
+.icon {
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+  color: var(--text-muted);
+}
+
+/* Hide native calendar icon */
+.dateSearch::-webkit-calendar-picker-indicator {
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Reset button */
+.btnBox {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 0.5rem 0;
+}
+
+.resetBtn {
+  background: var(--accent);
+  color: var(--text-main);
+  border-radius: var(--radius);
+  padding: 1rem;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+
+.resetBtn:hover {
+  background: var(--danger);
+}
+
+/* Recent record */
+.recentRecord {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+.recentRecord span:nth-of-type(1) {
+  background: var(--accent);
+  padding: 0.5rem;
+  border-radius: var(--radius);
+}
+
+.recentTitle {
+  font-weight: bold;
+}
+
+.stat {
+  display: grid;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stat div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.statLable {
+  color: var(--text-muted);
+  font-weight: bold;
+}
+
+/* Last edited */
+.lastEdited {
+  text-align: center;
+  color: var(--text-muted);
+  font-weight: bold;
+}
+
+.textDanger {
+  color: var(--danger);
+}
+
+.textSuccess {
+  color: var(--success);
+}
+
+/* override defaults */
+/* Change dropdown options color */
+.filterRow select option {
+  background-color: var(--bg-input);
+  color: var(--text-main);
+}
+
+/* Prevent autofill background override */
+.inputWrapper input:-webkit-autofill,
+.inputWrapper input:-webkit-autofill:hover,
+.inputWrapper input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text-main);
+  -webkit-box-shadow: 0 0 0px 1000px var(--bg-input) inset;
+  border-radius: var(--radius);
+}
+
+.inputWrapper select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px var(--bg-input) inset;
+}
