@@ -1,7 +1,7 @@
 .topbar {
   height: 80px;
-  background-color: #252526;
-  border-bottom: 1px solid #402626;
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border-right-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -24,19 +24,19 @@
   font-weight: 900;
   font-size: var(--font-size-xl);
   letter-spacing: 1px;
-  color: #ffffff;
+  color: var(--text-main);
 }
 
 .companyInfo span {
-  color: #b03a3e;
+  color: var(--color-primary);
   margin-left: 0.5rem;
 }
 
 .logoIcon {
   width: 50px;
   height: 50px;
-  background-color: #310d0d;
-  color: #b03a3e;
+  background-color: var(--bg-input);
+  color: var(--color-primary);
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -51,7 +51,7 @@
 }
 
 .togglediv {
-  background-color: #050505;
+  background-color:  var(--togglediv-color);
   border-radius: 10px;
   height: 50px;
   display: flex;
@@ -68,9 +68,9 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  color: #ffffff;
+  color: var(--text-main);
   transition: color 0.3s ease;
-  font-size: 20px; /* 👈 ဒီနေရာမှာ 20px သတ်မှတ်လိုက်ပါ */
+  font-size: 20px; 
 }
 
 .alertBtn {
@@ -79,13 +79,13 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  color: #a33b3b;
+  color: var(--color-primary);
   transition: color 0.3s ease;
   font-size: 20px;
 }
 
 .iconBtn:hover {
-  color: #dbdbdb;
+  color: var(--color-primary);
 }
 
 .badge {
@@ -126,5 +126,5 @@
 .userName {
   font-size: 1rem;
   font-weight: 600;
-  color: #ddd;
+  color: var(--text-main);
 }

@@ -38,6 +38,7 @@
 
 .title span {
   color: var(--color-primary);
+  font-weight: var( --font-weight-bolder);
 }
 
 .optionsRow {

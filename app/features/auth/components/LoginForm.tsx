@@ -145,19 +145,19 @@ export const LoginForm = () => {
 
         <Button
           type="submit"
-          icon={<FontAwesomeIcon icon={faChargingStation} />}
+          // icon={}
           disabled={isLoading}
         >
-          {isLoading ? "SIGNING IN..." : "SIGN IN"}
+          {isLoading ? "SIGNING IN..." : "SIGN IN"} <FontAwesomeIcon icon={faChargingStation} />
         </Button>
       </form>
 
       <hr className={styles.divider} />
 
       <div className={styles.footerText}>
-        <span>
+        <strong>
           © 2026 MYANMAR BRILLIANCE AUTO CO.,LTD . EV INDUSTRIAL SYSTEMS
-        </span>
+        </strong>
       </div>
     </div>
   );
