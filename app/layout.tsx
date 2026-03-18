@@ -1,9 +1,10 @@
+//app/layout.tsx;
 import "./globals.css";
-import { config } from '@fortawesome/fontawesome-svg-core'
-import '@fortawesome/fontawesome-svg-core/styles.css'
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+import { ThemeProvider } from "./core/providers/ThemeProvider";
 
-config.autoAddCss = false
-
+config.autoAddCss = false;
 
 export const metadata = {
   title: "Myanmar Brilliance Auto",
@@ -17,7 +18,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {" "}
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }

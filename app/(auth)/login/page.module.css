@@ -11,7 +11,7 @@
   top: 2rem;
   right: 2rem;
 
-  background-color: black;
+  background-color: var(--togglediv-color);
   border-radius: 10px;
   width: 100px;
   height: 50px;

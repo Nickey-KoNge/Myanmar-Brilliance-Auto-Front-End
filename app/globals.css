@@ -16,6 +16,9 @@ body {
   background-color: var(--bg-main);
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 a {
@@ -39,18 +42,34 @@ button {
   --bg-main: #181818;
   --bg-card: #222222;
   --bg-input: #121212;
-  --color-primary: #A33B3B; /* The red color */
+  --color-primary: #a33b3b; /* The red color */
   --color-primary-hover: #962e32;
-  --text-main: #D1D1D1;
+  --text-main: #d1d1d1;
   --text-muted: #888888;
   --border-color: #333333;
   --font-size-xl: 1.5rem;
   --font-size-l: 1.25rem;
   --font-size-m: 1rem;
   --font-size-s: 0.75rem;
-  
-
-
-  
+  --font-weight-normal: 400;
+  --font-weight-bold: 700;
+  --font-weight-bolder: 900;
+  --togglediv-color: #0b0b0e;
+  --border-right-color: #402626;
+  --active-link-color: #6f2f2f;
+  --active-right-link-color:#b25151;
 }
-
+.light-mode {
+  --bg-main: #d4cfcf;
+  --bg-card: #dbdbdb;
+  --bg-input: #f0f0f0;
+  --color-primary: #a33b3b;
+  --color-primary-hover: #962e32;
+  --text-main: #000000;
+  --text-muted: #131313;
+  --border-color: #cccccc;
+  --togglediv-color: #c4c4c4;
+  --border-right-color: #402626;
+  --active-right-link-color:#b25151;
+  --active-link-color: #6A6969;
+}

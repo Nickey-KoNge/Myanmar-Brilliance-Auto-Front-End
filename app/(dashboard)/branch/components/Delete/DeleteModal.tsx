@@ -1,0 +1,127 @@
+import React, { use, useEffect } from "react";
+import { useState } from "react";
+import { Button } from "@/app/components/ui/Button/Button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCancel, faWarning } from "@fortawesome/free-solid-svg-icons";
+import styles from "./Delete.module.css";
+
+interface DeleteModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  itemName: string;
+  name: string;
+  isLoading?: boolean;
+  id: string;
+  apiRoute: string;
+  onDeleteSuccess: (id: string) => void;
+}
+
+export default function DeleteModal({
+  isOpen,
+  onClose,
+  itemName,
+  name,
+  id,
+  apiRoute,
+  onDeleteSuccess,
+}: DeleteModalProps) {
+  //   const [branchData, setBranchData] = useState<any>(null);
+
+  const [isLoading, setIsLoading] = useState(false);
+  //   if (!isOpen) return null;
+
+  //   const fetchBranchData = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `http://localhost:3001/master-company/branches/${id}`,
+  //       );
+  //       const result = await response.json();
+  //       console.log("Fetched Branch Data:", result);
+  //       setBranchData(result.data);
+  //     } catch (error) {
+  //       console.error("Error fetching branch data:", error);
+  //     }
+  //   };
+
+  //   useEffect(() => {
+  //     if (isOpen && id) {
+  //       fetchBranchData();
+  //     }
+  //   }, [isOpen, id]);
+  //   console.log("Branch Data in Modal:", branchData);
+
+  //   const handleDelete = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `http://localhost:3001/master-company/branches/${id}`,
+  //         {
+  //           method: "DELETE",
+  //         },
+  //       );
+  //       if (!response.ok) {
+  //         throw new Error("Failed to delete branch");
+  //       }
+  //       onDeleteSuccess?.(id);
+  //       onClose();
+  //     } catch (error) {
+  //       console.error("Error deleting branch:", error);
+  //     }
+  //   };
+  const handleDelete = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`http://localhost:3001/${apiRoute}/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `Failed to delete ${name}`);
+      }
+
+      onDeleteSuccess(id);
+      onClose();
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "An error occurred";
+      alert(message);
+      console.error(`Error deleting ${name}:`, error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  return (
+    <>
+      <div className={styles.DeleteModal}>
+        <div className={styles.iconContainer}>
+          <div className={styles.iconOne}>
+            <FontAwesomeIcon icon={faWarning} color="red" size="2xl" />
+          </div>
+          <div className={styles.iconTwo}>
+            <FontAwesomeIcon icon={faCancel}  onClick={onClose}  />
+          </div>
+        </div>
+        <div className={styles.textContainer}>
+          <span>Confirm Delete</span>
+
+          <span>
+            Are you sure you want to delete{""}
+            <span style={{ color: "red" }}>&quot;{itemName}&quot;</span>
+             `This action will remove the <strong>
+              &quot; {name} &quot;
+            </strong>{" "}
+            record permanently from the database.
+          </span>
+        </div>
+        <div className={styles.btnContainer}>
+          <Button onClick={onClose} disabled={isLoading}>
+            No, Cancel
+          </Button>
+          <Button onClick={handleDelete} disabled={isLoading}>
+            {isLoading ? "Deleting..." : `Yes, Delete ${name} Record`}
+          </Button>
+        </div>
+      </div>
+    </>
+  );
+}

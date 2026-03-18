@@ -1,5 +1,5 @@
 import { Input } from '@/app/components/ui/Input/Input'
-import { faCalendar } from '@fortawesome/free-solid-svg-icons'
+import { faCalendar, faClockRotateLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button } from '@/app/components/ui/Button/Button'
 import styles from './Search.module.css'
@@ -38,11 +38,52 @@ export default function SearchModal({ title }: { title: string }) {
         </form>
       </div>
 
-      <Button className={styles.reset}>Reset Filters</Button>
+      <Button>Reset Filters</Button>
 
       <hr className={styles.divider} />
 
-      <div className={styles.recent}></div>
+      <div className={styles.recent}>
+          <div className={styles.recentHeader}>
+            <div className={styles.recentIcon}>
+                 <FontAwesomeIcon icon={faClockRotateLeft} />
+            </div>
+            <span>
+              RECENT RECORD
+            </span>
+              
+          </div>
+
+          <div className={styles.recentContent}>
+              
+            <div className={styles.recordItem}>
+              Total Company : <span>1</span>
+            </div>
+
+            <div className={styles.recordItem}>
+              Active Company : <span className={styles.active}>1</span>
+            </div>
+
+            <div className={styles.recordItem}>
+              Inactive Company : <span className={styles.inactive}>0</span>
+            </div>
+
+            </div>
+
+            <hr  className={styles.divider}/>
+
+   
+
+            <div className={styles.lastEdited}>
+              Last Edited : <span>Nickey (Admin)</span>
+            </div>
+
+
+    
+          
+
+
+        
+      </div>
     </div>
   )
 }

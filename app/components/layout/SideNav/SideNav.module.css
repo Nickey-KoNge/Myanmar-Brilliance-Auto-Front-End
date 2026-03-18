@@ -1,11 +1,12 @@
 .sidebar {
   width: 250px;
-  background-color: #252526;
+  background-color: var(--bg-card);
+  color: var(--text-main);
   height: 100vh;
   position: fixed;
   left: 0;
   top: 0;
-  border-right: 1px solid #402626; 
+  border-right: 1px solid var(--border-right-color); 
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -19,7 +20,7 @@
   font-weight: 800;
   font-size: var(--font-size-l);
   letter-spacing: 1px;
-  color: #ffffff;
+  color: var(--text-main);
 
 }
 
@@ -43,7 +44,7 @@
   display: flex;
   align-items: center;
   padding: 0.8rem 1.5rem;
-  color: #aaa;
+  color: var(--text-main);
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: 1rem;
@@ -54,12 +55,12 @@
 .menuItem:hover,
 .menuItem.active {
   color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--bg-main);
 }
 
 .menuItem.active {
-  border-right-color: #b25151;
-  background-color: #a33b3b6e;
+  border-right-color: var(--active-right-link-color);
+  background-color: var(--active-link-color);
 }
 
 .icon {

@@ -1,14 +1,18 @@
+"use client";
 import React from "react";
 import styles from "./TopNav.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSun,
+  faMoon,
   faBell,
   faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
+import { useTheme } from "@/app/core/providers/ThemeProvider";
 
 export const TopNav = () => {
+  const { isLight, toggleTheme } = useTheme();
   return (
     <header className={styles.topbar}>
       <div className={styles.companyInfo}>
@@ -28,12 +32,12 @@ export const TopNav = () => {
 
       <div className={styles.actions}>
         <div className={styles.togglediv}>
-          <div className={styles.iconBtn}>
-            <FontAwesomeIcon icon={faSun}/>
+          <div className={styles.iconBtn} onClick={toggleTheme} style={{cursor: 'pointer'}}>
+            <FontAwesomeIcon icon={isLight ? faMoon : faSun} />
           </div>
 
           <div className={styles.alertBtn}>
-            <FontAwesomeIcon icon={faBell}  />
+            <FontAwesomeIcon icon={faBell} />
             <span className={styles.badge}>1</span>
           </div>
         </div>
