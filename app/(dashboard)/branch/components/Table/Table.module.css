@@ -1,9 +1,9 @@
 .container {
   width: 100%;
-  background: #252526;
+  background:var(--bg-card);
   border-radius: 1.25rem;
   padding: 24px;
-  border: 1px solid #2a2a2a;
+  border: 1px solid var(--border-color);
 }
 
 /* SCROLL WRAPPER */
@@ -19,14 +19,16 @@
   border-collapse: separate;
   border-top-left-radius: 1.25rem;
   border-top-right-radius: 1.25rem;
-  background-color: #2a2a2a;
+  background-color:var(--bg-card);
   border-spacing: 0;
 }
 
 /* HEADER ROW */
 .table thead tr {
   border-bottom: 1px solid #2a2a2a;
-  background-color: #3b3b41;
+  background-color:var(--bg-card);
+  color: var(--text-main);
+  
 }
 
 /* HEADER CELLS */
@@ -34,7 +36,7 @@
   text-align: left;
   padding: 12px 16px;
   font-size: var(--font-size-s);
-  color: #888;
+  color:var(--text-main);
   text-transform: uppercase;
   letter-spacing: 0.8px;
 
@@ -43,8 +45,10 @@
 
 /* DATA ROWS */
 .table tbody tr {
+ 
   transition: background 0.15s ease;
 }
+
 
 .table tbody tr:hover {
   background: #252525;
@@ -55,7 +59,7 @@
   padding: 16px;
   border-bottom: 1px solid #2a2a2a;
   font-size: var(--font-size-s);
-  color: #d4d4d4;
+  color:var(--text-main);
   white-space: nowrap;
 }
 
@@ -65,7 +69,7 @@
  
   margin-bottom: 20px;
   text-align: center;
-  color: #e0e0e0;
+  color: var(--text-main);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -89,7 +93,7 @@
   justify-content: center;
   cursor: pointer;
   font-size: var(--font-size-m);
-  color: #fff;
+  color:var(--text-main);
 }
 
 .deleteBtn:hover {

@@ -2,7 +2,7 @@ import React, { use, useEffect } from "react";
 import { useState } from "react";
 import { Button } from "@/app/components/ui/Button/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCancel, faWarning } from "@fortawesome/free-solid-svg-icons";
+import { faCancel, faCross, faWarning } from "@fortawesome/free-solid-svg-icons";
 import styles from "./Delete.module.css";
 
 interface DeleteModalProps {
@@ -28,45 +28,7 @@ export default function DeleteModal({
   //   const [branchData, setBranchData] = useState<any>(null);
 
   const [isLoading, setIsLoading] = useState(false);
-  //   if (!isOpen) return null;
-
-  //   const fetchBranchData = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         `http://localhost:3001/master-company/branches/${id}`,
-  //       );
-  //       const result = await response.json();
-  //       console.log("Fetched Branch Data:", result);
-  //       setBranchData(result.data);
-  //     } catch (error) {
-  //       console.error("Error fetching branch data:", error);
-  //     }
-  //   };
-
-  //   useEffect(() => {
-  //     if (isOpen && id) {
-  //       fetchBranchData();
-  //     }
-  //   }, [isOpen, id]);
-  //   console.log("Branch Data in Modal:", branchData);
-
-  //   const handleDelete = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         `http://localhost:3001/master-company/branches/${id}`,
-  //         {
-  //           method: "DELETE",
-  //         },
-  //       );
-  //       if (!response.ok) {
-  //         throw new Error("Failed to delete branch");
-  //       }
-  //       onDeleteSuccess?.(id);
-  //       onClose();
-  //     } catch (error) {
-  //       console.error("Error deleting branch:", error);
-  //     }
-  //   };
+ 
   const handleDelete = async () => {
     setIsLoading(true);
     try {
