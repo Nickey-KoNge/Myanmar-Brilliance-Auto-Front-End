@@ -36,15 +36,11 @@ export default function UpdateBranch() {
           `http://localhost:3001/master-company/branches/${branchId}`
         );
         const result = await response.json();
-        console.log("Fetched Branch Data:", result); 
+        console.log("Fetched Branch Data For Update:", result); 
 
-        // company is object but we need company_id for the form, so we extract it
-        const transformedData={
-          ...result.data,
-          company_id: result.data.company?.id || "",
-        }
+  
 
-        setBranchData(transformedData); 
+        setBranchData(result.data); 
 
       } catch (error) {
         console.error("Error fetching branch data:", error);
