@@ -22,7 +22,7 @@ import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
 import styles from "./page.module.css";
 import dynamic from 'next/dynamic';
 
-const MapPicker=dynamic(()=>import("../MapPicker/MapPicker"),{
+const MapPicker=dynamic(()=>import("../../../../components/ui/MapPicker/MapPicker"),{
   ssr:false,
 })
 

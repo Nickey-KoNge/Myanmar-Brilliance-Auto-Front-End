@@ -5,16 +5,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCancel, faCircleXmark, faCross, faWarning } from "@fortawesome/free-solid-svg-icons";
 import styles from "./Delete.module.css";
 
+
+
 interface DeleteModalProps {
   isOpen: boolean;
   onClose: () => void;
   itemName: string;
+  
   name: string;
   isLoading?: boolean;
   id: string;
+  // " apiRoute="master-company/branches""
   apiRoute: string;
+  // function for remove deleted data row from table / filter 
   onDeleteSuccess: (id: string) => void;
 }
+
 
 export default function DeleteModal({
   isOpen,
