@@ -50,7 +50,7 @@ apiClient.interceptors.response.use(
 
         // Token အသစ်များကို သိမ်းဆည်းခြင်း
         Cookies.set("access_token", access_token, {
-          expires: 10 / 1440,
+          expires: 4 / 24,
           secure: true,
         });
         Cookies.set("refresh_token", refresh_token, {
