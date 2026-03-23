@@ -31,6 +31,10 @@
   margin-bottom: 0;
 }
 
+.formGridContainer .formGridBox:last-child .filterContainer:last-child div {
+  border: 1px solid red;
+}
+
 .filterItem {
   width: 100%;
   margin-bottom: 1.5rem;

@@ -27,6 +27,9 @@ import styles from "./page.module.css";
 // are defined in your page.module.css or the DataTable.module.css
 
 import { apiClient } from "@/app/features/lib/api-client";
+import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
+import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
+import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
 
 interface Staff {
   id: string;
@@ -214,26 +217,6 @@ export default function StaffPage() {
               />
             </div>
 
-            {/* Pagination remains separate from the table core logic */}
-            {/* <div className={styles.pagination}>
-              <p>
-                Showing <span className={styles.spanText}>1</span> to{" "}
-                <span className={styles.spanText}>10</span> of{" "}
-                <span className={styles.spanText}>200</span> total records
-              </p>
-              <div className={styles.pageActions}>
-                <span>
-                  Page <span className={styles.spanText}>1</span> of{" "}
-                  <span className={styles.spanText}>20</span>
-                </span>
-                <button>
-                  <FontAwesomeIcon icon={faAngleLeft} />
-                </button>
-                <button>
-                  <FontAwesomeIcon icon={faAngleRight} />
-                </button>
-              </div>
-            </div> */}
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
@@ -251,12 +234,29 @@ export default function StaffPage() {
 
           <div className={styles.searchContainer}>
             {/* Text Search Component */}
-            <TextSearch></TextSearch>
+            <TextInput
+              label="Searching"
+              placeholder="Search by name, email..."
+              // value={search}
+              // onChange={(e) => setSearch(e.target.value)}
+              name="search"
+            />
 
             {/* Date Search Component */}
             <div className={styles.filterRow}>
-              <DateInput label="From"></DateInput>
-              <DateInput label="To"></DateInput>
+              <DateInput
+                label="From"
+                // value={date}
+                // onChange={(val) => setDate(val)}
+                rightIcon={faCalendarDays}
+              />
+
+              <DateInput
+                label="To"
+                // value={date}
+                // onChange={(val) => setDate(val)}
+                rightIcon={faCalendarDays}
+              />
             </div>
 
             <div className={styles.filterRow}>
