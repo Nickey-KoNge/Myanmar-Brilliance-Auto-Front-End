@@ -1,0 +1,49 @@
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: var(--radius);
+}
+
+.table {
+  width: 100%;
+  border-spacing: 0;
+  background: var(--bg-table);
+  font-size: 14px;
+  overflow: hidden;
+}
+
+.table th,
+.table td {
+  padding: 1rem;
+  text-align: start;
+  color: var(--text-main);
+}
+
+.table thead {
+  background: var(--bg-head);
+  color: var(--text-muted);
+}
+
+.table tr:nth-child(even) {
+  background: var(--bg-row-alt);
+}
+
+.table tr:hover {
+  background: var(--bg-row-hover);
+}
+
+.clickableRow {
+  cursor: pointer;
+}
+
+/* Reusable Staff Info styles */
+.staffCell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.staffImg {
+  border-radius: var(--radius);
+  object-fit: cover;
+}

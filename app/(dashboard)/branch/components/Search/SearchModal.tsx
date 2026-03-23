@@ -7,6 +7,8 @@ import React from 'react'
 
 export default function SearchModal({ title }: { title: string }) {
   return (
+    <>
+  
     <div className={styles.card}>
       <h2 className={styles.title}>{title} Search</h2>
       <hr className={styles.divider} />
@@ -85,5 +87,7 @@ export default function SearchModal({ title }: { title: string }) {
         
       </div>
     </div>
+
+      </>
   )
 }

@@ -8,7 +8,6 @@ import {
   faCalendarAlt,
   faCar,
   faChartLine,
-  faDotCircle,
   faLaptop,
   faTags,
 } from "@fortawesome/free-solid-svg-icons";

@@ -1,0 +1,11 @@
+.deleteBtn {
+  border: none;
+  background: none;
+  color: var(--danger);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.deleteBtn:hover {
+  transform: scale(1.2);
+}

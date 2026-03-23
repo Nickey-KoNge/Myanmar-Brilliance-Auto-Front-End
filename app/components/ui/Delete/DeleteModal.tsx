@@ -2,19 +2,25 @@ import React, { use, useEffect } from "react";
 import { useState } from "react";
 import { Button } from "@/app/components/ui/Button/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCancel, faCross, faWarning } from "@fortawesome/free-solid-svg-icons";
+import { faCancel, faCircleXmark, faCross, faWarning } from "@fortawesome/free-solid-svg-icons";
 import styles from "./Delete.module.css";
+
+
 
 interface DeleteModalProps {
   isOpen: boolean;
   onClose: () => void;
   itemName: string;
+  
   name: string;
   isLoading?: boolean;
   id: string;
+  // " apiRoute="master-company/branches""
   apiRoute: string;
+  // function for remove deleted data row from table / filter 
   onDeleteSuccess: (id: string) => void;
 }
+
 
 export default function DeleteModal({
   isOpen,
@@ -57,10 +63,15 @@ export default function DeleteModal({
       <div className={styles.DeleteModal}>
         <div className={styles.iconContainer}>
           <div className={styles.iconOne}>
-            <FontAwesomeIcon icon={faWarning} color="red" size="2xl" />
+            <div className={styles.warningIcon}>
+                <FontAwesomeIcon icon={faWarning} color="red" size="xl" />
+            </div>
+          
           </div>
           <div className={styles.iconTwo}>
-            <FontAwesomeIcon icon={faCancel}  onClick={onClose}  />
+            
+            
+            <FontAwesomeIcon icon={faCircleXmark}  onClick={onClose} style={{color:"#A33B3B"}}  />
           </div>
         </div>
         <div className={styles.textContainer}>
@@ -72,15 +83,15 @@ export default function DeleteModal({
              `This action will remove the <strong>
               &quot; {name} &quot;
             </strong>{" "}
-            record permanently from the database.
+            record permanently.
           </span>
         </div>
         <div className={styles.btnContainer}>
           <Button onClick={onClose} disabled={isLoading}>
-            No, Cancel
+            Cancel
           </Button>
           <Button onClick={handleDelete} disabled={isLoading}>
-            {isLoading ? "Deleting..." : `Yes, Delete ${name} Record`}
+            {isLoading ? "Deleting..." : `Delete`}
           </Button>
         </div>
       </div>

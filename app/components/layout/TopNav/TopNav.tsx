@@ -7,12 +7,22 @@ import {
   faMoon,
   faBell,
   faChevronDown,
+  faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import { useTheme } from "@/app/core/providers/ThemeProvider";
+import Cookies from "js-cookie"; // Cookie ဖျက်ရန် import လုပ်ပါ
 
 export const TopNav = () => {
   const { isLight, toggleTheme } = useTheme();
+
+  // Logout လုပ်ဆောင်ချက်
+  const handleLogout = () => {
+    Cookies.remove("access_token");
+    Cookies.remove("refresh_token");
+    window.location.href = "/login"; // Login page သို့ ပြန်ပို့ပါ
+  };
+
   return (
     <header className={styles.topbar}>
       <div className={styles.companyInfo}>
@@ -32,7 +42,11 @@ export const TopNav = () => {
 
       <div className={styles.actions}>
         <div className={styles.togglediv}>
-          <div className={styles.iconBtn} onClick={toggleTheme} style={{cursor: 'pointer'}}>
+          <div
+            className={styles.iconBtn}
+            onClick={toggleTheme}
+            style={{ cursor: "pointer" }}
+          >
             <FontAwesomeIcon icon={isLight ? faMoon : faSun} />
           </div>
 
@@ -42,21 +56,29 @@ export const TopNav = () => {
           </div>
         </div>
 
-        <div className={styles.userProfile}>
-          <div className={styles.avatar}>
-            <Image
-              src="/staff.png"
-              alt="staff image"
-              width={50}
-              height={50}
-              style={{ objectFit: "cover" }}
-            />
+        {/* User Profile နှင့် Logout Area */}
+        <div className={styles.userSection}>
+          <div className={styles.userProfile}>
+            <div className={styles.avatar}>
+              <Image
+                src="/staff.png"
+                alt="staff image"
+                width={50}
+                height={50}
+                style={{ objectFit: "cover" }}
+              />
+            </div>
+            <span className={styles.userName}>STEVEN JOHN</span>
           </div>
-          <span className={styles.userName}>STEVEN JOHN</span>
-          <FontAwesomeIcon
-            icon={faChevronDown}
-            style={{ width: "10px", color: "#888" }}
-          />
+
+          {/* Logout Button */}
+          <button
+            className={styles.logoutBtn}
+            onClick={handleLogout}
+            title="Logout"
+          >
+            <FontAwesomeIcon icon={faSignOutAlt} />
+          </button>
         </div>
       </div>
     </header>

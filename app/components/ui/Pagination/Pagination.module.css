@@ -1,0 +1,78 @@
+.paginationContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 2rem 1rem;
+  background-color: var(--bg-main);
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: var(--font-weight-bold);
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+}
+
+.infoText {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.spanText {
+  color: var(--accent);
+  font-weight: bold;
+  font-size: 1.15rem;
+}
+
+.actionsContainer {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.pageInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--text-muted);
+}
+
+.btnGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pageBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-input);
+  background-color: var(--accent);
+    color: var(--icon-main);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1.2rem;
+}
+
+.pageBtn:hover:not(:disabled) {
+  background-color: var(--accent);
+  color: var(--color-primary);
+  border-color: var(--accent);
+}
+
+.pageBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .paginationContainer {
+    padding: 1.5rem 1rem;
+    gap: 1rem;
+  }
+}

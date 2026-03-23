@@ -169,9 +169,6 @@ export default function EditStaff() {
     </div>
   );
 
-  // Show a loading state while fetching existing data
-  if (fetching) return <p style={{ padding: "2rem" }}>Loading staff data…</p>;
-
   return (
     <>
       <PageHeader

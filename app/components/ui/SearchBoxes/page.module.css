@@ -1,0 +1,140 @@
+/* --- Grid / Layout --- */
+.filterRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* --- Input Wrapper (The Visual Box) --- */
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color, #333); /* Default border */
+  border-radius: var(--radius, 8px);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
+/* Focus State: We apply focus styling to the wrapper when the child is active */
+.inputWrapper:focus-within {
+  border-color: var(--primary-color, #0070f3);
+  box-shadow: 0 0 0 1px var(--primary-color, #0070f3);
+}
+
+/* Error State */
+.inputError {
+  border-color: var(--error-color, #ff4d4f) !important;
+}
+
+/* --- Core Elements --- */
+.inputWrapper input,
+.inputWrapper textarea,
+.inputWrapper select {
+  width: 100%;
+  min-height: 50px;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: transparent;
+  color: var(--text-main);
+  outline: none;
+  font-size: 14px;
+  font-family: inherit;
+  line-height: 1.5;
+  z-index: 2;
+}
+
+/* --- Textarea specific --- */
+.inputWrapper textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* --- Icon Spacing --- */
+.withLeftIcon {
+  padding-left: 2.75rem !important;
+}
+
+.withRightIcon {
+  padding-right: 2.75rem !important;
+}
+
+.iconLeft,
+.iconRight {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-muted);
+  font-size: 1rem;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+}
+
+.iconLeft { left: 14px; }
+.iconRight { right: 14px; }
+
+/* --- Select / Dropdown --- */
+.inputWrapper select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+/* Ensure select arrow doesn't overlap text */
+.inputWrapper select.withRightIcon {
+  padding-right: 3rem;
+}
+
+/* --- Date Input Specifics --- */
+.dateInput {
+  cursor: pointer;
+}
+
+/* This hides the default calendar icon but keeps the functionality */
+.dateInput::-webkit-calendar-picker-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  height: auto;
+  color: transparent;
+  background: transparent;
+  cursor: pointer;
+  z-index: 4;
+}
+
+/* --- Error Message --- */
+.error {
+  color: var(--error-color, #ff4d4f);
+  font-size: 11px;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* --- Autofill Fix --- */
+.inputWrapper input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px var(--bg-input) inset !important;
+  -webkit-text-fill-color: var(--text-main) !important;
+}

@@ -1,14 +1,3 @@
-/* ====== THEME ====== */
-:root {
-  --bg-main: #252526;
-  --bg-input: #101010;
-  --text-main: #d1d1d1;
-  --text-muted: #5b5b5b;
-  --accent: #a33b3b;
-  --radius: 8px;
-  --gap: 1rem;
-}
-
 /* ====== LAYOUT ====== */
 .formGridContainer {
   display: grid;
@@ -51,7 +40,7 @@
   display: block;
   font-size: 0.75rem;
   color: var(--text-muted);
-  margin-bottom: 1.5rem; /* Adjusted from 1.5rem for better spacing */
+  margin-bottom: 1.5rem; 
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }

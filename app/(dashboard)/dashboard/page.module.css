@@ -5,9 +5,9 @@
   margin-bottom: 1.5rem;
 }
 .liveBtn {
-  background-color: #1e1e1e;
+  background-color: var(--bg-main);
   border: 1px solid #2a2a2a;
-  color: #fff;
+  color: var(--text-main);
   padding: 0.6rem 1rem;
   border-radius: 8px;
   font-size: 0.8rem;
@@ -62,14 +62,13 @@
   gap: 1rem;
 }
 
-
 .calendarIconBtn {
-  background-color: #0d0d0d; 
-  border: 1px solid #402626; 
-  padding: 0; 
+  background-color: var(--bg-layout);
+  border: 1px solid #402626;
+  padding: 0;
   width: 45px;
   height: 45px;
-  border-radius: 10px; 
+  border-radius: 10px;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -83,16 +82,15 @@
 } */
 
 .calendarIcon {
-  color: #b03a3e; 
+  color: var(--color-primary);
   font-size: 1.2rem;
 }
 
-
 .liveBtn {
-  background-color: #0d0d0d; 
-  border: 1px solid #402626; 
-  color: #ffffff;
-  height: 45px; 
+  background-color: var(--bg-layout);
+  border: 1px solid #402626;
+  color: var(--text-main);
+  height: 45px;
   padding: 0 1.5rem;
   border-radius: 10px;
   font-size: 0.75rem;
@@ -115,6 +113,6 @@
   display: block;
   width: 6px;
   height: 6px;
-  background-color: #ffffff; 
+  background-color: var(--color-primary);
   border-radius: 50%;
 }

@@ -1,7 +1,7 @@
 .layout {
   display: flex;
   min-height: 100vh;
-  background-color: #121212; /* Dark background */
+  background-color: var(--bg-layout);
   color: #ffffff;
 }
 
@@ -13,6 +13,7 @@
 }
 
 .pageContent {
+  background-color: var(--bg-layout);
   padding: 1.5rem;
   overflow-y: auto;
   height: calc(100vh - 70px); /* Minus Topbar height */

@@ -39,12 +39,16 @@ button {
 
 /* Color Variables based on your UI */
 :root {
-  --bg-main: #181818;
-  --bg-card: #222222;
+  --bg-layout: #1b1b1c;
+  --bg-main: #252526;
+  --bg-card: #252526;
   --bg-input: #121212;
+  --btn-cancel: #333333;
   --color-primary: #a33b3b; /* The red color */
   --color-primary-hover: #962e32;
   --text-main: #d1d1d1;
+  --icon-main: #d1d1d1;
+  --text-scuccess: #eeecec;
   --text-muted: #888888;
   --border-color: #333333;
   --font-size-xl: 1.5rem;
@@ -57,19 +61,50 @@ button {
   --togglediv-color: #0b0b0e;
   --border-right-color: #402626;
   --active-link-color: #6f2f2f;
-  --active-right-link-color:#b25151;
+  --active-right-link-color: #b25151;
+  --padding: 1rem;
+  --radius: 8px;
+  --gap: 1rem;
+  --accent: #a33b3b;
+  /* table css */
+  --bg-table: #2d2d30;
+  --bg-head: #3b3b41;
+  --bg-row-alt: #29292d;
+  --bg-row-hover: #404047;
+  --bg-btn: #1a1a1b;
+  --border-input: #402626;
+  /* Btn colors */
+  --accent: #a33b3b;
+  --danger: #ff4d4f;
+  --success: #38a539;
+
+  --radius: 0.5rem;
+  --padding: 1rem;
+  --margin: 1rem;
 }
 .light-mode {
-  --bg-main: #d4cfcf;
-  --bg-card: #dbdbdb;
-  --bg-input: #f0f0f0;
+  --bg-layout: #ffffff;
+  --bg-main: #eeecec;
+  --bg-card: #f5f5f5;
+  --bg-input: #ffffff;
+  --bg-btn: #1a1a1b;
   --color-primary: #a33b3b;
   --color-primary-hover: #962e32;
   --text-main: #000000;
+  --text-cancel: #eeecec;
+  /* --icon-main: #000000; */
   --text-muted: #131313;
   --border-color: #cccccc;
   --togglediv-color: #c4c4c4;
   --border-right-color: #402626;
-  --active-right-link-color:#b25151;
-  --active-link-color: #6A6969;
+  --active-right-link-color: #b25151;
+  --active-link-color: #6a6969;
+  --accent: #a33b3b;
+  /* table css */
+  --bg-head: #ffffff;
+  --bg-table: #e7e7e7;
+  --bg-row-alt: #d1d1d1;
+  --bg-row-hover: #b9b9b9;
+
+  --border-input: #402626;
 }

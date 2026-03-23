@@ -7,13 +7,23 @@
   display: block;
   font-size: 0.75rem;
   color: var(--text-muted);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   letter-spacing: 0.5px;
 }
 
 .inputWrapper {
   position: relative;
   width: 100%;
+}
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus,
+.input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px var(--bg-input) inset !important;
+
+  -webkit-text-fill-color: var(--text-main) !important;
+
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 .input {
@@ -24,14 +34,20 @@
   border-radius: 8px;
   font-size: 0.9rem;
   border: 1px solid transparent;
-  transition: border-color 0.3s ease;
+  /* transition: border-color 0.3s ease; */
+  transition:
+    border-color 0.3s ease,
+    background-color 0.3s ease;
 }
 
 .input:focus {
   border-color: var(--color-primary);
   outline: none;
 }
-
+.input:autofill {
+  background-color: var(--bg-input) !important;
+  color: var(--text-main) !important;
+}
 .iconWrapper {
   position: absolute;
   right: 1rem;

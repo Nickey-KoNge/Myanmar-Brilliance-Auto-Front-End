@@ -22,7 +22,7 @@ import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
 import styles from "./page.module.css";
 import dynamic from 'next/dynamic';
 
-const MapPicker=dynamic(()=>import("../MapPicker/MapPicker"),{
+const MapPicker=dynamic(()=>import("../../../../components/ui/MapPicker/MapPicker"),{
   ssr:false,
 })
 
@@ -62,9 +62,9 @@ export const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSub
 
 
   // Reset form with initial data change  
-  //   useEffect(() => {
-  //   reset(initialData);
-  // }, [initialData, reset]);
+    useEffect(() => {
+    reset(initialData);
+  }, [initialData, reset]);
 
 
   useEffect(() => {
@@ -72,7 +72,8 @@ export const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSub
       try {
         const response = await fetch("http://localhost:3001/master-company/company");
         const result = await response.json();
-        if (result && Array.isArray(result.data)) setCompanies(result.data);
+        if (result && Array.isArray(result.data.data)) setCompanies(result.data.data);
+        console.log("Fetched Companies:", result);
 
       } catch (error) {
         console.error("Error fetching companies:", error);
@@ -134,10 +135,8 @@ export const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSub
               <label className={styles.fieldLabel}>Company</label>
               <select
                 className={styles.select}
-                {...register("company_id")}
+                {...register("company_id")}>
               
-               
-              >
                 <option value="">All Company</option>
                 {companies.map((c) => (
                   <option key={c.id} value={c.id}>
@@ -147,6 +146,7 @@ export const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSub
               </select>
             </div>
           </div>
+
 
           {/* RIGHT — Core Identity */}
           <div className={styles.card}>

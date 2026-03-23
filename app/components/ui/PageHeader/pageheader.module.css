@@ -4,8 +4,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
-  background-color: #252526;
-  padding: 1rem 1.5rem;
+  background-color: var(--bg-main);
+  padding: var(--padding);
   border-radius: 0.75rem;
 }
 
@@ -23,7 +23,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #ffffff;
   font-size: 1.2rem;
 }
 
@@ -36,13 +35,13 @@
 .title {
   font-size: 1.2rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-main);
   margin: 0;
 }
 
 .description {
   font-size: 0.8rem;
-  color: #aaaaaa;
+  color: var(--text-muted);
   margin: 0;
 }
 
