@@ -46,6 +46,41 @@
 
 .headerbarButton:hover {
   background-color: var(--danger);
+  color: var(--text-main);
+}
+
+/* Company specific styles */
+.companyCell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.companyLogo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.companyName {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-main);
+}
+
+.placeholderLogo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main);
 }
 
 /* Layout */

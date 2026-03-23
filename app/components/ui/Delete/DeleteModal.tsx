@@ -1,26 +1,20 @@
-import React, { use, useEffect } from "react";
-import { useState } from "react";
-import { Button } from "@/app/components/ui/Button/Button";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCancel, faCircleXmark, faCross, faWarning } from "@fortawesome/free-solid-svg-icons";
+import { faCircleXmark, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import styles from "./Delete.module.css";
-
-
 
 interface DeleteModalProps {
   isOpen: boolean;
   onClose: () => void;
-  itemName: string;
-  
-  name: string;
-  isLoading?: boolean;
+  itemName: string; // The specific name (e.g., "Myanmar Brilliance Auto")
+  name: string;     // The type of item (e.g., "Company")
   id: string;
-  // " apiRoute="master-company/branches""
-  apiRoute: string;
-  // function for remove deleted data row from table / filter 
+  apiRoute: string; // e.g., "master-company/company"
   onDeleteSuccess: (id: string) => void;
 }
-
 
 export default function DeleteModal({
   isOpen,
@@ -31,10 +25,22 @@ export default function DeleteModal({
   apiRoute,
   onDeleteSuccess,
 }: DeleteModalProps) {
-  //   const [branchData, setBranchData] = useState<any>(null);
-
   const [isLoading, setIsLoading] = useState(false);
- 
+  const [mounted, setMounted] = useState(false);
+
+  // Ensure portal only renders on client side
+  useEffect(() => {
+    setMounted(true);
+    if (isOpen) {
+      document.body.style.overflow = "hidden"; // Prevent background scroll
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => { document.body.style.overflow = "unset"; };
+  }, [isOpen]);
+
+  if (!isOpen || !mounted) return null;
+
   const handleDelete = async () => {
     setIsLoading(true);
     try {
@@ -44,57 +50,53 @@ export default function DeleteModal({
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || `Failed to delete ${name}`);
+        throw new Error(errorData.message || `Failed to delete ${itemName}`);
       }
 
       onDeleteSuccess(id);
       onClose();
     } catch (error: unknown) {
-      const message =
-        error instanceof Error ? error.message : "An error occurred";
+      const message = error instanceof Error ? error.message : "An error occurred";
       alert(message);
-      console.error(`Error deleting ${name}:`, error);
     } finally {
       setIsLoading(false);
     }
   };
-  return (
-    <>
-      <div className={styles.DeleteModal}>
-        <div className={styles.iconContainer}>
-          <div className={styles.iconOne}>
-            <div className={styles.warningIcon}>
-                <FontAwesomeIcon icon={faWarning} color="red" size="xl" />
-            </div>
-          
-          </div>
-          <div className={styles.iconTwo}>
-            
-            
-            <FontAwesomeIcon icon={faCircleXmark}  onClick={onClose} style={{color:"#A33B3B"}}  />
-          </div>
-        </div>
-        <div className={styles.textContainer}>
-          <span>Confirm Delete</span>
 
-          <span>
-            Are you sure you want to delete{""}
-            <span style={{ color: "red" }}>&quot;{itemName}&quot;</span>
-             `This action will remove the <strong>
-              &quot; {name} &quot;
-            </strong>{" "}
-            record permanently.
-          </span>
+  return createPortal(
+    <div className={styles.overlay} onClick={onClose}>
+      <div className={styles.modalContainer} onClick={(e) => e.stopPropagation()}>
+        {/* Top Icon Header */}
+        <div className={styles.iconHeader}>
+          <div className={styles.warningWrapper}>
+            <FontAwesomeIcon icon={faTriangleExclamation} className={styles.warningIcon} />
+          </div>
+          <button className={styles.closeBtn} onClick={onClose} disabled={isLoading}>
+            <FontAwesomeIcon icon={faCircleXmark} />
+          </button>
         </div>
-        <div className={styles.btnContainer}>
-          <Button onClick={onClose} disabled={isLoading}>
+
+        {/* Text Content */}
+        <div className={styles.textSection}>
+          <h2 className={styles.confirmTitle}>Confirm Delete</h2>
+          <p className={styles.description}>
+            Are you sure you want to delete{" "}
+            <span className={styles.highlight}>&quot;{itemName}&quot;</span>? 
+            This action will remove the <strong>&quot;{name}&quot;</strong> record permanently.
+          </p>
+        </div>
+
+        {/* Buttons */}
+        <div className={styles.btnActionArea}>
+          <button className={styles.cancelBtn} onClick={onClose} disabled={isLoading}>
             Cancel
-          </Button>
-          <Button onClick={handleDelete} disabled={isLoading}>
-            {isLoading ? "Deleting..." : `Delete`}
-          </Button>
+          </button>
+          <button className={styles.deleteBtn} onClick={handleDelete} disabled={isLoading}>
+            {isLoading ? "Deleting..." : "Delete"}
+          </button>
         </div>
       </div>
-    </>
+    </div>,
+    document.body
   );
 }

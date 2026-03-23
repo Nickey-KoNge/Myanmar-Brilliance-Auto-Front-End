@@ -21,7 +21,7 @@ import { Button } from "@/app/components/ui/Button/Button";
 import { apiClient } from "@/app/features/lib/api-client";
 import styles from "./Company.module.css";
 // Import your new custom modal! Make sure the path matches where you saved it.
-import { DeleteModal } from "@/app/components/ui/DeleteModal/DeleteModal"; 
+import DeleteModal from "@/app/components/ui/Delete/DeleteModal";
 
 const TABLE_HEADERS = [
   "Company Info",
@@ -124,14 +124,18 @@ export default function CompanyPage() {
   return (
     <>
       {/* --- NEW: The Delete Modal Component --- */}
-      <DeleteModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onConfirm={confirmDelete}
-        itemName={companyToDelete?.name || ""}
-        itemType="Company record"
-        isDeleting={isDeleting}
-      />
+<DeleteModal
+  isOpen={modalOpen}
+  onClose={() => setModalOpen(false)}
+  itemName={companyToDelete?.name || ""}
+  name="Company"
+  id={companyToDelete?.id || ""}
+  apiRoute="master-company/company"
+  onDeleteSuccess={(deletedId) => {
+    // This removes the deleted company from your list automatically
+    setCompanies((prev) => prev.filter((c) => c.id !== deletedId));
+  }}
+/>
 
       <PageHeader
         titleData={{
@@ -162,7 +166,7 @@ export default function CompanyPage() {
                       onClick={() => router.push(`/company/${company.id}`)}
                       style={{ cursor: "pointer" }}
                     >
-                      <td className={styles.infoCell}>
+                      <td className={styles.staffInfo}>
                         {company.logo ? (
                           <Image
                             src={company.logo}
@@ -186,12 +190,17 @@ export default function CompanyPage() {
                       <td>{company.phone || "N/A"}</td>
                       <td onClick={(e) => e.stopPropagation()}>
                         <button
-                          className={styles.deleteBtn}
-                          disabled={isDeleting && companyToDelete?.id === company.id}
-                          onClick={() => handleDeleteClick(company.id, company.name)}
-                        >
-                          <FontAwesomeIcon icon={faTrashCan} />
-                        </button>
+  className={styles.deleteBtn}
+  // We use modalOpen to disable the button while the process is happening
+  disabled={modalOpen} 
+  onClick={(e) => {
+    e.stopPropagation(); // Stop from going to the update page
+    setCompanyToDelete({ id: company.id, name: company.company_name || company.name || "" });
+    setModalOpen(true);
+  }}
+>
+  <FontAwesomeIcon icon={faTrashCan} />
+</button>
                       </td>
                     </tr>
                   ))}
