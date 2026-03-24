@@ -64,20 +64,20 @@ export default function DeleteModal({
   };
 
   return createPortal(
-    <div className={styles.overlay} onClick={onClose}>
+    <div className={styles.DeleteModal} onClick={onClose}>
       <div className={styles.modalContainer} onClick={(e) => e.stopPropagation()}>
         {/* Top Icon Header */}
-        <div className={styles.iconHeader}>
-          <div className={styles.warningWrapper}>
+        <div className={styles.iconContaioner}>
+          <div className={styles.iconOne}>
             <FontAwesomeIcon icon={faTriangleExclamation} className={styles.warningIcon} />
           </div>
-          <button className={styles.closeBtn} onClick={onClose} disabled={isLoading}>
+          <button className={styles.iconTwo} onClick={onClose} disabled={isLoading}>
             <FontAwesomeIcon icon={faCircleXmark} />
           </button>
         </div>
 
         {/* Text Content */}
-        <div className={styles.textSection}>
+        <div className={styles.textContainer}>
           <h2 className={styles.confirmTitle}>Confirm Delete</h2>
           <p className={styles.description}>
             Are you sure you want to delete{" "}
