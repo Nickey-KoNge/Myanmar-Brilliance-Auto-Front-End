@@ -24,7 +24,7 @@
 }
 
 /* Layout */
-.gridContainer {
+/* .gridContainer {
   display: grid;
   grid-template-columns: 3fr 1fr;
   gap: 1.5rem;
@@ -42,7 +42,7 @@
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
-}
+} */
 
 .gridBoxTitle {
   color: var(--text-main);

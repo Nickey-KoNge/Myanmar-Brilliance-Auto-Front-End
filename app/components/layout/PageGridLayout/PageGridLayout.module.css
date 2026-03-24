@@ -1,0 +1,19 @@
+.gridContainer {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 1.5rem;
+}
+
+.gridBox {
+  background: var(--bg-main);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  min-height: max-content;
+}
+
+.spacer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}

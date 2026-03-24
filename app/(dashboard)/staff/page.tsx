@@ -20,7 +20,7 @@ import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
 import { DataTable } from "@/app/components/ui/DataTable/DataTable";
 //pagination components
 import { Pagination } from "@/app/components/ui/Pagination/Pagination";
-
+import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
 // Styles
 import styles from "./page.module.css";
 // Note: Ensure styles like .staffCell, .staffImg, and .deleteBtn
@@ -124,11 +124,19 @@ export default function StaffPage() {
         if (activeFilters.endDate)
           params.endDate = activeFilters.endDate as string;
 
-        if (activeFilters.branchId && activeFilters.branchId !== "all" && activeFilters.branchId !== "") {
+        if (
+          activeFilters.branchId &&
+          activeFilters.branchId !== "all" &&
+          activeFilters.branchId !== ""
+        ) {
           params.branches_id = activeFilters.branchId as string;
         }
 
-        if (activeFilters.roleId && activeFilters.roleId !== "all" && activeFilters.roleId !== "") {
+        if (
+          activeFilters.roleId &&
+          activeFilters.roleId !== "all" &&
+          activeFilters.roleId !== ""
+        ) {
           params.role_id = activeFilters.roleId as string;
         }
 
@@ -278,129 +286,119 @@ export default function StaffPage() {
         actionNode={renderLiveButtonArea}
       />
 
-      <div className={styles.gridContainer}>
-        {/* Main Content: Table Section */}
-        <section className={styles.gridBox}>
-          <div className={styles.spacer}>
-            <div>
-              <p className={styles.gridBoxTitle}>EMPLOYEE MASTER RECORDS</p>
+      <PageGridLayout
+        sidebar={
+          <>
+            <p className={styles.gridBoxTitle}>Employee Search</p>
+            <hr className={styles.cuttingLine} />
 
-              <DataTable
-                columns={columns}
-                data={staffs}
-                onRowClick={(staff) => router.push(`/staff/update/${staff.id}`)}
-                emptyMessage="No staff records found."
+            <div className={styles.searchContainer}>
+              <TextInput
+                label="Searching"
+                placeholder="Search by name, email..."
+                value={filters.search}
+                onChange={(e) => updateFilter("search", e.target.value)}
               />
-            </div>
 
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              totalRecords={totalRecords}
-              pageSize={PAGE_SIZE}
-              onPageChange={(page) => setCurrentPage(page)}
-            />
-          </div>
-        </section>
-
-        {/* Sidebar: Search & Filters */}
-        <aside className={styles.gridBox}>
-          <p className={styles.gridBoxTitle}>Employee Search</p>
-          <hr className={styles.cuttingLine} />
-
-          <div className={styles.searchContainer}>
-            {/* Text Search Component */}
-            <TextInput
-              label="Searching"
-              placeholder="Search by name, email..."
-              value={filters.search}
-              onChange={(e) => updateFilter("search", e.target.value)}
-            />
-
-            {/* Date Search Component */}
-            <div className={styles.filterRow}>
               <div className={styles.filterRow}>
+                <div className={styles.filterRow}>
+                  <DateInput
+                    label="From"
+                    value={filters.startDate}
+                    onChange={(e) => updateFilter("startDate", e.target.value)}
+                    rightIcon={faCalendarDays}
+                  />
+                </div>
                 <DateInput
-                  label="From"
-                  value={filters.startDate}
-                  onChange={(e) => updateFilter("startDate", e.target.value)}
+                  label="To"
+                  value={filters.endDate}
+                  onChange={(e) => updateFilter("endDate", e.target.value)}
                   rightIcon={faCalendarDays}
                 />
               </div>
 
-              <DateInput
-                label="To"
-                value={filters.endDate}
-                onChange={(e) => updateFilter("endDate", e.target.value)}
-                rightIcon={faCalendarDays}
-              />
-            </div>
+              <div className={styles.filterRow}>
+                <DropdownInput
+                  label="Branch"
+                  options={branches.map((b) => ({
+                    id: b.id,
+                    name: b.branches_name,
+                  }))}
+                  valueKey="id"
+                  nameKey="name"
+                  value={(filters.branchId as string) || ""}
+                  onChange={(e) => updateFilter("branchId", e.target.value)}
+                  placeholder="All Branches"
+                />
 
-            <div className={styles.filterRow}>
-              <DropdownInput
-                label="Branch"
-                options={branches.map((b) => ({
-                  id: b.id,
-                  name: b.branches_name,
-                }))}
-                valueKey="id"
-                nameKey="name"
-                value={(filters.branchId as string) || ""}
-                onChange={(e) => updateFilter("branchId", e.target.value)}
-                placeholder="All Branches"
-              />
+                <DropdownInput
+                  label="Role"
+                  options={roles.map((r) => ({ id: r.id, name: r.role_name }))}
+                  valueKey="id"
+                  nameKey="name"
+                  value={(filters.roleId as string) || ""}
+                  onChange={(e) => updateFilter("roleId", e.target.value)}
+                  placeholder="All Roles"
+                />
+              </div>
 
-              <DropdownInput
-                label="Role"
-                options={roles.map((r) => ({ id: r.id, name: r.role_name }))}
-                valueKey="id"
-                nameKey="name"
-                value={(filters.roleId as string) || ""}
-                onChange={(e) => updateFilter("roleId", e.target.value)}
-                placeholder="All Roles"
-              />
-            </div>
+              <div className={styles.btnBox}>
+                <Button className={styles.resetBtn} onClick={resetFilters}>
+                  Reset Filters
+                </Button>
+              </div>
 
-            <div className={styles.btnBox}>
-              <Button className={styles.resetBtn} onClick={resetFilters}>
-                Reset Filters
-              </Button>
-            </div>
+              <hr className={styles.cuttingLine} />
 
-            <hr className={styles.cuttingLine} />
-
-            <div className={styles.recentRecord}>
-              <span>
-                {" "}
-                <FontAwesomeIcon icon={faClockRotateLeft} />
-              </span>
-              <p className={styles.recentTitle}>RECENT RECORD</p>
-              <span />
-              <div className={styles.stat}>
-                <div>
-                  <p className={styles.statLable}>Total Staff :</p>
-                  <p className={styles.textDanger}>{totalRecords}</p>
+              <div className={styles.recentRecord}>
+                <span>
+                  <FontAwesomeIcon icon={faClockRotateLeft} />
+                </span>
+                <p className={styles.recentTitle}>RECENT RECORD</p>
+                <span />
+                <div className={styles.stat}>
+                  <div>
+                    <p className={styles.statLable}>Total Staff :</p>
+                    <p className={styles.textDanger}>{totalRecords}</p>
+                  </div>
+                  <div>
+                    <p className={styles.statLable}>Active Staff :</p>
+                    <p className={styles.textSuccess}>36</p>
+                  </div>
+                  <div>
+                    <p className={styles.statLable}>Inactive Staff :</p>
+                    <p className={styles.textDanger}>4</p>
+                  </div>
                 </div>
-                <div>
-                  {" "}
-                  <p className={styles.statLable}>Active Staff :</p>
-                  <p className={styles.textSuccess}>36</p>{" "}
-                </div>{" "}
-                <div>
-                  <p className={styles.statLable}>Inactive Staff :</p>
-                  <p className={styles.textDanger}>4</p>{" "}
-                </div>{" "}
-              </div>{" "}
-            </div>
+              </div>
 
-            <hr className={styles.cuttingLine} />
-            <p className={styles.lastEdited}>
-              Last Edited :{" "}
-              <span className={styles.spanText}>Nickey (Admin)</span>
-            </p>
-          </div>
-        </aside>
-      </div>
+              <hr className={styles.cuttingLine} />
+              <p className={styles.lastEdited}>
+                Last Edited :{" "}
+                <span className={styles.spanText}>Nickey (Admin)</span>
+              </p>
+            </div>
+          </>
+        }
+      >
+        <div>
+          <p className={styles.gridBoxTitle}>EMPLOYEE MASTER RECORDS</p>
+          <DataTable
+            columns={columns}
+            data={staffs}
+            onRowClick={(staff) => router.push(`/staff/update/${staff.id}`)}
+            emptyMessage="No staff records found."
+          />
+        </div>
+
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalRecords={totalRecords}
+          pageSize={PAGE_SIZE}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
+      </PageGridLayout>
     </>
   );
 }
