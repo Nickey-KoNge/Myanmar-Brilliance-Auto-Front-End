@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarDays,
-  faCaretDown,
+  // faCaretDown,
   faClockRotateLeft,
   faPlus,
   faTrashCan,
@@ -31,16 +31,21 @@ import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
 import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
 import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
 
+// Hook
+import { useFilters, FilterState } from "@/app/hooks/userFilters";
 interface Staff {
   id: string;
   staffName: string;
   image: string;
   email: string;
   fullAddress: string;
+  street_address: string;
+  city: string;
+  country: string;
   position: string;
   branches_name: string;
   phone: string;
-  status: string;
+  role_name: string;
 }
 
 interface Branch {
@@ -55,13 +60,6 @@ interface Role {
   role_name: string;
 }
 
-interface PaginatedStaffResponse {
-  data: Staff[] | { data: Staff[]; totalPages: number; total: number };
-  total?: number;
-  totalPages?: number;
-  currentPage?: number;
-}
-
 export default function StaffPage() {
   const router = useRouter();
   const [staffs, setStaffs] = useState<Staff[]>([]);
@@ -72,40 +70,112 @@ export default function StaffPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
-  const PAGE_SIZE = 1;
+  const PAGE_SIZE = 10;
 
+  //Active Filters State
+  const [activeFilters, setActiveFilters] = useState<FilterState>({
+    search: "",
+    startDate: "",
+    endDate: "",
+    branchId: "",
+    roleId: "",
+  });
+
+  // // Custom Hook
+  // const { filters, updateFilter, resetFilters } = useFilters(
+  //   { search: "", startDate: "", endDate: "", branchId: "", roleId: "" },
+  //   (debouncedFilters) => {
+  //     setActiveFilters(debouncedFilters);
+  //     setCurrentPage(1);
+  //   },
+  // );
+
+  // Custom Hook
+  const { filters, updateFilter, resetFilters } = useFilters(
+    { search: "", startDate: "", endDate: "", branchId: "", roleId: "" },
+    (debouncedFilters) => {
+      const isFilterChanged =
+        activeFilters.search !== debouncedFilters.search ||
+        activeFilters.startDate !== debouncedFilters.startDate ||
+        activeFilters.endDate !== debouncedFilters.endDate ||
+        activeFilters.branchId !== debouncedFilters.branchId ||
+        activeFilters.roleId !== debouncedFilters.roleId;
+
+      setActiveFilters(debouncedFilters);
+
+      if (isFilterChanged) {
+        setCurrentPage(1);
+      }
+    },
+  );
   // 1. Fetch Staff Data
   useEffect(() => {
     const fetchStaffs = async () => {
       try {
+        const params: Record<string, string> = {
+          page: currentPage.toString(),
+          limit: PAGE_SIZE.toString(),
+        };
+
+        if (activeFilters.search)
+          params.search = activeFilters.search as string;
+        if (activeFilters.startDate)
+          params.startDate = activeFilters.startDate as string;
+        if (activeFilters.endDate)
+          params.endDate = activeFilters.endDate as string;
+
+        if (activeFilters.branchId && activeFilters.branchId !== "all" && activeFilters.branchId !== "") {
+          params.branches_id = activeFilters.branchId as string;
+        }
+
+        if (activeFilters.roleId && activeFilters.roleId !== "all" && activeFilters.roleId !== "") {
+          params.role_id = activeFilters.roleId as string;
+        }
+
+        const queryString = new URLSearchParams(params).toString();
+
         const response = await apiClient.get(
-          `/master-company/staff?page=${currentPage}&limit=${PAGE_SIZE}`,
+          `/master-company/staff?${queryString}`,
         );
 
-        const rawData = response as unknown as PaginatedStaffResponse;
+        const res = response as unknown as {
+          data?:
+            | Staff[]
+            | { data?: Staff[]; total?: number; totalPages?: number };
+          total?: number;
+          totalPages?: number;
+        };
 
-        if (rawData && Array.isArray(rawData.data)) {
-          setStaffs(rawData.data);
-          setTotalPages(rawData.totalPages || 1);
-          setTotalRecords(rawData.total || 0);
-        } else if (
-          rawData?.data &&
-          typeof rawData.data === "object" &&
-          Array.isArray(rawData.data)
-        ) {
-          setStaffs(rawData.data);
-          setTotalPages(rawData.totalPages || 1);
-          setTotalRecords(rawData.total || 0);
-        } else {
-          console.error("Data format issue:", rawData);
-          setStaffs([]);
+        let staffList: Staff[] = [];
+        let total = 0;
+        let totalPages = 1;
+
+        if (res && typeof res === "object") {
+          if (Array.isArray(res.data)) {
+            staffList = res.data;
+            total = res.total || 0;
+            totalPages = res.totalPages || 1;
+          } else if (
+            res.data &&
+            typeof res.data === "object" &&
+            Array.isArray(res.data.data)
+          ) {
+            staffList = res.data.data;
+            total = res.data.total || 0;
+            totalPages = res.data.totalPages || 1;
+          }
         }
+
+        setStaffs(staffList);
+        setTotalRecords(total);
+        setTotalPages(totalPages);
       } catch (error) {
         console.error("Failed to fetch staff:", error);
+        setStaffs([]);
       }
     };
     fetchStaffs();
-  }, [currentPage]);
+  }, [currentPage, activeFilters]);
 
   // 2. Fetch Filters (Branches/Roles)
   useEffect(() => {
@@ -161,8 +231,14 @@ export default function StaffPage() {
       ),
     },
     { header: "Email", key: "email" },
-    { header: "Address", key: "fullAddress" },
-    { header: "Role", key: "position" },
+    {
+      header: "Address",
+      key: "address",
+      render: (staff: Staff) => {
+        return staff.fullAddress ? staff.fullAddress : "-";
+      },
+    },
+    { header: "Role", key: "role_name" },
     { header: "Branch", key: "branches_name" },
     { header: "Phone", key: "phone" },
     {
@@ -237,24 +313,25 @@ export default function StaffPage() {
             <TextInput
               label="Searching"
               placeholder="Search by name, email..."
-              // value={search}
-              // onChange={(e) => setSearch(e.target.value)}
-              name="search"
+              value={filters.search}
+              onChange={(e) => updateFilter("search", e.target.value)}
             />
 
             {/* Date Search Component */}
             <div className={styles.filterRow}>
-              <DateInput
-                label="From"
-                // value={date}
-                // onChange={(val) => setDate(val)}
-                rightIcon={faCalendarDays}
-              />
+              <div className={styles.filterRow}>
+                <DateInput
+                  label="From"
+                  value={filters.startDate}
+                  onChange={(e) => updateFilter("startDate", e.target.value)}
+                  rightIcon={faCalendarDays}
+                />
+              </div>
 
               <DateInput
                 label="To"
-                // value={date}
-                // onChange={(val) => setDate(val)}
+                value={filters.endDate}
+                onChange={(e) => updateFilter("endDate", e.target.value)}
                 rightIcon={faCalendarDays}
               />
             </div>
@@ -262,29 +339,32 @@ export default function StaffPage() {
             <div className={styles.filterRow}>
               <DropdownInput
                 label="Branch"
-                options={branches.map((option) => ({
-                  id: option.id,
-                  name: option.branches_name,
+                options={branches.map((b) => ({
+                  id: b.id,
+                  name: b.branches_name,
                 }))}
                 valueKey="id"
                 nameKey="name"
-                defaultValue="all"
+                value={(filters.branchId as string) || ""}
+                onChange={(e) => updateFilter("branchId", e.target.value)}
+                placeholder="All Branches"
               />
 
               <DropdownInput
                 label="Role"
-                options={roles.map((option) => ({
-                  id: option.id,
-                  name: option.role_name,
-                }))}
+                options={roles.map((r) => ({ id: r.id, name: r.role_name }))}
                 valueKey="id"
                 nameKey="name"
-                defaultValue="all"
+                value={(filters.roleId as string) || ""}
+                onChange={(e) => updateFilter("roleId", e.target.value)}
+                placeholder="All Roles"
               />
             </div>
 
             <div className={styles.btnBox}>
-              <Button className={styles.resetBtn}>Reset Filters</Button>
+              <Button className={styles.resetBtn} onClick={resetFilters}>
+                Reset Filters
+              </Button>
             </div>
 
             <hr className={styles.cuttingLine} />
