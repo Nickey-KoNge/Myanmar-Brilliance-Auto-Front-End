@@ -59,7 +59,7 @@ const DropdownInput = forwardRef<HTMLSelectElement, DropdownProps>(
             {...props}
           >
             {placeholder && (
-              <option value="" disabled selected>
+              <option value="">
                 {placeholder}
               </option>
             )}

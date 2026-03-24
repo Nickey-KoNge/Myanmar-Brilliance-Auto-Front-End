@@ -6,7 +6,7 @@
   position: fixed;
   left: 0;
   top: 0;
-  border-right: 1px solid var(--border-right-color); 
+  border-right: 1px solid var(--border-right-color);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -21,7 +21,6 @@
   font-size: var(--font-size-l);
   letter-spacing: 1px;
   color: var(--text-main);
-
 }
 
 .brand span {
@@ -72,4 +71,45 @@
 .arrow {
   margin-left: auto;
   font-size: 0.7rem;
+}
+/* --- Dropdown Sub Menu Styles --- */
+
+.navGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.subMenu {
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+}
+
+.subMenuItem {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 1.5rem 0.8rem 3.5rem;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-right: 3px solid transparent;
+}
+
+.subMenuItem:hover {
+  color: #ffffff;
+  background-color: var(--bg-main);
+}
+
+.subActive {
+  border-right-color: var(--active-right-link-color);
+  background-color: var(--active-link-color);
+  color: #ffffff;
+}
+
+.subIcon {
+  width: 16px !important;
+  height: 16px !important;
+  margin-right: 1rem;
 }
