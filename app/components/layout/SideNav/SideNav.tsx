@@ -63,10 +63,11 @@
 
 "use client";
 import React, { useState } from "react";
-import Link from "next/link"; // Link ကို import လုပ်ပါ
-import { usePathname } from "next/navigation"; // လက်ရှိ URL ကိုသိရန် import လုပ်ပါ
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import styles from "./SideNav.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
   faLaptop,
   faUsers,
@@ -95,7 +96,7 @@ const NavItem = ({
   label,
   href,
 }: {
-  icon: any;
+  icon: IconDefinition;
   label: string;
   href: string;
 }) => {
@@ -112,11 +113,22 @@ const NavItem = ({
     </Link>
   );
 };
+interface SubItem {
+  icon: IconDefinition;
+  label: string;
+  href: string;
+}
 
-const NavDropdown = ({ icon, label, subItems }: any) => {
+interface NavDropdownProps {
+  icon: IconDefinition;
+  label: string;
+  subItems: SubItem[];
+}
+
+const NavDropdown: React.FC<NavDropdownProps> = ({ icon, label, subItems }) => {
   const pathname = usePathname();
 
-  const isAnyChildActive = subItems.some((item: any) =>
+  const isAnyChildActive = subItems.some((item) =>
     pathname.startsWith(item.href),
   );
 
@@ -136,7 +148,7 @@ const NavDropdown = ({ icon, label, subItems }: any) => {
       {/* Sub Items */}
       {isOpen && (
         <div className={styles.subMenu}>
-          {subItems.map((item: any, index: number) => {
+          {subItems.map((item, index) => {
             const isActive = pathname.startsWith(item.href);
             return (
               <Link
