@@ -159,11 +159,7 @@ export const LoginForm = () => {
           </a>
         </div>
 
-        <Button
-          type="submit"
-          // icon={}
-          disabled={isLoading}
-        >
+        <Button type="submit" disabled={isLoading} >
           {isLoading ? "SIGNING IN..." : "SIGN IN"}{" "}
           <FontAwesomeIcon icon={faChargingStation} />
         </Button>
