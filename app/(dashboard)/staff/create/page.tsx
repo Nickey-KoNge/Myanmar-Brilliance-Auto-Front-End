@@ -190,7 +190,8 @@ export default function CreateStaff() {
             <TextInput
               label="Position"
               placeholder="e.g. Senior Manager"
-              {...register("position")}
+              error={errors.position?.message as string}
+              {...register("position", { required: "Position is required" })}
             />
           </div>
         </section>
