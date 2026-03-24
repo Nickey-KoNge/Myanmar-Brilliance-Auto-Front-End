@@ -21,6 +21,8 @@ import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
 import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
 
 import styles from "../../create/page.module.css";
+import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
+import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 
 const GENDERS = [
   { id: "Male", name: "Male" },
@@ -95,7 +97,7 @@ export default function EditStaff() {
       branches.length === 0 ||
       companies.length === 0
     ) {
-      return; 
+      return;
     }
 
     const s = staffData;
@@ -165,18 +167,17 @@ export default function EditStaff() {
         }}
         actionNode={
           <div className={styles.headerActionArea}>
-            <Link href="/staff" className={`${styles.btn} ${styles.btnCancel}`}>
+            <NavigationBtn href="/staff" variant="cancel">
               CANCEL
-            </Link>
-            <button
+            </NavigationBtn>
+            <ActionBtn
+              variant="action"
               type="submit"
+              leftIcon={faCircleCheck}
               form="staffForm"
-              disabled={loading}
-              className={`${styles.btn} ${styles.btnSuccess}`}
             >
-              <FontAwesomeIcon icon={faCircleCheck} />
-              {loading ? "UPDATING..." : "UPDATE RECORD"}
-            </button>
+              UPDATE RECORD
+            </ActionBtn>
           </div>
         }
       />

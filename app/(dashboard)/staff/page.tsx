@@ -1,18 +1,15 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarDays,
-  faCheck,
   faClockRotateLeft,
   faPlus,
   faTrashCan,
   faUser,
-  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 
 // Components
@@ -33,7 +30,8 @@ import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
 
 // Hook
 import { useFilters, FilterState } from "@/app/hooks/userFilters";
-import CustomBtn from "@/app/components/ui/Button/CustomBtn";
+import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
+import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 interface Staff {
   id: string;
   staffName: string;
@@ -71,7 +69,7 @@ export default function StaffPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
-  const PAGE_SIZE = 10;
+  const PAGE_SIZE = 1;
 
   //Active Filters State
   const [activeFilters, setActiveFilters] = useState<FilterState>({
@@ -270,15 +268,9 @@ export default function StaffPage() {
 
   const renderLiveButtonArea = (
     <div className={styles.headerActionArea}>
-      <CustomBtn variant="action" leftIcon={faPlus}>
-        <Link href="/staff/create">ADD STAFF</Link>
-      </CustomBtn>
-      <CustomBtn variant="success" leftIcon={faCheck}>
-        <Link href="/staff/create">SUCCESS</Link>
-      </CustomBtn>
-      <CustomBtn variant="cancel" leftIcon={faXmark}>
-        <Link href="/staff/create">CANCEL</Link>
-      </CustomBtn>
+      <NavigationBtn href="/staff/create" leftIcon={faPlus}>
+        ADD STAFF
+      </NavigationBtn>
     </div>
   );
 
@@ -348,7 +340,9 @@ export default function StaffPage() {
                 />
               </div>
 
-              <div className={styles.btnBox}></div>
+              <ActionBtn type="reset" variant="action" fullWidth={true}>
+                RESET
+              </ActionBtn>
 
               <hr className={styles.cuttingLine} />
 

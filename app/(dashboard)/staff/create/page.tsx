@@ -21,6 +21,7 @@ import {
   faCity,
   faTimes,
   faEnvelope,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
@@ -29,6 +30,8 @@ import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
 import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
 
 import styles from "./page.module.css";
+import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
+import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 
 const GENDERS = [
   { id: "Male", name: "Male" },
@@ -116,18 +119,17 @@ export default function CreateStaff() {
 
   const ActionButtons = (
     <div className={styles.headerActionArea}>
-      <Link href="/staff" className={`${styles.btn} ${styles.btnCancel}`}>
+      <NavigationBtn href="/staff" variant="cancel">
         CANCEL
-      </Link>
-      <button
+      </NavigationBtn>
+      <ActionBtn
         type="submit"
+        variant="action"
+        leftIcon={faPlus}
         form="staffForm"
-        disabled={loading}
-        className={`${styles.btn} ${styles.btnSuccess}`}
       >
-        <FontAwesomeIcon icon={faCircleCheck} />
-        {loading ? "SAVING..." : "SAVE RECORD"}
-      </button>
+        ADD STAFF
+      </ActionBtn>
     </div>
   );
 
