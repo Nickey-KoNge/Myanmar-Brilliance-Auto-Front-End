@@ -15,7 +15,7 @@ function LocationMarker({ setValue }: any) {
       const pos = { lat, lng };
 
       setPosition(pos);
-      setValue("gps_location", `${lat.toFixed(6)},${lng.toFixed(6)}`);
+      setValue("gps_location", `${lat.toFixed(4)},${lng.toFixed(4)}`);
     },
   });
 

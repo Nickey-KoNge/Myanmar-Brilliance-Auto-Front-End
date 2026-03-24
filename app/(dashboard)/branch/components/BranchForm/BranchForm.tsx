@@ -73,7 +73,7 @@ export const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSub
       try {
         const response = await fetch("http://localhost:3001/master-company/company");
         const result = await response.json();
-        if (result && Array.isArray(result.data.data)) setCompanies(result.data.data);
+        if (result && Array.isArray(result.data.data)) setCompanies(result?.data?.data ?? []);
         console.log("Fetched Companies:", result);
 
       } catch (error) {

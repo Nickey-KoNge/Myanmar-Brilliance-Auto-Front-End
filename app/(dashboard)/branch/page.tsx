@@ -210,15 +210,17 @@ useEffect(() => {
           <hr className={styles.cuttingLine} />
 
           <div className={styles.searchContainer}>
-            {/* Text Search Component */}
+            {/* Text Search  */}
+
             <TextInput
               label="Searching"
               placeholder="Search by name, email..."
               value={filters.search}
               onChange={(e) => updateFilter("search", e.target.value)}
             />
+            {/* Date Search */}
+          
 
-            {/* Date Search Component */}
             <div className={styles.filterRow}>
               <div className={styles.filterRow}>
                 <DateInput
@@ -282,7 +284,7 @@ useEffect(() => {
       } 
       >
         <div>
-            <p className={styles.gridBoxTitle}>BRANCHES MASTER RECORDS</p>
+        <p className={styles.gridBoxTitle}>BRANCHES MASTER RECORDS</p>
               
 
       <DataTable data={branchData} columns={columns} onRowClick={(branch)=>router.push(`/branch/Updatebranch/${branch.id}`)}/>
