@@ -7,18 +7,18 @@ import styles from "./page.module.css";
 export interface Option {
   id: string | number;
   name: string;
-  [key: string]: any; // Allow for custom keys
+  [key: string]: any;
 }
 
 interface DropdownProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
-  error?: string; // Added for consistency with TextInput
+  error?: string;
   options: Option[];
   valueKey?: keyof Option;
   nameKey?: keyof Option;
   leftIcon?: IconProp;
   rightIcon?: IconProp;
-  placeholder?: string; // Better than hardcoding "All {label}"
+  placeholder?: string;
 }
 
 const DropdownInput = forwardRef<HTMLSelectElement, DropdownProps>(
@@ -59,7 +59,7 @@ const DropdownInput = forwardRef<HTMLSelectElement, DropdownProps>(
             {...props}
           >
             {placeholder && (
-              <option value="" disabled>
+              <option value="" disabled selected>
                 {placeholder}
               </option>
             )}

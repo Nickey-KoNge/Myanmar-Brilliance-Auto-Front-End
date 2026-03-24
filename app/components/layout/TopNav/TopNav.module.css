@@ -5,7 +5,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 3rem;
+  padding: 0 1.5rem;
 }
 
 .companyInfo {
@@ -20,7 +20,7 @@
   height: 80px;
   display: flex;
   align-items: center;
-  padding: 0 1.5rem;
+  /* padding: 0 1.5rem; */
   font-weight: 900;
   font-size: var(--font-size-xl);
   letter-spacing: 1px;
@@ -138,9 +138,9 @@
 }
 
 .logoutBtn {
-  background: none;
+  background: var(--color-primary);
   border: none;
-  color: #888;
+  color: var(--btn-text);
   font-size: 1.1rem;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -152,6 +152,6 @@
 }
 
 .logoutBtn:hover {
-  color: var(--color-primary);
-  background-color: rgba(176, 58, 62, 0.1);
+  color: var(--btn-text);
+  background-color: var(--color-primary)
 }

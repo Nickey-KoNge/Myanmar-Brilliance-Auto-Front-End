@@ -1,10 +1,3 @@
-/* --- Grid / Layout --- */
-.filterRow {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
 .field {
   display: flex;
   flex-direction: column;
@@ -18,32 +11,31 @@
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  margin-bottom: var(--margin);
 }
 
-/* --- Input Wrapper (The Visual Box) --- */
 .inputWrapper {
   position: relative;
   display: flex;
   align-items: center;
   background: var(--bg-input);
-  border: 1px solid var(--border-color, #333); /* Default border */
+  border: 1px solid var(--border-color, #333);
   border-radius: var(--radius, 8px);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
   overflow: hidden;
 }
 
-/* Focus State: We apply focus styling to the wrapper when the child is active */
 .inputWrapper:focus-within {
   border-color: var(--primary-color, #0070f3);
   box-shadow: 0 0 0 1px var(--primary-color, #0070f3);
 }
 
-/* Error State */
 .inputError {
-  border-color: var(--error-color, #ff4d4f) !important;
+  border-color: var(--textDanger) !important;
 }
 
-/* --- Core Elements --- */
 .inputWrapper input,
 .inputWrapper textarea,
 .inputWrapper select {
@@ -60,13 +52,11 @@
   z-index: 2;
 }
 
-/* --- Textarea specific --- */
 .inputWrapper textarea {
   resize: vertical;
   min-height: 100px;
 }
 
-/* --- Icon Spacing --- */
 .withLeftIcon {
   padding-left: 2.75rem !important;
 }
@@ -90,27 +80,33 @@
   width: 20px;
 }
 
-.iconLeft { left: 14px; }
-.iconRight { right: 14px; }
+.iconLeft {
+  left: 14px;
+}
 
-/* --- Select / Dropdown --- */
+.iconRight {
+  right: 14px;
+}
+
 .inputWrapper select {
   appearance: none;
   -webkit-appearance: none;
   cursor: pointer;
 }
 
-/* Ensure select arrow doesn't overlap text */
+.inputWrapper select option {
+  background: var(--bg-input);
+  color: var(--text-main);
+}
+
 .inputWrapper select.withRightIcon {
   padding-right: 3rem;
 }
 
-/* --- Date Input Specifics --- */
 .dateInput {
   cursor: pointer;
 }
 
-/* This hides the default calendar icon but keeps the functionality */
 .dateInput::-webkit-calendar-picker-indicator {
   position: absolute;
   top: 0;
@@ -127,14 +123,26 @@
 
 /* --- Error Message --- */
 .error {
-  color: var(--error-color, #ff4d4f);
+  color: var(--textDanger, #ff4d4f);
   font-size: 11px;
   font-weight: 500;
   margin-top: 2px;
 }
 
 /* --- Autofill Fix --- */
-.inputWrapper input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0px 1000px var(--bg-input) inset !important;
+.inputWrapper input:-webkit-autofill,
+.inputWrapper input:-webkit-autofill:hover,
+.inputWrapper input:-webkit-autofill:focus,
+.inputWrapper input:-webkit-autofill:active,
+.inputWrapper select:-webkit-autofill,
+.inputWrapper select:-webkit-autofill:hover,
+.inputWrapper select:-webkit-autofill:focus,
+.inputWrapper textarea:-webkit-autofill,
+.inputWrapper textarea:-webkit-autofill:hover,
+.inputWrapper textarea:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 9999px var(--bg-input) inset !important;
+  box-shadow: 0 0 0px 9999px var(--bg-input) inset !important;
   -webkit-text-fill-color: var(--text-main) !important;
+  caret-color: var(--text-main);
+  transition: background-color 0s 99999s !important;
 }

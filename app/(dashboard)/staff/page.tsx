@@ -44,8 +44,8 @@ interface Staff {
   country: string;
   position: string;
   branches_name: string;
+  role_name?: string;
   phone: string;
-  role_name: string;
 }
 
 interface Branch {
@@ -257,7 +257,7 @@ export default function StaffPage() {
           className={styles.deleteBtn}
           disabled={deletingId === staff.id}
           onClick={(e) => {
-            e.stopPropagation(); // Prevent row click trigger
+            e.stopPropagation();
             handleDelete(staff.id, staff.staffName);
           }}
         >

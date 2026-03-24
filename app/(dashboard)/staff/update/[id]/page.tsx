@@ -1,5 +1,3 @@
-// app/(dashboard)/staff/[id]/edit/page.tsx
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -9,26 +7,25 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBorderAll,
-  faCalendar,
   faCamera,
-  faCaretDown,
   faCircleCheck,
-  faCity,
-  faGlobe,
-  faIdCard,
-  faLock,
   faPersonCircleExclamation,
-  faPhone,
-  faPortrait,
   faShieldHalved,
+  faPortrait,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
-import { Input } from "@/app/components/ui/Input/Input";
-import styles from "../../create/page.module.css"; // reuse the same CSS
+import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
+import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
+import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
 
-const GENDERS = ["Male", "Female"];
+import styles from "../../create/page.module.css";
+
+const GENDERS = [
+  { id: "Male", name: "Male" },
+  { id: "Female", name: "Female" },
+];
 
 export default function EditStaff() {
   const { id } = useParams();
@@ -39,62 +36,46 @@ export default function EditStaff() {
   const [branches, setBranches] = useState<any[]>([]);
   const [companies, setCompanies] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [fetching, setFetching] = useState(true); // loading existing data
+  const [fetching, setFetching] = useState(true);
+
+  // Store raw staff data separately so we can reset the form
+  // only AFTER options are populated in state
+  const [staffData, setStaffData] = useState<any>(null);
 
   const {
     register,
     handleSubmit,
-    reset, // ← key difference: used to pre-fill the form
+    reset,
     formState: { errors },
   } = useForm({ mode: "onTouched" });
 
-  // 1. Fetch dropdowns + existing staff data in parallel
+  // Step 1: Fetch all data (options + staff record)
   useEffect(() => {
-    const fetchAll = async () => {
+    const fetchData = async () => {
       try {
-        const [r, b, c, staff] = await Promise.all([
-          fetch("http://localhost:3001/master-service/roles").then((res) =>
-            res.json(),
-          ),
-          fetch("http://localhost:3001/master-company/branches").then((res) =>
-            res.json(),
-          ),
-          fetch("http://localhost:3001/master-company/company").then((res) =>
-            res.json(),
-          ),
-          fetch(`http://localhost:3001/master-company/staff/${id}`).then(
-            (res) => res.json(),
-          ),
-        ]);
+        const [rolesRes, branchesRes, companiesRes, staffRes] =
+          await Promise.all([
+            fetch("http://localhost:3001/master-service/roles").then((r) =>
+              r.json(),
+            ),
+            fetch("http://localhost:3001/master-company/branches").then((r) =>
+              r.json(),
+            ),
+            fetch("http://localhost:3001/master-company/company").then((r) =>
+              r.json(),
+            ),
+            fetch(`http://localhost:3001/master-company/staff/${id}`).then(
+              (r) => r.json(),
+            ),
+          ]);
 
-        if (r.success) setRoles(r.data.data);
-        if (b.success) setBranches(b.data.data);
-        if (c.success) setCompanies(c.data.data);
+        setRoles(rolesRes.data?.data || []);
+        setBranches(branchesRes.data?.data || []);
+        setCompanies(companiesRes.data?.data || []);
 
-        if (staff.success) {
-          const s = staff.data;
-
-          // Pre-fill all form fields with existing values
-          reset({
-            role: s.role,
-            branch: s.branch,
-            company: s.company,
-            position: s.position,
-            staffName: s.staffName,
-            nrc: s.nrc,
-            // Format ISO date string → "YYYY-MM-DD" for the date input
-            dob: s.dob ? s.dob.split("T")[0] : "",
-            gender: s.gender,
-            phone: s.phone,
-            country: s.country,
-            city: s.city,
-            email: s.email,
-            street_address: s.street_address,
-            // password intentionally left blank for security
-          });
-
-          // Show existing photo as preview if available
-          if (s.photo_url) setPreview(s.photo_url);
+        if (staffRes.success) {
+          setStaffData(staffRes.data);
+          if (staffRes.data.image) setPreview(staffRes.data.image);
         }
       } catch (err) {
         console.error("Fetch error:", err);
@@ -103,15 +84,46 @@ export default function EditStaff() {
       }
     };
 
-    fetchAll();
-  }, [id, reset]);
+    fetchData();
+  }, [id]);
+
+  // Step 2: Reset form ONLY after both options AND staff data are ready.
+  // This ensures <option> elements exist in the DOM when `reset()` sets values,
+  // which is what makes the <select> display the correct selected item.
+  useEffect(() => {
+    if (
+      !staffData ||
+      roles.length === 0 ||
+      branches.length === 0 ||
+      companies.length === 0
+    ) {
+      return; // Wait until everything is loaded
+    }
+
+    const s = staffData;
+
+    reset({
+      role: s.role_id ?? s.role?.id ?? s.role ?? "",
+      branch: s.branch_id ?? s.branch?.id ?? s.branch ?? "",
+      company: s.company_id ?? s.company?.id ?? s.company ?? "",
+      position: s.position ?? "",
+      staffName: s.staffName ?? "",
+      nrc: s.nrc ?? "",
+      dob: s.dob ? s.dob.split("T")[0] : "",
+      gender: s.gender ?? "",
+      phone: s.phone ?? "",
+      email: s.email ?? "",
+      country: s.country ?? "",
+      city: s.city ?? "",
+      street_address: s.street_address ?? "",
+    });
+  }, [staffData, roles, branches, companies, reset]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) setPreview(URL.createObjectURL(file));
   };
 
-  // 2. Submit — PATCH instead of POST, photo only sent if changed
   const onSubmit = async (data: any) => {
     setLoading(true);
     try {
@@ -119,31 +131,22 @@ export default function EditStaff() {
 
       Object.entries(data).forEach(([key, value]: any) => {
         if (key === "photo") {
-          // Only attach a new file if the user actually picked one
           if (value?.[0]) formData.append("image", value[0]);
         } else if (key === "password") {
-          // Only send password if the user typed something
           if (value) formData.append("password", value);
-        } else if (key === "dob") {
-          if (value) formData.append(key, new Date(value).toISOString());
-        } else if (value !== undefined && value !== null) {
+        } else if (key === "dob" && value) {
+          formData.append(key, new Date(value).toISOString());
+        } else if (value !== "" && value !== null && value !== undefined) {
           formData.append(key, value);
         }
       });
 
       const response = await fetch(
         `http://localhost:3001/master-company/staff/${id}`,
-        {
-          method: "PATCH", // or "PUT" depending on your API
-          body: formData,
-        },
+        { method: "PATCH", body: formData },
       );
 
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.message || "Failed to update");
-      }
-
+      if (!response.ok) throw new Error("Update failed");
       router.push("/staff");
     } catch (error: any) {
       alert(error.message);
@@ -152,22 +155,7 @@ export default function EditStaff() {
     }
   };
 
-  const ActionButtons = (
-    <div className={styles.headerActionArea}>
-      <Link href="/staff" className={`${styles.btn} ${styles.btnCancel}`}>
-        CANCEL
-      </Link>
-      <button
-        type="submit"
-        form="staffForm"
-        disabled={loading || fetching}
-        className={`${styles.btn} ${styles.btnSuccess}`}
-      >
-        <FontAwesomeIcon icon={faCircleCheck} />
-        {loading ? "UPDATING..." : "UPDATE RECORD"}
-      </button>
-    </div>
-  );
+  if (fetching) return <div>Loading record...</div>;
 
   return (
     <>
@@ -177,7 +165,22 @@ export default function EditStaff() {
           text: "Staff Update",
           description: "EDIT EMPLOYEE RECORD",
         }}
-        actionNode={ActionButtons}
+        actionNode={
+          <div className={styles.headerActionArea}>
+            <Link href="/staff" className={`${styles.btn} ${styles.btnCancel}`}>
+              CANCEL
+            </Link>
+            <button
+              type="submit"
+              form="staffForm"
+              disabled={loading}
+              className={`${styles.btn} ${styles.btnSuccess}`}
+            >
+              <FontAwesomeIcon icon={faCircleCheck} />
+              {loading ? "UPDATING..." : "UPDATE RECORD"}
+            </button>
+          </div>
+        }
       />
 
       <form
@@ -185,7 +188,7 @@ export default function EditStaff() {
         onSubmit={handleSubmit(onSubmit)}
         className={styles.formGridContainer}
       >
-        {/* Section: Professional */}
+        {/* PROFESSIONAL ASSIGNMENT */}
         <section className={styles.formGridBox}>
           <header className={styles.gridBoxTitle}>
             <span className={styles.pill} />
@@ -193,97 +196,43 @@ export default function EditStaff() {
             PROFESSIONAL ASSIGNMENT
           </header>
           <hr className={styles.cuttingLine} />
-
           <div className={styles.filterContainer}>
-            <div className={styles.filterItem}>
-              <label className={styles.inputLabel}>Role</label>
-              <div className={styles.inputWrapper}>
-                <select {...register("role", { required: "Role is required" })}>
-                  <option value="" disabled>
-                    Select Role
-                  </option>
-                  {roles.map((r) => (
-                    <option key={r.id} value={r.id}>
-                      {r.role_name}
-                    </option>
-                  ))}
-                </select>
-                <FontAwesomeIcon
-                  icon={faCaretDown}
-                  className={styles.inputIcon}
-                />
-              </div>
-              {errors.role && (
-                <p className={styles.errorMsg}>
-                  {errors.role.message as string}
-                </p>
-              )}
-            </div>
-
-            <div className={styles.filterItem}>
-              <label className={styles.inputLabel}>Branch</label>
-              <div className={styles.inputWrapper}>
-                <select
-                  {...register("branch", { required: "Branch is required" })}
-                >
-                  <option value="" disabled>
-                    Select Branch
-                  </option>
-                  {branches.map((b) => (
-                    <option key={b.id} value={b.id}>
-                      {b.branches_name}
-                    </option>
-                  ))}
-                </select>
-                <FontAwesomeIcon
-                  icon={faCaretDown}
-                  className={styles.inputIcon}
-                />
-              </div>
-              {errors.branch && (
-                <p className={styles.errorMsg}>
-                  {errors.branch.message as string}
-                </p>
-              )}
-            </div>
-
-            <div className={styles.filterItem}>
-              <label className={styles.inputLabel}>Company</label>
-              <div className={styles.inputWrapper}>
-                <select
-                  {...register("company", { required: "Company is required" })}
-                >
-                  <option value="" disabled>
-                    Select Company
-                  </option>
-                  {companies.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.company_name}
-                    </option>
-                  ))}
-                </select>
-                <FontAwesomeIcon
-                  icon={faCaretDown}
-                  className={styles.inputIcon}
-                />
-              </div>
-              {errors.company && (
-                <p className={styles.errorMsg}>
-                  {errors.company.message as string}
-                </p>
-              )}
-            </div>
-
-            <Input
+            <DropdownInput
+              label="Role"
+              placeholder="Select Role"
+              options={roles.map((r) => ({ id: r.id, name: r.role_name }))}
+              error={errors.role?.message as string}
+              {...register("role", { required: "Role is required" })}
+            />
+            <DropdownInput
+              label="Branch"
+              placeholder="Select Branch"
+              options={branches.map((b) => ({
+                id: b.id,
+                name: b.branches_name,
+              }))}
+              error={errors.branch?.message as string}
+              {...register("branch", { required: "Branch is required" })}
+            />
+            <DropdownInput
+              label="Company"
+              placeholder="Select Company"
+              options={companies.map((c) => ({
+                id: c.id,
+                name: c.company_name,
+              }))}
+              error={errors.company?.message as string}
+              {...register("company", { required: "Company is required" })}
+            />
+            <TextInput
               label="Position"
               placeholder="Position"
-              icon={<FontAwesomeIcon icon={faUser} />}
-              {...register("position", { required: "Position is required" })}
+              {...register("position")}
             />
           </div>
         </section>
 
-        {/* Section: Identity */}
+        {/* CORE IDENTITY */}
         <section className={styles.formGridBox}>
           <header className={styles.gridBoxTitle}>
             <span className={styles.pill} />
@@ -294,68 +243,30 @@ export default function EditStaff() {
             CORE IDENTITY
           </header>
           <hr className={styles.cuttingLine} />
-
           <div className={styles.filterContainer}>
-            <Input
+            <TextInput
               label="Staff Name"
-              placeholder="Enter Name"
-              icon={<FontAwesomeIcon icon={faUser} />}
-              {...register("staffName", { required: "Staff Name is required" })}
+              {...register("staffName", { required: "Required" })}
             />
-            <Input
-              label="NRC"
-              placeholder="Enter NRC"
-              icon={<FontAwesomeIcon icon={faIdCard} />}
-              {...register("nrc", { required: "NRC is required" })}
+            <TextInput
+              label="NRC Number"
+              {...register("nrc", { required: "Required" })}
             />
-
-            <div className={styles.filterItem}>
-              <label className={styles.inputLabel}>Date of Birth</label>
-              <div className={styles.inputWrapper}>
-                <input
-                  type="date"
-                  {...register("dob", { required: "DOB is required" })}
-                />
-                <FontAwesomeIcon
-                  icon={faCalendar}
-                  className={styles.inputIcon}
-                />
-              </div>
-              {errors.dob && (
-                <p className={styles.errorMsg}>
-                  {errors.dob.message as string}
-                </p>
-              )}
-            </div>
-
-            <div className={styles.filterItem}>
-              <label className={styles.inputLabel}>Gender</label>
-              <div className={styles.inputWrapper}>
-                <select
-                  {...register("gender", { required: "Gender is required" })}
-                >
-                  <option value="">Choose Gender</option>
-                  {GENDERS.map((g) => (
-                    <option key={g} value={g}>
-                      {g}
-                    </option>
-                  ))}
-                </select>
-                <FontAwesomeIcon
-                  icon={faCaretDown}
-                  className={styles.inputIcon}
-                />
-              </div>
-              {errors.gender && (
-                <p className={styles.errorMsg}>
-                  {errors.gender.message as string}
-                </p>
-              )}
-            </div>
+            <DateInput
+              label="Date of Birth"
+              {...register("dob", { required: "Required" })}
+            />
+            <DropdownInput
+              label="Gender"
+              placeholder="Select Gender"
+              options={GENDERS}
+              error={errors.gender?.message as string}
+              {...register("gender", { required: "Required" })}
+            />
           </div>
         </section>
 
-        {/* Section: Security */}
+        {/* SECURITY & PHOTO */}
         <section className={styles.formGridBox}>
           <header className={styles.gridBoxTitle}>
             <span className={styles.pill} />
@@ -366,7 +277,6 @@ export default function EditStaff() {
             SECURITY & PHOTO
           </header>
           <hr className={styles.cuttingLine} />
-
           <div className={styles.imageUploadSection}>
             <div className={styles.imageUploadWrapper}>
               <input
@@ -374,7 +284,6 @@ export default function EditStaff() {
                 accept="image/*"
                 id="photo"
                 {...register("photo", { onChange: handleImageChange })}
-                // Not required on update — existing photo stays if none selected
                 hidden
               />
               <label htmlFor="photo" className={styles.imageUploadBox}>
@@ -396,20 +305,14 @@ export default function EditStaff() {
               </label>
             </div>
           </div>
-
-          <Input
-            label="NEW PASSWORD (leave blank to keep current)"
+          <TextInput
+            label="NEW PASSWORD"
             type="password"
-            icon={<FontAwesomeIcon icon={faLock} />}
-            {...register("password", {
-              minLength: { value: 6, message: "Min 6 characters" },
-              // Not required on update
-            })}
-            placeholder="Leave blank to keep current password"
+            {...register("password")}
           />
         </section>
 
-        {/* Section: Contact */}
+        {/* CONTACT DETAILS */}
         <section className={styles.formGridBox}>
           <header className={styles.gridBoxTitle}>
             <span className={styles.pill} />
@@ -417,53 +320,23 @@ export default function EditStaff() {
             CONTACT DETAILS
           </header>
           <hr className={styles.cuttingLine} />
-
           <div className={styles.filterContainer}>
-            <Input
-              label="Phone"
-              placeholder="Phone"
-              icon={<FontAwesomeIcon icon={faPhone} />}
-              {...register("phone", { required: "Phone is required" })}
+            <TextInput
+              label="Phone Number"
+              {...register("phone", { required: "Required" })}
             />
-            <Input
-              label="Country"
-              placeholder="Country"
-              icon={<FontAwesomeIcon icon={faGlobe} />}
-              {...register("country")}
+            <TextInput
+              label="Email Address"
+              {...register("email", { required: "Required" })}
             />
-            <Input
-              label="City"
-              placeholder="City"
-              icon={<FontAwesomeIcon icon={faCity} />}
-              {...register("city")}
+            <TextInput label="Country" {...register("country")} />
+            <TextInput label="City" {...register("city")} />
+            <TextInput
+              label="Street Address"
+              as="textarea"
+              rows={4}
+              {...register("street_address", { required: "Required" })}
             />
-            <Input
-              label="Email"
-              placeholder="Email"
-              icon={<FontAwesomeIcon icon={faUser} />}
-              {...register("email", {
-                required: "Email is required",
-                pattern: { value: /^\S+@\S+$/i, message: "Invalid email" },
-              })}
-            />
-
-            <div className={styles.filterItem}>
-              <label className={styles.inputLabel}>Street Address</label>
-              <div className={styles.inputWrapper}>
-                <textarea
-                  {...register("street_address", {
-                    required: "Address is required",
-                  })}
-                  rows={5}
-                  placeholder="Address"
-                />
-              </div>
-              {errors.street_address && (
-                <p className={styles.errorMsg}>
-                  {errors.street_address.message as string}
-                </p>
-              )}
-            </div>
           </div>
         </section>
       </form>

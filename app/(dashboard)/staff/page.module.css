@@ -10,12 +10,12 @@
   background: var(--accent);
   font-weight: bold;
   border-radius: var(--radius);
-  display: inline-block;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 45px;
   padding: 0 1rem;
+  gap: calc(var(--gap)/5);
   transition: all 0.3s ease;
 }
 
@@ -144,7 +144,6 @@
   gap: 1rem;
 }
 
-/* Shared two-column row for date pickers and select filters */
 .filterRow {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -270,8 +269,7 @@
   color: var(--success);
 }
 
-/* override defaults */
-/* Change dropdown options color */
+/* Dropdown option colors */
 .filterRow select option {
   background-color: var(--bg-input);
   color: var(--text-main);
