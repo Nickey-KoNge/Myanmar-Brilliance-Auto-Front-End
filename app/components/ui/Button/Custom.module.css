@@ -1,0 +1,57 @@
+.btn {
+  padding: 0.775rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--gap) / 2);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.fitContent {
+  width: auto;
+  min-width: 145px;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+/* Variants */
+.actionBtn {
+  background: var(--accent);
+  color: var(--btn-text);
+}
+.successBtn {
+  background: var(--success);
+  color: var(--btn-text);
+}
+.cancelBtn {
+  background: var(--bg-btn);
+  color: var(--btn-text);
+}
+
+.btn:hover:not(:disabled) {
+  filter: brightness(1.2);
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

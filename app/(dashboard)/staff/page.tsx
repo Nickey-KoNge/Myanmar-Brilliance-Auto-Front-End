@@ -1,13 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarDays,
-  // faCaretDown,
   faClockRotateLeft,
   faPlus,
   faTrashCan,
@@ -15,7 +13,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 // Components
-import { Button } from "@/app/components/ui/Button/Button";
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
 import { DataTable } from "@/app/components/ui/DataTable/DataTable";
 //pagination components
@@ -33,6 +30,8 @@ import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
 
 // Hook
 import { useFilters, FilterState } from "@/app/hooks/userFilters";
+import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
+import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 interface Staff {
   id: string;
   staffName: string;
@@ -70,7 +69,7 @@ export default function StaffPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
-  const PAGE_SIZE = 10;
+  const PAGE_SIZE = 1;
 
   //Active Filters State
   const [activeFilters, setActiveFilters] = useState<FilterState>({
@@ -269,10 +268,9 @@ export default function StaffPage() {
 
   const renderLiveButtonArea = (
     <div className={styles.headerActionArea}>
-      <Link href="/staff/create" className={styles.headerbarButton}>
-        <FontAwesomeIcon icon={faPlus} />
+      <NavigationBtn href="/staff/create" leftIcon={faPlus}>
         ADD STAFF
-      </Link>
+      </NavigationBtn>
     </div>
   );
 
@@ -342,11 +340,9 @@ export default function StaffPage() {
                 />
               </div>
 
-              <div className={styles.btnBox}>
-                <Button className={styles.resetBtn} onClick={resetFilters}>
-                  Reset Filters
-                </Button>
-              </div>
+              <ActionBtn type="reset" variant="action" fullWidth={true}>
+                RESET
+              </ActionBtn>
 
               <hr className={styles.cuttingLine} />
 

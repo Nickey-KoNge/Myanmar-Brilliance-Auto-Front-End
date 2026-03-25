@@ -6,44 +6,6 @@
   margin: 0.5rem 0;
 }
 
-.headerbarButton {
-  background: var(--accent);
-  font-weight: bold;
-  border-radius: var(--radius);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 45px;
-  padding: 0 1rem;
-  gap: calc(var(--gap)/5);
-  transition: all 0.3s ease;
-}
-
-.headerbarButton:hover {
-  background-color: var(--danger);
-}
-
-/* Layout */
-/* .gridContainer {
-  display: grid;
-  grid-template-columns: 3fr 1fr;
-  gap: 1.5rem;
-}
-
-.gridBox {
-  background: var(--bg-main);
-  padding: 1.5rem;
-  border-radius: var(--radius);
-  min-height: max-content;
-}
-
-.spacer {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-} */
-
 .gridBoxTitle {
   color: var(--text-main);
   text-align: center;
@@ -51,36 +13,7 @@
   font-weight: 600;
 }
 
-/* Table */
-.table {
-  width: 100%;
-  border-spacing: 0;
-  background: var(--bg-table);
-  font-size: 14px;
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-.table th,
-.table td {
-  padding: 1rem;
-  text-align: start;
-  color: var(--text-main);
-}
-
-.table thead {
-  background: var(--bg-head);
-  color: var(--text-muted);
-}
-
-.table tr:nth-child(even) {
-  background: var(--bg-row-alt);
-}
-
-.table tr:hover {
-  background: var(--bg-row-hover);
-}
-
+/* Staff Table Info */
 .staffInfo {
   display: flex;
   align-items: center;
@@ -88,56 +21,30 @@
   color: var(--text-main);
 }
 
-.staffInfo img {
+.staffImg {
   border-radius: var(--radius);
   object-fit: cover;
 }
 
 /* Actions */
+.headerActionArea {
+  display: flex;
+  align-items: center;
+}
+
 .deleteBtn {
   border: none;
   background: none;
   color: var(--danger);
   cursor: pointer;
-  transition: 0.2s;
+  transition: all 0.2s ease;
 }
 
 .deleteBtn:hover {
   transform: scale(1.2);
 }
 
-/* Pagination */
-.pagination {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 1rem;
-  color: var(--text-muted);
-}
-
-.spanText {
-  color: var(--accent);
-  font-weight: bold;
-  margin: 0 4px;
-}
-
-.pageActions button {
-  background: var(--bg-btn);
-  border: none;
-  color: white;
-  margin-left: 8px;
-  padding: 8px;
-  cursor: pointer;
-  border-radius: var(--radius);
-  transition: 0.25s;
-}
-
-.pageActions button:hover {
-  background: var(--accent);
-}
-
-/* Search */
+/* Search Layout */
 .searchContainer {
   display: flex;
   flex-direction: column;
@@ -150,76 +57,7 @@
   gap: 0.5rem;
 }
 
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.label {
-  font-size: 12px;
-  color: var(--text-main);
-}
-
-/* Inputs */
-.inputWrapper {
-  position: relative;
-  background: var(--bg-input);
-  border: 1px solid var(--border-input);
-  border-radius: var(--radius);
-  display: flex;
-  align-items: center;
-  margin: 0.5rem 0;
-}
-
-.inputWrapper input,
-.inputWrapper select {
-  width: 100%;
-  height: 42px;
-  padding: 0 1rem;
-  border: none;
-  background: transparent;
-  color: var(--text-muted);
-  outline: none;
-  appearance: none;
-}
-
-.icon {
-  position: absolute;
-  right: 10px;
-  pointer-events: none;
-  color: var(--text-muted);
-}
-
-/* Hide native calendar icon */
-.dateSearch::-webkit-calendar-picker-indicator {
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-/* Reset button */
-.btnBox {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin: 0.5rem 0;
-}
-
-.resetBtn {
-  background: var(--accent);
-  color: inherit;
-  border-radius: var(--radius);
-  padding: 1rem;
-  transition: all 0.3s ease;
-  font-weight: bold;
-}
-
-.resetBtn:hover {
-  background: var(--danger);
-}
-
-/* Recent record */
+/* Recent record section */
 .recentRecord {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -257,20 +95,20 @@
 /* Last edited */
 .lastEdited {
   text-align: center;
+  font-size: 0.9rem;
   color: var(--text-muted);
   font-weight: bold;
 }
 
+.spanText {
+  color: var(--text-main);
+}
+
+/* Status Colors */
 .textDanger {
   color: var(--danger);
 }
 
 .textSuccess {
   color: var(--success);
-}
-
-/* Dropdown option colors */
-.filterRow select option {
-  background-color: var(--bg-input);
-  color: var(--text-main);
 }

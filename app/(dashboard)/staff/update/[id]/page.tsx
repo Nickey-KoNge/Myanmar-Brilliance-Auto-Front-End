@@ -21,6 +21,8 @@ import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
 import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
 
 import styles from "../../create/page.module.css";
+import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
+import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 
 const GENDERS = [
   { id: "Male", name: "Male" },
@@ -75,6 +77,7 @@ export default function EditStaff() {
 
         if (staffRes.success) {
           setStaffData(staffRes.data);
+          console.log(staffRes.data);
           if (staffRes.data.image) setPreview(staffRes.data.image);
         }
       } catch (err) {
@@ -87,9 +90,6 @@ export default function EditStaff() {
     fetchData();
   }, [id]);
 
-  // Step 2: Reset form ONLY after both options AND staff data are ready.
-  // This ensures <option> elements exist in the DOM when `reset()` sets values,
-  // which is what makes the <select> display the correct selected item.
   useEffect(() => {
     if (
       !staffData ||
@@ -97,7 +97,7 @@ export default function EditStaff() {
       branches.length === 0 ||
       companies.length === 0
     ) {
-      return; // Wait until everything is loaded
+      return;
     }
 
     const s = staffData;
@@ -167,18 +167,17 @@ export default function EditStaff() {
         }}
         actionNode={
           <div className={styles.headerActionArea}>
-            <Link href="/staff" className={`${styles.btn} ${styles.btnCancel}`}>
+            <NavigationBtn href="/staff" variant="cancel">
               CANCEL
-            </Link>
-            <button
+            </NavigationBtn>
+            <ActionBtn
+              variant="action"
               type="submit"
+              leftIcon={faCircleCheck}
               form="staffForm"
-              disabled={loading}
-              className={`${styles.btn} ${styles.btnSuccess}`}
             >
-              <FontAwesomeIcon icon={faCircleCheck} />
-              {loading ? "UPDATING..." : "UPDATE RECORD"}
-            </button>
+              UPDATE RECORD
+            </ActionBtn>
           </div>
         }
       />
