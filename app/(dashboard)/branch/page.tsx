@@ -237,16 +237,16 @@ export default function BranchPage() {
                 <span />
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLable}>Total Staff :</p>
+                    <p className={styles.statLable}>Total Branches :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
                     {" "}
-                    <p className={styles.statLable}>Active Staff :</p>
+                    <p className={styles.statLable}>Active Branches :</p>
                     <p className={styles.textSuccess}>36</p>{" "}
                   </div>{" "}
                   <div>
-                    <p className={styles.statLable}>Inactive Staff :</p>
+                    <p className={styles.statLable}>Inactive Branches :</p>
                     <p className={styles.textDanger}>4</p>{" "}
                   </div>{" "}
                 </div>{" "}
