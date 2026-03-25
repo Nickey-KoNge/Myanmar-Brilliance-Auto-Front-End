@@ -175,6 +175,7 @@ export default function BranchPage() {
 
 
 
+
   return (
     <>
       <PageHeader
@@ -281,32 +282,16 @@ export default function BranchPage() {
         />
       </PageGridLayout>
       {isDeleteOpen && selectedBranch && (
-      <DeleteModal
-    isOpen={isDeleteOpen}
-    onClose={() => setIsDeleteOpen(false)}
-    itemName={selectedBranch.branches_name}
-    name="Branch"
-    id={selectedBranch.id}
-    apiRoute="master-company/branches"
-    onDeleteSuccess={handleDeleteSuccess}
-  />
-)}
-
-          </div>
-
-          
- 
-  <Pagination
-  currentPage={currentPage}
-  totalPages={totalPages}
-  totalRecords={totalRecords}
-  pageSize={PAGE_SIZE}
-  onPageChange={(page)=>setCurrentPage(page)}/>
-
-
-    
-
-      </PageGridLayout>
+        <DeleteModal
+          isOpen={isDeleteOpen}
+          onClose={() => setIsDeleteOpen(false)}
+          itemName={selectedBranch.branches_name}
+          name="Branch"
+          id={selectedBranch.id}
+          apiRoute="master-company/branches"
+          onDeleteSuccess={handleDeleteSuccess}
+        />
+      )}
     </>
   );
 }
