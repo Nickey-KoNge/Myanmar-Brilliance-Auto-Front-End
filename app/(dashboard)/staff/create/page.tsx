@@ -36,7 +36,6 @@ import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 const GENDERS = [
   { id: "Male", name: "Male" },
   { id: "Female", name: "Female" },
-  { id: "Other", name: "Other" },
 ];
 
 export default function CreateStaff() {
@@ -127,6 +126,7 @@ export default function CreateStaff() {
         variant="action"
         leftIcon={faPlus}
         form="staffForm"
+        loading={loading}
       >
         ADD STAFF
       </ActionBtn>

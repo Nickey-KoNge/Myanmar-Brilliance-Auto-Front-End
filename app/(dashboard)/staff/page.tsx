@@ -20,8 +20,6 @@ import { Pagination } from "@/app/components/ui/Pagination/Pagination";
 import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
 // Styles
 import styles from "./page.module.css";
-// Note: Ensure styles like .staffCell, .staffImg, and .deleteBtn
-// are defined in your page.module.css or the DataTable.module.css
 
 import { apiClient } from "@/app/features/lib/api-client";
 import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
@@ -32,6 +30,8 @@ import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
 import { useFilters, FilterState } from "@/app/hooks/userFilters";
 import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
+import DeleteModal from "@/app/components/ui/Delete/DeleteModal";
+
 interface Staff {
   id: string;
   staffName: string;
@@ -64,7 +64,16 @@ export default function StaffPage() {
   const [staffs, setStaffs] = useState<Staff[]>([]);
   const [branches, setBranches] = useState<Branch[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteModal, setDeleteModal] = useState<{
+    isOpen: boolean;
+    id: string | null;
+    name: string;
+  }>({
+    isOpen: false,
+    id: null,
+    name: "",
+  });
+
   //for Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -107,7 +116,7 @@ export default function StaffPage() {
       }
     },
   );
-  // 1. Fetch Staff Data
+  // Fetch Staff Data
   useEffect(() => {
     const fetchStaffs = async () => {
       try {
@@ -184,7 +193,7 @@ export default function StaffPage() {
     fetchStaffs();
   }, [currentPage, activeFilters]);
 
-  // 2. Fetch Filters (Branches/Roles)
+  // Fetch Filters (Branches/Roles)
   useEffect(() => {
     const fetchFilters = async () => {
       try {
@@ -201,24 +210,17 @@ export default function StaffPage() {
     fetchFilters();
   }, []);
 
-  // 3. Delete Handler
-  const handleDelete = async (id: string, name: string) => {
-    const confirmDelete = confirm(`Delete ${name}?`);
-    if (!confirmDelete) return;
-
-    setDeletingId(id);
-    try {
-      await apiClient.delete(`/master-company/staff/${id}`);
-      setStaffs((prev) => prev.filter((s) => s.id !== id));
-    } catch (error) {
-      console.error(error);
-      alert("Delete failed");
-    } finally {
-      setDeletingId(null);
-    }
+  const openDeleteModal = (id: string, name: string) => {
+    setDeleteModal({
+      isOpen: true,
+      id,
+      name,
+    });
+  };
+  const handleDeleteSuccess = (id: string) => {
+    setStaffs((prev) => prev.filter((s) => s.id !== id));
   };
 
-  // 4. Table Column Definitions
   const columns = [
     {
       header: "Staff Info",
@@ -254,10 +256,9 @@ export default function StaffPage() {
       render: (staff: Staff) => (
         <button
           className={styles.deleteBtn}
-          disabled={deletingId === staff.id}
           onClick={(e) => {
             e.stopPropagation();
-            handleDelete(staff.id, staff.staffName);
+            openDeleteModal(staff.id, staff.staffName);
           }}
         >
           <FontAwesomeIcon icon={faTrashCan} />
@@ -395,6 +396,18 @@ export default function StaffPage() {
           onPageChange={(page) => setCurrentPage(page)}
         />
       </PageGridLayout>
+
+      {deleteModal.isOpen && deleteModal.id && (
+        <DeleteModal
+          isOpen={deleteModal.isOpen}
+          onClose={() => setDeleteModal({ isOpen: false, id: null, name: "" })}
+          itemName={deleteModal.name}
+          name="staff"
+          id={deleteModal.id}
+          apiRoute="master-company/staff"
+          onDeleteSuccess={handleDeleteSuccess}
+        />
+      )}
     </>
   );
 }

@@ -241,20 +241,29 @@ export default function EditStaff() {
             />
             CORE IDENTITY
           </header>
+
           <hr className={styles.cuttingLine} />
+
           <div className={styles.filterContainer}>
+            {/* NAME */}
             <TextInput
               label="Staff Name"
               {...register("staffName", { required: "Required" })}
             />
+
+            {/* NRC */}
             <TextInput
               label="NRC Number"
               {...register("nrc", { required: "Required" })}
             />
+
+            {/* DOB */}
             <DateInput
               label="Date of Birth"
               {...register("dob", { required: "Required" })}
             />
+
+            {/* GENDER */}
             <DropdownInput
               label="Gender"
               placeholder="Select Gender"
@@ -275,7 +284,10 @@ export default function EditStaff() {
             />
             SECURITY & PHOTO
           </header>
+
           <hr className={styles.cuttingLine} />
+
+          {/* IMAGE */}
           <div className={styles.imageUploadSection}>
             <div className={styles.imageUploadWrapper}>
               <input
@@ -304,10 +316,13 @@ export default function EditStaff() {
               </label>
             </div>
           </div>
+
+          {/* PASSWORD */}
           <TextInput
             label="NEW PASSWORD"
             type="password"
             {...register("password")}
+            placeholder="Leave blank to keep old password"
           />
         </section>
 
@@ -318,18 +333,29 @@ export default function EditStaff() {
             <FontAwesomeIcon icon={faPortrait} className={styles.textDanger} />
             CONTACT DETAILS
           </header>
+
           <hr className={styles.cuttingLine} />
+
           <div className={styles.filterContainer}>
+            {/* PHONE */}
             <TextInput
               label="Phone Number"
               {...register("phone", { required: "Required" })}
             />
+
+            {/* EMAIL */}
             <TextInput
               label="Email Address"
               {...register("email", { required: "Required" })}
             />
+
+            {/* COUNTRY */}
             <TextInput label="Country" {...register("country")} />
+
+            {/* CITY */}
             <TextInput label="City" {...register("city")} />
+
+            {/* STREET */}
             <TextInput
               label="Street Address"
               as="textarea"

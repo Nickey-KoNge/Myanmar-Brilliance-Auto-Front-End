@@ -2,25 +2,27 @@ import React, { use, useEffect } from "react";
 import { useState } from "react";
 import { Button } from "@/app/components/ui/Button/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCancel, faCircleXmark, faCross, faWarning } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCancel,
+  faCircleXmark,
+  faCross,
+  faWarning,
+} from "@fortawesome/free-solid-svg-icons";
 import styles from "./Delete.module.css";
-
-
 
 interface DeleteModalProps {
   isOpen: boolean;
   onClose: () => void;
   itemName: string;
-  
+
   name: string;
   isLoading?: boolean;
   id: string;
   // " apiRoute="master-company/branches""
   apiRoute: string;
-  // function for remove deleted data row from table / filter 
+  // function for remove deleted data row from table / filter
   onDeleteSuccess: (id: string) => void;
 }
-
 
 export default function DeleteModal({
   isOpen,
@@ -34,7 +36,7 @@ export default function DeleteModal({
   //   const [branchData, setBranchData] = useState<any>(null);
 
   const [isLoading, setIsLoading] = useState(false);
- 
+
   const handleDelete = async () => {
     setIsLoading(true);
     try {
@@ -64,26 +66,24 @@ export default function DeleteModal({
         <div className={styles.iconContainer}>
           <div className={styles.iconOne}>
             <div className={styles.warningIcon}>
-                <FontAwesomeIcon icon={faWarning} color="red" size="xl" />
+              <FontAwesomeIcon icon={faWarning} color="red" size="xl" />
             </div>
-          
           </div>
           <div className={styles.iconTwo}>
-            
-            
-            <FontAwesomeIcon icon={faCircleXmark}  onClick={onClose} style={{color:"#A33B3B"}}  />
+            <FontAwesomeIcon
+              icon={faCircleXmark}
+              onClick={onClose}
+              style={{ color: "#A33B3B" }}
+            />
           </div>
         </div>
         <div className={styles.textContainer}>
           <span>Confirm Delete</span>
 
           <span>
-            Are you sure you want to delete{""}
-            <span style={{ color: "red" }}>&quot;{itemName}&quot;</span>
-             `This action will remove the <strong>
-              &quot; {name} &quot;
-            </strong>{" "}
-            record permanently.
+            Are you sure you want to delete{" "}
+            <span style={{ color: "red" }}>"{itemName}"</span>? This action will
+            remove the <strong>"{name}"</strong> record permanently.
           </span>
         </div>
         <div className={styles.btnContainer}>
