@@ -67,7 +67,7 @@ apiClient.interceptors.response.use(
 
         // မူလ Request ကို ပြန်လည်ပို့ဆောင်ခြင်း
         return apiClient(originalRequest);
-      } catch (refreshError: any) {
+      } catch (refreshError: unknown) {
         // Refresh Token ပါ သက်တမ်းကုန်သွားခြင်း
         console.error(
           "🚫 [Auth]: Refresh Token Expired or Invalid. User must login again.",

@@ -67,12 +67,12 @@
   gap: 6px;
 }
 
-.fieldLabel {
+.textareaLabel {
   font-size: var(--font-size-s);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.6px;
-  /* color: var(--text-muted); */
+  color: var(--text-muted);
 }
 
 /* TWO COLUMN ROW inside a card */
@@ -92,7 +92,7 @@
   font-size: var(--font-size-s);
   color: var(--text-main);
   appearance: none;
- 
+
   cursor: pointer;
   transition: border-color 0.2s;
   margin-top: 1.5rem;
@@ -107,12 +107,12 @@
 /* TEXTAREA */
 .textarea {
   width: 100%;
-  background: var(--bg-input, #2a2a2a);
+  background: var(--bg-input);
   border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 12px 14px;
   font-size: var(--font-size-s);
-  color: var(--text-primary);
+  color: var(--text-main);
   resize: vertical;
   min-height: 90px;
   font-family: inherit;
@@ -125,14 +125,11 @@
   border-color: var(--color-primary);
 }
 
-.textarea::placeholder {
-  color: var(--text-muted);
-}
-
 /* MAP PLACEHOLDER */
 .mapPlaceholder {
   flex: 1;
-  min-height: 160px;
+  height: 100%;
+  min-height: 250px;
   background: #1a1a1a;
   border-radius: 8px;
   border: 1px solid var(--border-color);
@@ -141,6 +138,5 @@
   justify-content: center;
   color: #444;
   font-size: 28px;
+  overflow: hidden;
 }
-
-

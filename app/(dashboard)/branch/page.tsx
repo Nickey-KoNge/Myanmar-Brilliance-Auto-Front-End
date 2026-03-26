@@ -9,7 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@/app/components/ui/Button/Button";
-import { useEffect, useState,} from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 
 import { useRouter } from "next/navigation";
@@ -21,7 +21,7 @@ import { Pagination } from "@/app/components/ui/Pagination/Pagination";
 import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
 import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
 import { FilterState, useFilters } from "@/app/hooks/userFilters";
-import { set } from "react-hook-form";
+// import { set } from "react-hook-form";
 import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
 
 interface Branch {
@@ -37,7 +37,7 @@ interface Branch {
 
 export default function BranchPage() {
   const router = useRouter();
-  const [branchData, setBranchData] = React.useState<any[]>([]);
+  const [branchData, setBranchData] = React.useState<Branch[]>([]);
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
   const [selectedBranch, setSelectedBranch] = React.useState<Branch | null>(
     null,
@@ -99,59 +99,58 @@ export default function BranchPage() {
       ),
     },
   ];
-
-  const fetchBranchData = async () => {
-    try {
-      const params: Record<string, string> = {
-        page: currentPage.toString(),
-        limit: PAGE_SIZE.toString(),
-      };
-      // const response=await apiClient.get("/master-company/branches")
-      if (activeFilters.search) params.search = activeFilters.search;
-      if (activeFilters.startDate) params.startDate = activeFilters.startDate;
-      if (activeFilters.endDate) params.endDate = activeFilters.endDate;
-      const queryString = new URLSearchParams(params).toString();
-      const response = await apiClient.get(
-        `/master-company/branches?${queryString}`,
-      );
-
-      const res = response as unknown as {
-        data?:
-          | Branch[]
-          | { data?: Branch[]; total?: number; totalPages?: number };
-        total?: number;
-        totalPages?: number;
-      };
-      let branchList: Branch[] = [];
-      let total = 0;
-      let totalPages = 1;
-
-      if (res && typeof res === "object") {
-        if (Array.isArray(res.data)) {
-          branchList = res.data;
-          total = res.total || 0;
-          totalPages = res.totalPages || 1;
-        } else if (
-          res.data &&
-          typeof res.data === "object" &&
-          Array.isArray(res.data.data)
-        ) {
-          branchList = res.data.data;
-          total = res.data.total || 0;
-          totalPages = res.data.totalPages || 1;
-        }
-      }
-
-      setBranchData(branchList);
-      setTotalRecords(total);
-      setTotalPages(totalPages);
-    } catch (error) {
-      console.error("Failed to fetch branch:", error);
-      setBranchData([]);
-    }
-  };
-
   useEffect(() => {
+    const fetchBranchData = async () => {
+      try {
+        const params: Record<string, string> = {
+          page: currentPage.toString(),
+          limit: PAGE_SIZE.toString(),
+        };
+        // const response=await apiClient.get("/master-company/branches")
+        if (activeFilters.search) params.search = activeFilters.search as string;
+        if (activeFilters.startDate) params.startDate = activeFilters.startDate as string;
+        if (activeFilters.endDate) params.endDate = activeFilters.endDate as string;
+        const queryString = new URLSearchParams(params).toString();
+        const response = await apiClient.get(
+          `/master-company/branches?${queryString}`,
+        );
+
+        const res = response as unknown as {
+          data?:
+            | Branch[]
+            | { data?: Branch[]; total?: number; totalPages?: number };
+          total?: number;
+          totalPages?: number;
+        };
+        let branchList: Branch[] = [];
+        let total = 0;
+        let totalPages = 1;
+
+        if (res && typeof res === "object") {
+          if (Array.isArray(res.data)) {
+            branchList = res.data;
+            total = res.total || 0;
+            totalPages = res.totalPages || 1;
+          } else if (
+            res.data &&
+            typeof res.data === "object" &&
+            Array.isArray(res.data.data)
+          ) {
+            branchList = res.data.data;
+            total = res.data.total || 0;
+            totalPages = res.data.totalPages || 1;
+          }
+        }
+
+        setBranchData(branchList);
+        setTotalRecords(total);
+        setTotalPages(totalPages);
+      } catch (error) {
+        console.error("Failed to fetch branch:", error);
+        setBranchData([]);
+      }
+    };
+
     fetchBranchData();
   }, [currentPage, activeFilters]);
 
@@ -172,9 +171,6 @@ export default function BranchPage() {
       </Button>
     </div>
   );
-
-
-
 
   return (
     <>
