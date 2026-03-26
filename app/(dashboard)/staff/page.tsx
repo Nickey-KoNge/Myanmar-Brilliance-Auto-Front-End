@@ -340,10 +340,11 @@ export default function StaffPage() {
                   placeholder="All Roles"
                 />
               </div>
-
-              <ActionBtn type="reset" variant="action" fullWidth={true}>
-                RESET
-              </ActionBtn>
+              <div style={{ alignSelf: "flex-start" }}>
+                <ActionBtn type="reset" variant="action" fullWidth={false}>
+                  RESET
+                </ActionBtn>
+              </div>
 
               <hr className={styles.cuttingLine} />
 

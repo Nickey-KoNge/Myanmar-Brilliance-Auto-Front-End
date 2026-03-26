@@ -1,20 +1,28 @@
 .layout {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   background-color: var(--bg-layout);
-  color: #ffffff;
+  color: var(--icon-main);
 }
 
 .mainContent {
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-left: 250px; /* Sidebar width */
+  margin-left: 250px;
 }
 
 .pageContent {
+  display: flex;
+  flex-direction: column;
   background-color: var(--bg-layout);
   padding: 1.5rem;
+  flex: 1;
   overflow-y: auto;
-  height: calc(100vh - 70px); /* Minus Topbar height */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.pageContent::-webkit-scrollbar {
+  display: none;
 }

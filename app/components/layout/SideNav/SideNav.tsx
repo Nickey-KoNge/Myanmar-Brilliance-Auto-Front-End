@@ -1,66 +1,3 @@
-// "use client";
-// import React from "react";
-// import styles from "./SideNav.module.css";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import {
-//   faLaptop,
-//   faUsers,
-//   faBuilding,
-//   faWrench,
-//   faCar,
-//   faShoppingCart,
-//   faFileInvoice,
-//   faRoute,
-//   faKey,
-//   faDollarSign,
-//   faChevronRight,
-// } from "@fortawesome/free-solid-svg-icons";
-
-// export const SideNav = () => {
-//   return (
-//     <aside className={styles.sidebar}>
-//       <div className={styles.brand}>
-//         VEHICLE <span>ERP</span>
-//       </div>
-//       <div className={styles.menu}>
-//         <div className={`${styles.menuItem} ${styles.active}`}>
-//           <FontAwesomeIcon icon={faLaptop} className={styles.icon} />
-//           Dashboard
-//         </div>
-
-//         <div className={styles.sectionTitle}>Master Data</div>
-//         <NavItem icon={faUsers} label="Personnel" />
-//         <NavItem icon={faBuilding} label="Entity" />
-//         <NavItem icon={faWrench} label="Spare-part" />
-//         <NavItem icon={faCar} label="Fleet" />
-
-//         <div className={styles.sectionTitle}>Sale</div>
-//         <NavItem icon={faShoppingCart} label="Sale" />
-
-//         <div className={styles.sectionTitle}>Purchase</div>
-//         <NavItem icon={faFileInvoice} label="Purchase" />
-
-//         <div className={styles.sectionTitle}>Trip</div>
-//         <NavItem icon={faRoute} label="Trip" />
-
-//         <div className={styles.sectionTitle}>Rental & Trip</div>
-//         <NavItem icon={faKey} label="Rental" />
-
-//         <div className={styles.sectionTitle}>Cashflow</div>
-//         <NavItem icon={faDollarSign} label="Cashflow" />
-//       </div>
-//     </aside>
-//   );
-// };
-
-// const NavItem = ({ icon, label }: { icon: any; label: string }) => (
-//   <div className={styles.menuItem}>
-//     <FontAwesomeIcon icon={icon} className={styles.icon} />
-//     {label}
-//     <FontAwesomeIcon icon={faChevronRight} className={styles.arrow} />
-//   </div>
-// );
-
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
@@ -123,20 +60,28 @@ interface NavDropdownProps {
   icon: IconDefinition;
   label: string;
   subItems: SubItem[];
+  isOpen: boolean;
+  onToggle: () => void;
 }
 
-const NavDropdown: React.FC<NavDropdownProps> = ({ icon, label, subItems }) => {
+const NavDropdown: React.FC<NavDropdownProps> = ({
+  icon,
+  label,
+  subItems,
+  isOpen,
+  onToggle,
+}) => {
   const pathname = usePathname();
 
-  const isAnyChildActive = subItems.some((item) =>
-    pathname.startsWith(item.href),
-  );
+  // const isAnyChildActive = subItems.some((item) =>
+  //   pathname.startsWith(item.href),
+  // );
 
-  const [isOpen, setIsOpen] = useState(isAnyChildActive);
+  // const [isOpen, setIsOpen] = useState(isAnyChildActive);
 
   return (
     <div className={styles.navGroup}>
-      <div className={styles.menuItem} onClick={() => setIsOpen(!isOpen)}>
+      <div className={styles.menuItem} onClick={onToggle}>
         <FontAwesomeIcon icon={icon} className={styles.icon} />
         {label}
         <FontAwesomeIcon
@@ -179,9 +124,41 @@ const NavDropdown: React.FC<NavDropdownProps> = ({ icon, label, subItems }) => {
 export const SideNav = () => {
   const pathname = usePathname();
 
+  const getActiveMenu = (path: string) => {
+    if (
+      path.startsWith("/staff") ||
+      path.startsWith("/customer") ||
+      path.startsWith("/supplier") ||
+      path.startsWith("/driver")
+    ) {
+      return "Personnel";
+    }
+    if (
+      path.startsWith("/company") ||
+      path.startsWith("/branch") ||
+      path.startsWith("/station") ||
+      path.startsWith("/groups")
+    ) {
+      return "Entity";
+    }
+    return null;
+  };
+  const [openDropdown, setOpenDropdown] = useState<string | null>(
+    getActiveMenu(pathname),
+  );
+  const [prevPathname, setPrevPathname] = useState(pathname);
+
   const isDashboardActive =
     pathname === "/" || pathname.startsWith("/dashboard");
 
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
+    setOpenDropdown(getActiveMenu(pathname));
+  }
+
+  const handleToggle = (dropdownName: string) => {
+    setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
+  };
   return (
     <aside className={styles.sidebar}>
       <div className={styles.brand}>
@@ -208,6 +185,8 @@ export const SideNav = () => {
             { icon: faTruckMoving, label: "Supplier", href: "/supplier" },
             { icon: faIdCardClip, label: "Driver", href: "/driver" },
           ]}
+          isOpen={openDropdown === "Personnel"}
+          onToggle={() => handleToggle("Personnel")}
         />
 
         <NavDropdown
@@ -219,6 +198,8 @@ export const SideNav = () => {
             { icon: faChargingStation, label: "Station", href: "/station" },
             { icon: faObjectGroup, label: "Groups", href: "/groups" },
           ]}
+          isOpen={openDropdown === "Entity"}
+          onToggle={() => handleToggle("Entity")}
         />
 
         <NavItem icon={faWrench} label="Spare-part" href="/spare-part" />

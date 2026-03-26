@@ -2,18 +2,24 @@
   display: grid;
   grid-template-columns: 3fr 1fr;
   gap: 1.5rem;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .gridBox {
+  display: flex;
+  flex-direction: column;
   background: var(--bg-main);
   padding: 1.5rem;
   border-radius: var(--radius);
-  min-height: max-content;
+  box-sizing: border-box;
+  
 }
 
 .spacer {
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%;
 }

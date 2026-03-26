@@ -1,6 +1,6 @@
-'use client';
-import { Input } from '@/app/components/ui/Input/Input';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+"use client";
+import { Input } from "@/app/components/ui/Input/Input";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCodeBranch,
   faUser,
@@ -9,7 +9,6 @@ import {
   faTable,
   faIdCard,
   faLocationDot,
-  faMap,
   faPhone,
   faMapPin,
   faAddressBook,
@@ -20,13 +19,18 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { Button } from "@/app/components/ui/Button/Button";
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
 import styles from "./page.module.css";
-import dynamic from 'next/dynamic';
-import DropdownInput from '@/app/components/ui/SearchBoxes/DropdownInput';
+import dynamic from "next/dynamic";
+import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
 
-const MapPicker=dynamic(()=>import("../../../../components/ui/MapPicker/MapPicker"),{
-  ssr:false,
-})
+import { FormCard } from "@/app/components/ui/FormCard/FormCard";
+import { apiClient } from "@/app/features/lib/api-client";
 
+const MapPicker = dynamic(
+  () => import("../../../../components/ui/MapPicker/MapPicker"),
+  {
+    ssr: false,
+  },
+);
 
 interface FormData {
   branches_name: string;
@@ -37,10 +41,10 @@ interface FormData {
   address: string;
   description: string;
   company_id: string;
-  id:string;
-  staff:string;
-  stations:string;
-  company:string;
+  id: string;
+  staff: string;
+  stations: string;
+  company: string;
 }
 
 interface Company {
@@ -54,28 +58,60 @@ interface BranchFormProps {
   onSubmit: SubmitHandler<FormData>;
 }
 
-export const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSubmit }) => {
-  const { register,setValue, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
-    defaultValues: initialData || {company_id:""},
+export const BranchForm: React.FC<BranchFormProps> = ({
+  mode,
+  initialData,
+  onSubmit,
+}) => {
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>({
+    defaultValues: initialData || { company_id: "" },
   });
   const [companies, setCompanies] = useState<Company[]>([]);
 
-
-
-  // Reset form with initial data change  
-    useEffect(() => {
+  // Reset form with initial data change
+  useEffect(() => {
     reset(initialData);
   }, [initialData, reset]);
 
-
+  // useEffect(() => {
+  //   const fetchCompanies = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         "http://localhost:3001/master-company/company",
+  //       );
+  //       const result = await response.json();
+  //       if (result && Array.isArray(result.data))
+  //         setCompanies(result?.data?.data ?? []);
+  //       console.log("Fetched Companies:", result);
+  //     } catch (error) {
+  //       console.error("Error fetching companies:", error);
+  //     }
+  //   };
+  //   fetchCompanies();
+  // }, []);
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const response = await fetch("http://localhost:3001/master-company/company");
-        const result = await response.json();
-        if (result && Array.isArray(result.data.data)) setCompanies(result?.data?.data ?? []);
+        // 👈 ရိုးရိုး fetch အစား apiClient ကို သုံးပါ
+        const response = await apiClient.get("/master-company/company");
+
+        const result = response as { data?: Company[] | { data?: Company[] } };
+
         console.log("Fetched Companies:", result);
 
+        if (result && Array.isArray(result.data)) {
+          setCompanies(result.data);
+        } else if (result && result.data && Array.isArray(result.data)) {
+          setCompanies(result.data);
+        } else {
+          setCompanies([]);
+        }
       } catch (error) {
         console.error("Error fetching companies:", error);
       }
@@ -83,7 +119,7 @@ export const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSub
     fetchCompanies();
   }, []);
 
-  console.log("Companies list",companies);
+  console.log("Companies list", companies);
 
   return (
     <>
@@ -91,7 +127,10 @@ export const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSub
         titleData={{
           icon: <FontAwesomeIcon icon={faCodeBranch} />,
           text: mode === "create" ? "Branch Registration" : "Update Branch",
-          description: mode === "create" ? "Create New Branches Records" : "Update Existing Branch",
+          description:
+            mode === "create"
+              ? "Create New Branches Records"
+              : "Update Existing Branch",
         }}
         actionNode={
           <div style={{ display: "flex", gap: "10px", width: "400px" }}>
@@ -113,7 +152,7 @@ export const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSub
           </div>
         }
       />
-
+      {/* testing code  */}
       <form
         id="branchForm"
         onSubmit={handleSubmit(onSubmit)}
@@ -121,170 +160,111 @@ export const BranchForm: React.FC<BranchFormProps> = ({ mode, initialData, onSub
       >
         <div className={styles.grid}>
           {/* LEFT — Professional Assignment */}
-          <div className={styles.card}>
-            <div className={styles.sectionHeader}>
-              <div className={styles.sectionBar} />
-              <div className={styles.sectionIcon}>
-                <FontAwesomeIcon icon={faTable} />
-              </div>
-              <span className={styles.sectionTitle}>
-                Professional Assignment
-              </span>
-            </div>
-
+          <FormCard title="Professional Assignment" icon={faTable}>
             <div className={styles.fieldGroup}>
-              {/* <label className={styles.fieldLabel} style={{marginBottom:'1rem'}}>Company</label> */}
-              {/* <select
-                className={styles.select}
-                {...register("company_id")}>
-              
-                <option value="">All Company</option>
-                {companies.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.company_name}
-                  </option>
-                ))}
-              </select> */}
               <DropdownInput
-                label='Company'
+                label="Company"
                 placeholder="Select Company"
-                options={companies.map((c) => ({ id: c.id, name: c.company_name }))}
+                options={companies.map((c) => ({
+                  id: c.id,
+                  name: c.company_name,
+                }))}
                 {...register("company_id")}
-                
               />
             </div>
-          </div>
-
+          </FormCard>
 
           {/* RIGHT — Core Identity */}
-          <div className={styles.card}>
-            <div className={styles.sectionHeader}>
-              <div className={styles.sectionBar} />
-              <div className={styles.sectionIcon}>
-                <FontAwesomeIcon icon={faIdCard} />
-              </div>
-              <span className={styles.sectionTitle}>
-                Core Identity Attributes
-              </span>
-            </div>
-
+          <FormCard title="Core Identity Attributes" icon={faIdCard}>
             <div className={styles.row}>
-              <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Branch Name</label>
-                <Input
-                  label=""
-                  type="text"
-                  placeholder="Enter Your Branches Name..."
-                  icon={<FontAwesomeIcon icon={faUser} />}
-                  {...register("branches_name", { required: "Branch name is required" })}
-                />
-              </div>
-
-              <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>GPS Location</label>
-                <Input
-                readOnly
-                  label=""
-                  type="text"
-                  placeholder="Enter Your GPS Location..."
-                  icon={<FontAwesomeIcon icon={faMapLocation} />}
-                  {...register("gps_location", { required: "GPS location is required" })}
-                />
-              </div>
-            </div>
-
-            <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Description</label>
               <Input
-                label=""
-                placeholder="Enter Your Description...."
-                {...register("description", { required: "Description is required" })}
-              />
-            </div>
-          </div>
-
-
-
-        {/* LEFT — Location Map */}
-          <div className={styles.card}>
-            <div className={styles.sectionHeader}>
-              <div className={styles.sectionBar} />
-              <div className={styles.sectionIcon}>
-                <FontAwesomeIcon icon={faLocationDot} />
-              </div>
-              <span className={styles.sectionTitle}>Location Map</span>
-            </div>
-
-            <div className={styles.mapPlaceholder}>
-              {/* <FontAwesomeIcon icon={faMap} /> */}
-              <MapPicker setValue={setValue}/>
-            </div>
-          </div>
-
-
-            {/* RIGHT — Contact & Address Details */}
-          <div className={styles.card}>
-            <div className={styles.sectionHeader}>
-              <div className={styles.sectionBar} />
-              <div className={styles.sectionIcon}>
-                <FontAwesomeIcon icon={faAddressBook} />
-              </div>
-              <span className={styles.sectionTitle}>
-                Contact & Address Details
-              </span>
-            </div>
-
-            {/* Phone + Division row */}
-            <div className={styles.row}>
-              <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Phone Number</label>
-                <Input
-                  label=""
-                  type="text"
-                  placeholder="+95 9 xxx xxx xxx"
-                  icon={<FontAwesomeIcon icon={faPhone} />}
-                  {...register("phone", { required: "Phone number is required" })}
-                />
-              </div>
-              <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Division</label>
-                <Input
-                  label=""
-                  type="text"
-                  placeholder="Enter Division..."
-                  icon={<FontAwesomeIcon icon={faMapPin} />}
-                  {...register("division", { required: "Division is required" })}
-                />
-              </div>
-            </div>
-       
-
-             {/* City */}
-            <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>City</label>
-              <Input
-                label=""
+                label="BRANCHE NAME"
                 type="text"
-                placeholder="City"
-                icon={<FontAwesomeIcon icon={faCity} />}
-                {...register("city", { required: "City is required" })}
+                placeholder="Enter Your Branches Name..."
+                icon={<FontAwesomeIcon icon={faUser} />}
+                error={errors.branches_name?.message}
+                {...register("branches_name", {
+                  required: "Branch name is required",
+                })}
+              />
+              <Input
+                readOnly
+                label="GPS LOCATION"
+                type="text"
+                placeholder="Enter Your GPS Location..."
+                icon={<FontAwesomeIcon icon={faMapLocation} />}
+                error={errors.gps_location?.message}
+                {...register("gps_location", {
+                  required: "GPS location is required",
+                })}
               />
             </div>
-     
 
-            {/* Street Address */}
+            <Input
+              label="DESCRIPTION"
+              placeholder="Enter Your Description...."
+              error={errors.description?.message}
+              {...register("description", {
+                required: "Description is required",
+              })}
+            />
+          </FormCard>
+
+          {/* LEFT — Location Map */}
+          <FormCard title="Location Map" icon={faLocationDot}>
+            <div className={styles.mapPlaceholder}>
+              <MapPicker setValue={setValue} />
+            </div>
+          </FormCard>
+
+          {/* RIGHT — Contact & Address Details */}
+          <FormCard title="Contact & Address Details" icon={faAddressBook}>
+            <div className={styles.row}>
+              <Input
+                label="PHONE NUMBER"
+                type="text"
+                placeholder="+95 9 xxx xxx xxx"
+                icon={<FontAwesomeIcon icon={faPhone} />}
+                error={errors.phone?.message}
+                {...register("phone", {
+                  required: "Phone number is required",
+                })}
+              />
+
+              <Input
+                label="DIVISION"
+                type="text"
+                placeholder="Enter Division..."
+                icon={<FontAwesomeIcon icon={faMapPin} />}
+                error={errors.division?.message}
+                {...register("division", {
+                  required: "Division is required",
+                })}
+              />
+            </div>
+
+            <Input
+              label="CITY"
+              type="text"
+              placeholder="City"
+              icon={<FontAwesomeIcon icon={faCity} />}
+              error={errors.city?.message}
+              {...register("city", { required: "City is required" })}
+            />
+
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Street Address</label>
+              <label className={styles.textareaLabel}>Street Address</label>
               <textarea
                 className={styles.textarea}
                 placeholder="Enter Your Address...."
                 {...register("address", { required: "Address is required" })}
               />
             </div>
-        </div>
-
+          </FormCard>
         </div>
       </form>
+
+      {/* testing code */}
     </>
   );
 };
