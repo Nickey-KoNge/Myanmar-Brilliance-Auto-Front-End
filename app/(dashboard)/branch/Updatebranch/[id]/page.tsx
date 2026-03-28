@@ -27,23 +27,6 @@ export default function UpdateBranch() {
     undefined,
   );
 
-  // useEffect(() => {
-  //   const fetchBranchData = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         `http://localhost:3001/master-company/branches/${branchId}`,
-  //       );
-  //       const result = await response.json();
-  //       console.log("Fetched Branch Data For Update:", result);
-
-  //       setBranchData(result.data);
-  //     } catch (error) {
-  //       console.error("Error fetching branch data:", error);
-  //     }
-  //   };
-
-  //   fetchBranchData();
-  // }, [branchId]);
   useEffect(() => {
     const fetchBranchData = async () => {
       try {

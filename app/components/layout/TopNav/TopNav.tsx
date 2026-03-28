@@ -1,26 +1,55 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./TopNav.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSun,
   faMoon,
   faBell,
-  faChevronDown,
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import { useTheme } from "@/app/core/providers/ThemeProvider";
-import Cookies from "js-cookie"; // Cookie ဖျက်ရန် import လုပ်ပါ
+import Cookies from "js-cookie";
 
 export const TopNav = () => {
   const { isLight, toggleTheme } = useTheme();
+  const [userInfo, setUserInfo] = useState({
+    name: "Loading...",
+    image: "/default_staff.png",
+  });
 
-  // Logout လုပ်ဆောင်ချက်
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user_data");
+    if (storedUser && storedUser !== "undefined") {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        let imgUrl = "/default_staff.png";
+        console.log("image", parsedUser["image"])
+        if (parsedUser?.image) {
+          imgUrl = parsedUser.image.includes("localhost:3000")
+            ? parsedUser.image.replace("localhost:3000", "localhost:3001")
+            : parsedUser.image;
+        }
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setUserInfo({
+          name: parsedUser?.staffName || parsedUser?.name || "User",
+          image: imgUrl,
+        });
+      } catch (error) {
+        console.error("Failed to parse user data:", error);
+        setUserInfo({ name: "Unknown User", image: "/default_staff.png" });
+      }
+    } else {
+      setUserInfo({ name: "Unknown User", image: "/default_staff.png" });
+    }
+  }, []);
+
   const handleLogout = () => {
     Cookies.remove("access_token");
     Cookies.remove("refresh_token");
-    window.location.href = "/login"; // Login page သို့ ပြန်ပို့ပါ
+    localStorage.removeItem("user_data");
+    window.location.href = "/login";
   };
 
   return (
@@ -61,14 +90,15 @@ export const TopNav = () => {
           <div className={styles.userProfile}>
             <div className={styles.avatar}>
               <Image
-                src="/staff.png"
+                src={userInfo.image}
                 alt="staff image"
                 width={50}
                 height={50}
                 style={{ objectFit: "cover" }}
+                unoptimized
               />
             </div>
-            <span className={styles.userName}>STEVEN JOHN</span>
+            <span className={styles.userName}>{userInfo.name}</span>
           </div>
 
           {/* Logout Button */}

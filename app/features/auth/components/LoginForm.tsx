@@ -9,7 +9,7 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { useForm, SubmitHandler } from "react-hook-form";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import Cookies from "js-cookie";
 import { Input } from "@/app/components/ui/Input/Input";
 import { Button } from "@/app/components/ui/Button/Button";
@@ -52,27 +52,33 @@ export const LoginForm = () => {
         },
       );
 
-      console.log(data.email);
-
       // ၂။ Response မှ Token များကို ရယူခြင်း
-      const { access_token, refresh_token } = response.data.data;
-      console.log(access_token);
-      console.log(refresh_token);
+      const { access_token, refresh_token, user } = response.data.data;
 
+      console.log("Backend က ပြန်လာတဲ့ User:", user);
       // ၃။ Cookies ထဲတွင် သိမ်းဆည်းခြင်း
       Cookies.set("access_token", access_token, {
         expires: 10 / 1440,
         secure: true,
       });
+      // localStorage.setItem("user_data", JSON.stringify(response.data.user));
 
-      Cookies.set("refresh_token", refresh_token, { expires: 7, secure: true });
-
+      Cookies.set("refresh_token", refresh_token, {
+        expires: 7,
+        secure: true
+      });
+      if (user) {
+        localStorage.setItem("user_data", JSON.stringify(user));
+      }
       console.log("Login Successful!");
       router.push("/dashboard");
-    } catch (err: any) {
-      const message =
-        err.response?.data?.message ||
-        "Login failed. Please check your credentials.";
+    } catch (err: unknown) {
+      let message = "Login failed. Please check your credentials.";
+
+      if (isAxiosError(err)) {
+        message = err.response?.data?.message || message;
+      }
+
       setServerError(Array.isArray(message) ? message[0] : message);
     } finally {
       setIsLoading(false);
@@ -159,7 +165,7 @@ export const LoginForm = () => {
           </a>
         </div>
 
-        <Button type="submit" disabled={isLoading} >
+        <Button type="submit" disabled={isLoading}>
           {isLoading ? "SIGNING IN..." : "SIGN IN"}{" "}
           <FontAwesomeIcon icon={faChargingStation} />
         </Button>

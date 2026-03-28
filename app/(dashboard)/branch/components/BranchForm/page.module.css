@@ -140,3 +140,7 @@
   font-size: 28px;
   overflow: hidden;
 }
+.headerActionArea {
+  display: flex;
+  gap: 10px;
+}

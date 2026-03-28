@@ -1,13 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBorderAll,
-  faCalendar,
   faCamera,
   faCircleCheck,
   faPersonCircleExclamation,
@@ -17,62 +14,138 @@ import {
   faIdCard,
   faLock,
   faPhone,
+  faEnvelope,
   faGlobe,
   faCity,
-  faTimes,
-  faEnvelope,
-  faPlus,
+  faArrowsRotate,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
 import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
 import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
 import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
-
-import styles from "./page.module.css";
 import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
+
+import styles from "./page.module.css";
+import { apiClient } from "@/app/features/lib/api-client";
 
 const GENDERS = [
   { id: "Male", name: "Male" },
   { id: "Female", name: "Female" },
 ];
 
-export default function CreateStaff() {
-  const [preview, setPreview] = useState<string | null>(null);
-  const [roles, setRoles] = useState<any[]>([]);
-  const [branches, setBranches] = useState<any[]>([]);
-  const [companies, setCompanies] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+// Type Definitions
+interface Role {
+  id: string;
+  role_name: string;
+}
 
-  const router = useRouter();
+interface Branch {
+  id: string;
+  branches_name: string;
+}
+
+interface Company {
+  id: string;
+  company_name: string;
+}
+
+export interface StaffFormData {
+  role: string;
+  branch: string;
+  company: string;
+  position: string;
+  staffName: string;
+  nrc: string;
+  dob: string;
+  gender: string;
+  photo?: FileList;
+  password?: string;
+  phone: string;
+  email: string;
+  country: string;
+  city: string;
+  street_address: string;
+  image?: string;
+}
+
+interface StaffFormProps {
+  mode: "create" | "update";
+  initialData?: Partial<StaffFormData>;
+  onSubmit: SubmitHandler<StaffFormData>;
+  loading?: boolean;
+}
+
+export const StaffForm: React.FC<StaffFormProps> = ({
+  mode,
+  initialData,
+  onSubmit,
+  loading = false,
+}) => {
+  const [preview, setPreview] = useState<string | null>(null);
+
+  const [roles, setRoles] = useState<Role[]>([]);
+  const [branches, setBranches] = useState<Branch[]>([]);
+  const [companies, setCompanies] = useState<Company[]>([]);
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<StaffFormData>({
     mode: "onTouched",
+    defaultValues: initialData || {},
   });
 
+  // Handle Initial Data Binding (For Update)
   useEffect(() => {
-    const fetchData = async () => {
+    if (initialData) {
+      reset(initialData);
+      if (initialData.image) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setPreview(initialData.image);
+      }
+    }
+  }, [initialData, reset]);
+
+  // Fetch Dropdown Options
+useEffect(() => {
+    const fetchOptions = async () => {
       try {
-        const baseUrl = "http://localhost:3001";
         const [rolesRes, branchesRes, companiesRes] = await Promise.all([
-          fetch(`${baseUrl}/master-service/roles`).then((res) => res.json()),
-          fetch(`${baseUrl}/master-company/branches`).then((res) => res.json()),
-          fetch(`${baseUrl}/master-company/company`).then((res) => res.json()),
+          apiClient.get("/master-service/roles"),
+          apiClient.get("/master-company/branches"),
+          apiClient.get("/master-company/company"),
         ]);
 
-        if (rolesRes.success) setRoles(rolesRes.data.data);
-        if (branchesRes.success) setBranches(branchesRes.data.data);
-        if (companiesRes.success) setCompanies(companiesRes.data.data);
+        const rolesData = (
+          (rolesRes as { data?: { data?: Role[] } })?.data?.data ||
+          (rolesRes as { data?: Role[] })?.data ||
+          []
+        ) as Role[];
+
+        const branchesData = (
+          (branchesRes as { data?: { data?: Branch[] } })?.data?.data ||
+          (branchesRes as { data?: Branch[] })?.data ||
+          []
+        ) as Branch[];
+
+        const companiesData = (
+          (companiesRes as { data?: { data?: Company[] } })?.data?.data ||
+          (companiesRes as { data?: Company[] })?.data ||
+          []
+        ) as Company[];
+
+        setRoles(rolesData);
+        setBranches(branchesData);
+        setCompanies(companiesData);
       } catch (err) {
-        console.error("Fetch error:", err);
+        console.error("Error fetching form options:", err);
       }
     };
-    fetchData();
+    fetchOptions();
   }, []);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,68 +153,33 @@ export default function CreateStaff() {
     if (file) setPreview(URL.createObjectURL(file));
   };
 
-  const onSubmit = async (data: any) => {
-    setLoading(true);
-    try {
-      const formData = new FormData();
-
-      Object.entries(data).forEach(([key, value]: any) => {
-        if (key === "photo" && value?.[0]) {
-          formData.append("image", value[0]);
-        } else if (key === "dob" && value) {
-          formData.append(key, new Date(value).toISOString());
-        } else if (value) {
-          formData.append(key, value);
-        }
-      });
-
-      const response = await fetch(
-        "http://localhost:3001/master-company/staff",
-        {
-          method: "POST",
-          body: formData,
-        },
-      );
-
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.message || "Failed to save");
-      }
-
-      router.push("/staff");
-    } catch (error: any) {
-      alert(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const ActionButtons = (
-    <div className={styles.headerActionArea}>
-      <NavigationBtn href="/staff" variant="cancel">
-        CANCEL
-      </NavigationBtn>
-      <ActionBtn
-        type="submit"
-        variant="action"
-        leftIcon={faPlus}
-        form="staffForm"
-        loading={loading}
-      >
-        ADD STAFF
-      </ActionBtn>
-    </div>
-  );
-
   return (
     <>
       <PageHeader
         titleData={{
           icon: <FontAwesomeIcon icon={faUser} />,
-          text: "Staff Registration",
-          description: "CREATE NEW EMPLOYEE RECORD",
+          text: mode === "create" ? "Staff Registration" : "Staff Update",
+          description:
+            mode === "create"
+              ? "CREATE NEW EMPLOYEE RECORD"
+              : "EDIT EMPLOYEE RECORD",
         }}
-        actionNode={ActionButtons}
+        actionNode={
+          <div className={styles.headerActionArea}>
+            <NavigationBtn href="/staff" variant="cancel">
+              cancel
+            </NavigationBtn>
+            <ActionBtn
+              type="submit"
+              variant="action"
+              leftIcon={mode === "create" ? faCircleCheck : faArrowsRotate }
+              form="staffForm"
+              loading={loading}
+            >
+              {mode === "create" ? "save record" : "update record"}
+            </ActionBtn>
+          </div>
+        }
       />
 
       <form
@@ -149,7 +187,7 @@ export default function CreateStaff() {
         onSubmit={handleSubmit(onSubmit)}
         className={styles.formGridContainer}
       >
-        {/* Section: Professional */}
+        {/* Section: Professional Assignment */}
         <section className={styles.formGridBox}>
           <header className={styles.gridBoxTitle}>
             <span className={styles.pill} />
@@ -163,10 +201,9 @@ export default function CreateStaff() {
               label="Role"
               placeholder="Select Role"
               options={roles.map((r) => ({ id: r.id, name: r.role_name }))}
-              error={errors.role?.message as string}
+              error={errors.role?.message}
               {...register("role", { required: "Role is required" })}
             />
-
             <DropdownInput
               label="Branch"
               placeholder="Select Branch"
@@ -174,10 +211,9 @@ export default function CreateStaff() {
                 id: b.id,
                 name: b.branches_name,
               }))}
-              error={errors.branch?.message as string}
+              error={errors.branch?.message}
               {...register("branch", { required: "Branch is required" })}
             />
-
             <DropdownInput
               label="Company"
               placeholder="Select Company"
@@ -185,14 +221,13 @@ export default function CreateStaff() {
                 id: c.id,
                 name: c.company_name,
               }))}
-              error={errors.company?.message as string}
+              error={errors.company?.message}
               {...register("company", { required: "Company is required" })}
             />
-
             <TextInput
               label="Position"
               placeholder="e.g. Senior Manager"
-              error={errors.position?.message as string}
+              error={errors.position?.message}
               {...register("position", { required: "Position is required" })}
             />
           </div>
@@ -214,36 +249,33 @@ export default function CreateStaff() {
             <TextInput
               label="Staff Name"
               placeholder="Enter Full Name"
-              leftIcon={faUser}
-              error={errors.staffName?.message as string}
+              rightIcon={faUser}
+              error={errors.staffName?.message}
               {...register("staffName", { required: "Staff Name is required" })}
             />
-
             <TextInput
               label="NRC Number"
               placeholder="12/MAMANA(N)123456"
-              leftIcon={faIdCard}
-              error={errors.nrc?.message as string}
+              rightIcon={faIdCard}
+              error={errors.nrc?.message}
               {...register("nrc", { required: "NRC is required" })}
             />
-
             <DateInput
               label="Date of Birth"
-              error={errors.dob?.message as string}
+              error={errors.dob?.message}
               {...register("dob", { required: "DOB is required" })}
             />
-
             <DropdownInput
               label="Gender"
               placeholder="Select Gender"
               options={GENDERS}
-              error={errors.gender?.message as string}
+              error={errors.gender?.message}
               {...register("gender", { required: "Gender is required" })}
             />
           </div>
         </section>
 
-        {/* Section: Security */}
+        {/* Section: Security & Photo */}
         <section className={styles.formGridBox}>
           <header className={styles.gridBoxTitle}>
             <span className={styles.pill} />
@@ -262,18 +294,21 @@ export default function CreateStaff() {
                 accept="image/*"
                 id="photo"
                 {...register("photo", {
-                  required: "A photo is required",
+                  required: mode === "create" ? "A photo is required" : false,
                   onChange: handleImageChange,
                 })}
                 hidden
               />
               <label htmlFor="photo" className={styles.imageUploadBox}>
                 {preview ? (
-                  <img
-                    src={preview}
-                    alt="Preview"
-                    className={styles.previewImage}
-                  />
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={preview}
+                      alt="Preview"
+                      className={styles.previewImage}
+                    />
+                  </>
                 ) : (
                   <FontAwesomeIcon
                     icon={faUser}
@@ -291,19 +326,23 @@ export default function CreateStaff() {
           </div>
 
           <TextInput
-            label="Secure Password"
+            label={mode === "create" ? "Secure Password" : "New Password"}
             type="password"
-            placeholder="••••••••"
-            leftIcon={faLock}
-            error={errors.password?.message as string}
+            placeholder={
+              mode === "create"
+                ? "••••••••"
+                : "Leave blank to keep old password"
+            }
+            rightIcon={faLock}
+            error={errors.password?.message}
             {...register("password", {
-              required: "Password is required",
+              required: mode === "create" ? "Password is required" : false,
               minLength: { value: 6, message: "Min 6 characters" },
             })}
           />
         </section>
 
-        {/* Section: Contact */}
+        {/* Section: Contact Details */}
         <section className={styles.formGridBox}>
           <header className={styles.gridBoxTitle}>
             <span className={styles.pill} />
@@ -316,42 +355,38 @@ export default function CreateStaff() {
             <TextInput
               label="Phone Number"
               placeholder="+95 9..."
-              leftIcon={faPhone}
-              error={errors.phone?.message as string}
+              rightIcon={faPhone}
+              error={errors.phone?.message}
               {...register("phone", { required: "Phone is required" })}
             />
-
             <TextInput
               label="Email Address"
               placeholder="example@mail.com"
-              leftIcon={faEnvelope}
-              error={errors.email?.message as string}
+              rightIcon={faEnvelope}
+              error={errors.email?.message}
               {...register("email", {
                 required: "Email is required",
                 pattern: { value: /^\S+@\S+$/i, message: "Invalid email" },
               })}
             />
-
             <TextInput
               label="Country"
               placeholder="Myanmar"
-              leftIcon={faGlobe}
+              rightIcon={faGlobe}
               {...register("country")}
             />
-
             <TextInput
               label="City"
               placeholder="Yangon"
-              leftIcon={faCity}
+              rightIcon={faCity}
               {...register("city")}
             />
-
             <TextInput
               label="Street Address"
               placeholder="No. (123), Street Name..."
               as="textarea"
               rows={3}
-              error={errors.street_address?.message as string}
+              error={errors.street_address?.message}
               {...register("street_address", {
                 required: "Address is required",
               })}
@@ -361,4 +396,4 @@ export default function CreateStaff() {
       </form>
     </>
   );
-}
+};
