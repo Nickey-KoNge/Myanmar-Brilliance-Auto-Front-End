@@ -11,6 +11,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
+  
 }
 
 .fitContent {
@@ -26,14 +27,17 @@
 .actionBtn {
   background: var(--accent);
   color: var(--btn-text);
+  text-transform: uppercase;
 }
 .successBtn {
   background: var(--success);
   color: var(--btn-text);
+  text-transform: uppercase;
 }
 .cancelBtn {
   background: var(--bg-btn);
   color: var(--btn-text);
+  text-transform: uppercase;
 }
 
 .btn:hover:not(:disabled) {

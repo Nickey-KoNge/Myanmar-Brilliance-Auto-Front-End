@@ -13,10 +13,11 @@ import {
   faMapPin,
   faAddressBook,
   faCity,
+  faArrowsRotate,
 } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Button } from "@/app/components/ui/Button/Button";
+// import { Button } from "@/app/components/ui/Button/Button";
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
 import styles from "./page.module.css";
 import dynamic from "next/dynamic";
@@ -24,6 +25,8 @@ import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
 
 import { FormCard } from "@/app/components/ui/FormCard/FormCard";
 import { apiClient } from "@/app/features/lib/api-client";
+import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
+import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 
 const MapPicker = dynamic(
   () => import("../../../../components/ui/MapPicker/MapPicker"),
@@ -56,12 +59,14 @@ interface BranchFormProps {
   mode: "create" | "update";
   initialData?: FormData;
   onSubmit: SubmitHandler<FormData>;
+  loading?: boolean;
 }
 
 export const BranchForm: React.FC<BranchFormProps> = ({
   mode,
   initialData,
   onSubmit,
+  loading = false,
 }) => {
   const {
     register,
@@ -74,31 +79,13 @@ export const BranchForm: React.FC<BranchFormProps> = ({
   });
   const [companies, setCompanies] = useState<Company[]>([]);
 
-  // Reset form with initial data change
   useEffect(() => {
     reset(initialData);
   }, [initialData, reset]);
 
-  // useEffect(() => {
-  //   const fetchCompanies = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         "http://localhost:3001/master-company/company",
-  //       );
-  //       const result = await response.json();
-  //       if (result && Array.isArray(result.data))
-  //         setCompanies(result?.data?.data ?? []);
-  //       console.log("Fetched Companies:", result);
-  //     } catch (error) {
-  //       console.error("Error fetching companies:", error);
-  //     }
-  //   };
-  //   fetchCompanies();
-  // }, []);
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        // 👈 ရိုးရိုး fetch အစား apiClient ကို သုံးပါ
         const response = await apiClient.get("/master-company/company");
 
         const result = response as { data?: Company[] | { data?: Company[] } };
@@ -133,26 +120,23 @@ export const BranchForm: React.FC<BranchFormProps> = ({
               : "Update Existing Branch",
         }}
         actionNode={
-          <div style={{ display: "flex", gap: "10px", width: "400px" }}>
-            <Button
-              type="button"
-              style={{
-                background: "#1a1a1a",
-                color: "white",
-                border: "1px solid #333",
-              }}
-              onClick={() => window.history.back()}
+          <div className={styles.headerActionArea}>
+            <NavigationBtn href="/branch" variant="cancel">
+              cancel
+            </NavigationBtn>
+            <ActionBtn
+              type="submit"
+              variant="action"
+              leftIcon={mode === "create" ? faCircleCheck : faArrowsRotate}
+              form="branchForm"
+              loading={loading}
             >
-              CANCEL
-            </Button>
-            <Button type="submit" form="branchForm">
-              <FontAwesomeIcon icon={faCircleCheck} />
-              {mode === "create" ? "SAVE RECORD" : "UPDATE RECORD"}
-            </Button>
+              {mode === "create" ? "save record" : "update record"}
+            </ActionBtn>
           </div>
         }
       />
-      {/* testing code  */}
+
       <form
         id="branchForm"
         onSubmit={handleSubmit(onSubmit)}
@@ -263,8 +247,6 @@ export const BranchForm: React.FC<BranchFormProps> = ({
           </FormCard>
         </div>
       </form>
-
-      {/* testing code */}
     </>
   );
 };

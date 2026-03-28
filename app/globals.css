@@ -71,7 +71,7 @@ button {
   --bg-head: #3b3b41;
   --bg-row-alt: #29292d;
   --bg-row-hover: #404047;
-  --bg-btn: #1a1a1b;
+  --bg-btn: #0d0d0d;
   --border-input: #402626;
   /* Btn colors */
   --accent: #a33b3b;
@@ -89,7 +89,7 @@ button {
   --bg-main: #eeecec;
   --bg-card: #f5f5f5;
   --bg-input: #ffffff;
-  --bg-btn: #1a1a1b;
+  /* --bg-btn: #1a1a1b; */
   --btn-text: #eeecec;
   --color-primary: #a33b3b;
   --color-primary-hover: #962e32;
@@ -111,3 +111,5 @@ button {
 
   --border-input: #402626;
 }
+
+

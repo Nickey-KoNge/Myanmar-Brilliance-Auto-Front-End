@@ -1,14 +1,14 @@
 "use client";
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
 import {
-  faAdd,
   faCalendarDays,
   faClockRotateLeft,
   faCodeBranch,
+  faPlus,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button } from "@/app/components/ui/Button/Button";
+// import { Button } from "@/app/components/ui/Button/Button";
 import { useEffect, useState } from "react";
 import React from "react";
 
@@ -23,6 +23,8 @@ import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
 import { FilterState, useFilters } from "@/app/hooks/userFilters";
 // import { set } from "react-hook-form";
 import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
+import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
+import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 
 interface Branch {
   id: string;
@@ -46,7 +48,7 @@ export default function BranchPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
-  const PAGE_SIZE = 10;
+  const PAGE_SIZE = 6;
 
   //Active Filters State
   const [activeFilters, setActiveFilters] = useState<FilterState>({
@@ -107,9 +109,12 @@ export default function BranchPage() {
           limit: PAGE_SIZE.toString(),
         };
         // const response=await apiClient.get("/master-company/branches")
-        if (activeFilters.search) params.search = activeFilters.search as string;
-        if (activeFilters.startDate) params.startDate = activeFilters.startDate as string;
-        if (activeFilters.endDate) params.endDate = activeFilters.endDate as string;
+        if (activeFilters.search)
+          params.search = activeFilters.search as string;
+        if (activeFilters.startDate)
+          params.startDate = activeFilters.startDate as string;
+        if (activeFilters.endDate)
+          params.endDate = activeFilters.endDate as string;
         const queryString = new URLSearchParams(params).toString();
         const response = await apiClient.get(
           `/master-company/branches?${queryString}`,
@@ -162,13 +167,10 @@ export default function BranchPage() {
   };
 
   const renderLiveButtonArea = (
-    <div>
-      {/* Add New Branch Button */}
-
-      <Button onClick={() => router.push("/branch/Addbranch")}>
-        <FontAwesomeIcon icon={faAdd} />
-        Add New Branch
-      </Button>
+    <div className={styles.headerActionArea}>
+      <NavigationBtn href="/branch/Addbranch" leftIcon={faPlus}>
+        add branch
+      </NavigationBtn>
     </div>
   );
 
@@ -183,50 +185,57 @@ export default function BranchPage() {
       />
       <PageGridLayout
         sidebar={
-          <>
-            <p className={styles.gridBoxTitle}>Branch Search</p>
-            <hr className={styles.cuttingLine} />
+          <div className={styles.sidebarWrapper}>
+            <div className={styles.topSection}>
+              <p className={styles.gridBoxTitle}>Branch Search</p>
+              <hr className={styles.cuttingLine} />
 
-            <div className={styles.searchContainer}>
-              {/* Text Search  */}
+              <div className={styles.searchContainer}>
+                <TextInput
+                  label="Searching"
+                  placeholder="Search by name, email..."
+                  value={filters.search}
+                  onChange={(e) => updateFilter("search", e.target.value)}
+                />
 
-              <TextInput
-                label="Searching"
-                placeholder="Search by name, email..."
-                value={filters.search}
-                onChange={(e) => updateFilter("search", e.target.value)}
-              />
-              {/* Date Search */}
-
-              <div className={styles.filterRow}>
                 <div className={styles.filterRow}>
+                  <div className={styles.filterRow}>
+                    <DateInput
+                      label="From"
+                      value={filters.startDate}
+                      onChange={(e) =>
+                        updateFilter("startDate", e.target.value)
+                      }
+                      rightIcon={faCalendarDays}
+                    />
+                  </div>
+
                   <DateInput
-                    label="From"
-                    value={filters.startDate}
-                    onChange={(e) => updateFilter("startDate", e.target.value)}
+                    label="To"
+                    value={filters.endDate}
+                    onChange={(e) => updateFilter("endDate", e.target.value)}
                     rightIcon={faCalendarDays}
                   />
                 </div>
 
-                <DateInput
-                  label="To"
-                  value={filters.endDate}
-                  onChange={(e) => updateFilter("endDate", e.target.value)}
-                  rightIcon={faCalendarDays}
-                />
+                <div style={{ alignSelf: "flex-start" }}>
+                  <ActionBtn
+                    type="reset"
+                    variant="action"
+                    fullWidth={false}
+                    onClick={resetFilters}
+                  >
+                    reset
+                  </ActionBtn>
+                </div>
               </div>
+            </div>
 
-              <div className={styles.btnBox}>
-                <Button className={styles.resetBtn} onClick={resetFilters}>
-                  Reset Filters
-                </Button>
-              </div>
-
+            <div className={styles.bottomSection}>
               <hr className={styles.cuttingLine} />
 
               <div className={styles.recentRecord}>
                 <span>
-                  {" "}
                   <FontAwesomeIcon icon={faClockRotateLeft} />
                 </span>
                 <p className={styles.recentTitle}>RECENT RECORD</p>
@@ -237,15 +246,14 @@ export default function BranchPage() {
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
-                    {" "}
                     <p className={styles.statLable}>Active Branches :</p>
-                    <p className={styles.textSuccess}>36</p>{" "}
-                  </div>{" "}
+                    <p className={styles.textSuccess}>36</p>
+                  </div>
                   <div>
                     <p className={styles.statLable}>Inactive Branches :</p>
-                    <p className={styles.textDanger}>4</p>{" "}
-                  </div>{" "}
-                </div>{" "}
+                    <p className={styles.textDanger}>4</p>
+                  </div>
+                </div>
               </div>
 
               <hr className={styles.cuttingLine} />
@@ -254,7 +262,7 @@ export default function BranchPage() {
                 <span className={styles.spanText}>Nickey (Admin)</span>
               </p>
             </div>
-          </>
+          </div>
         }
       >
         <div>
