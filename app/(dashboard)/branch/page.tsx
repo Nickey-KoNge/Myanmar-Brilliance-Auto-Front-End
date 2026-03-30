@@ -108,13 +108,14 @@ export default function BranchPage() {
           page: currentPage.toString(),
           limit: PAGE_SIZE.toString(),
         };
-        // const response=await apiClient.get("/master-company/branches")
+
         if (activeFilters.search)
           params.search = activeFilters.search as string;
         if (activeFilters.startDate)
           params.startDate = activeFilters.startDate as string;
         if (activeFilters.endDate)
           params.endDate = activeFilters.endDate as string;
+        
         const queryString = new URLSearchParams(params).toString();
         const response = await apiClient.get(
           `/master-company/branches?${queryString}`,

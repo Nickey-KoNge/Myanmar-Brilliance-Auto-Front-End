@@ -64,7 +64,7 @@ button {
   --active-right-link-color: #b25151;
   --padding: 1rem;
   --radius: 8px;
-  --gap: 1rem;
+  --gap: 1.5rem;
   --accent: #a33b3b;
   /* table css */
   --bg-table: #2d2d30;
@@ -82,7 +82,6 @@ button {
 
   --padding: 1rem;
   --margin: 1rem;
-  --gap: 1rem;
 }
 .light-mode {
   --bg-layout: #ffffff;
@@ -111,5 +110,3 @@ button {
 
   --border-input: #402626;
 }
-
-

@@ -2,14 +2,14 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--gap);
 }
 
 /* GRID: 2 columns */
 .grid {
   display: grid;
   grid-template-columns: 1.25fr 2fr;
-  gap: 16px;
+  gap: var(--gap);
 }
 
 /* Each card panel */
@@ -20,7 +20,7 @@
   padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--gap);
 }
 
 /* SECTION HEADER (red bar + icon + title) */
@@ -79,7 +79,7 @@
 .row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+   gap: var(--gap);
 }
 
 /* SELECT */
