@@ -203,7 +203,20 @@ export const SideNav = () => {
         />
 
         <NavItem icon={faWrench} label="Spare-part" href="/spare-part" />
-        <NavItem icon={faCar} label="Fleet" href="/fleet" />
+        
+        <NavDropdown
+          icon={faCar}
+          label="Fleet"
+          subItems={[
+            {
+              icon: faBuildingFlag,
+              label: "Vehicle Brands",
+              href: "/vehicle-brands",
+            },
+          ]}
+          isOpen={openDropdown === "Fleet"}
+          onToggle={() => handleToggle("Fleet")}
+        />
 
         <div className={styles.sectionTitle}>Sale</div>
         <NavItem icon={faShoppingCart} label="Sale" href="/sale" />
