@@ -2,141 +2,270 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faAngleLeft,
-  faAngleRight,
   faBuilding,
   faCalendarDays,
-  faCaretDown,
   faClockRotateLeft,
   faPlus,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 
+// Reusable Components များကို Import လုပ်ခြင်း
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
-import { Button } from "@/app/components/ui/Button/Button";
-import { apiClient } from "@/app/features/lib/api-client";
-import styles from "./Company.module.css";
-// Import your new custom modal! Make sure the path matches where you saved it.
+import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
+import { DataTable } from "@/app/components/ui/DataTable/DataTable";
+import { Pagination } from "@/app/components/ui/Pagination/Pagination";
+import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
+import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
+import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
+import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
+import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 import DeleteModal from "@/app/components/ui/Delete/DeleteModal";
 
-const TABLE_HEADERS = [
-  "Company Info",
-  "Email",
-  "Address",
-  "Website",
-  "Reg No",
-  "Phone",
-  "Actions",
-];
-
-const FILTERS = [
-  {
-    label: "Status",
-    options: ["Active", "Inactive"],
-  },
-];
+import { apiClient } from "@/app/features/lib/api-client";
+import { FilterState, useFilters } from "@/app/hooks/userFilters";
+import styles from "./page.module.css";
 
 interface Company {
   id: string;
-  name: string;
-  email: string;
-  address: string;
-  website: string;
-  regNo: string;
+  company_name?: string;
+  reg_number: string;
   phone: string;
-  logo?: string;
+  email: string;
+  owner_name: string;
+  owner_phone: string;
+  owner_email: string;
+  image: string;
+  fullAddress: string;
+  website_url: string;
+  establish_year: string;
+  reg_exp_date: string;
 }
 
 export default function CompanyPage() {
-  const [companies, setCompanies] = useState<Company[]>([]);
-  
-  // --- NEW: Modal State ---
-  const [modalOpen, setModalOpen] = useState(false);
-  const [companyToDelete, setCompanyToDelete] = useState<{ id: string; name: string } | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
-  // ------------------------
-
   const router = useRouter();
 
-  const renderLiveButtonArea = (
-    <div className={styles.headerActionArea}>
-      <Link href="/company/create" className={styles.headerbarButton}>
-        <FontAwesomeIcon icon={faPlus} />
-        ADD COMPANY
-      </Link>
-    </div>
+  // Data States
+  const [companies, setCompanies] = useState<Company[]>([]);
+
+  // Modal States
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [selectedCompany, setSelectedCompany] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+
+  // Pagination States
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalRecords, setTotalRecords] = useState(0);
+  const PAGE_SIZE = 6;
+
+  // Active Filters State
+  const [activeFilters, setActiveFilters] = useState<FilterState>({
+    search: "",
+    startDate: "",
+    endDate: "",
+    status: "",
+  });
+
+  // Custom Hook for Filters
+  const { filters, updateFilter, resetFilters } = useFilters(
+    { search: "", startDate: "", endDate: "", status: "all" },
+    (debouncedFilters: FilterState) => {
+      const isFilterChanged =
+        activeFilters.search !== debouncedFilters.search ||
+        activeFilters.startDate !== debouncedFilters.startDate ||
+        activeFilters.endDate !== debouncedFilters.endDate ||
+        activeFilters.status !== debouncedFilters.status;
+
+      setActiveFilters(debouncedFilters);
+
+      if (isFilterChanged) {
+        setCurrentPage(1);
+      }
+    },
   );
 
+  // Fetch API Data
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const response = await apiClient.get("/master-company/company");
-        setCompanies(response.data);
+        const params: Record<string, string> = {
+          page: currentPage.toString(),
+          limit: PAGE_SIZE.toString(),
+        };
+
+        if (activeFilters.search)
+          params.search = activeFilters.search as string;
+        if (activeFilters.startDate)
+          params.startDate = activeFilters.startDate as string;
+        if (activeFilters.endDate)
+          params.endDate = activeFilters.endDate as string;
+
+        const queryString = new URLSearchParams(params).toString();
+        const response = await apiClient.get(
+          `/master-company/company?${queryString}`,
+        );
+
+        const res = response as unknown as {
+          data?:
+            | Company[]
+            | { data?: Company[]; total?: number; totalPages?: number };
+          total?: number;
+          totalPages?: number;
+        };
+
+        let companyList: Company[] = [];
+        let total = 0;
+        let totalPagesCount = 1;
+
+        if (res && typeof res === "object") {
+          if (Array.isArray(res.data)) {
+            companyList = res.data;
+            total = res.total || 0;
+            totalPagesCount = res.totalPages || 1;
+          } else if (
+            res.data &&
+            typeof res.data === "object" &&
+            Array.isArray(res.data.data)
+          ) {
+            companyList = res.data.data;
+            total = res.data.total || 0;
+            totalPagesCount = res.data.totalPages || 1;
+          }
+        }
+
+        setCompanies(companyList);
+        setTotalRecords(total);
+        setTotalPages(totalPagesCount);
       } catch (error) {
-        console.error(error);
-        // Fallback to mock data if API fails
-        setCompanies([
-          {
-            id: "1",
-            name: "Myanmar Brilliance Auto",
-            email: "myanmarbrillianceauto@gmail.com",
-            address: "No 22, Aung Myitt Thar road, Bago, Myanmar",
-            website: "https://myanmarbrillianceauto.com",
-            regNo: "10387373635",
-            phone: "0974645555",
-            logo: "",
-          },
-        ]);
+        console.error("Failed to fetch companies:", error);
+        setCompanies([]);
       }
     };
 
     fetchCompanies();
-  }, []);
+  }, [currentPage, activeFilters]);
 
-  // --- NEW: Handle Clicking the Trash Can ---
-  const handleDeleteClick = (id: string, name: string) => {
-    setCompanyToDelete({ id, name });
-    setModalOpen(true);
+  const handleDeleteSuccess = (id: string) => {
+    setCompanies((prev) => prev.filter((c) => c.id !== id));
   };
 
-  // --- NEW: Handle the Actual Deletion from the Modal ---
-  const confirmDelete = async () => {
-    if (!companyToDelete) return;
-    setIsDeleting(true);
+  const columns = [
+    {
+      header: "Company Info",
+      key: "companyInfo",
+      render: (company: Company) => {
+        const compName = company.company_name || "Unknown";
+        return (
+          <div className={styles.staffInfo}>
+            {company.image ? (
+              <Image
+                src={company.image}
+                alt={compName}
+                width={40}
+                height={40}
+                className={styles.avatar}
+                unoptimized
+              />
+            ) : (
+              <div className={styles.placeholderLogo}>
+                <FontAwesomeIcon icon={faBuilding} />
+              </div>
+            )}
+            <div>
+              <div style={{ fontWeight: "600" }}>{compName}</div>
+              <div style={{ fontSize: "11px", color: "#666" }}>
+                Reg: {company.reg_number}
+              </div>
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      header: "Owner Details",
+      key: "owner",
+      render: (company: Company) => (
+        <div>
+          <div style={{ fontWeight: "500" }}>{company.owner_name}</div>
+          <div style={{ fontSize: "12px", color: "#007bff" }}>
+            {company.owner_email}
+          </div>
+          <div style={{ fontSize: "12px" }}>{company.owner_phone}</div>
+        </div>
+      ),
+    },
+    {
+      header: "Contact & Web",
+      key: "contact",
+      render: (company: Company) => (
+        <div>
+          <div>{company.email}</div>
+          <div style={{ fontSize: "12px", color: "gray" }}>
+            {company.website_url}
+          </div>
+          <div style={{ fontSize: "12px" }}>{company.phone}</div>
+        </div>
+      ),
+    },
+    {
+      header: "Full Address",
+      key: "fullAddress",
+      render: (company: Company) => (
+        <div title={company.fullAddress} className={styles.addressCell}>
+          {company.fullAddress || "-"}
+        </div>
+      ),
+    },
+    {
+      header: "Timeline",
+      key: "dates",
+      render: (company: Company) => (
+        <div>
+          <div className={styles.timelineText}>
+            Est: {company.establish_year}
+          </div>
+          <div className={styles.expireText}>
+            Exp: {company.reg_exp_date?.split("T")[0] || "-"}
+          </div>
+        </div>
+      ),
+    },
+    {
+      header: "Actions",
+      key: "actions",
+      render: (company: Company) => (
+        <button
+          className={styles.deleteBtn}
+          onClick={(e) => {
+            e.stopPropagation();
+            setSelectedCompany({
+              id: company.id,
+              name: company.company_name || "",
+            });
+            setIsDeleteOpen(true);
+          }}
+        >
+          <FontAwesomeIcon icon={faTrashCan} />
+        </button>
+      ),
+    },
+  ];
 
-    try {
-      await apiClient.delete(`/master-company/company/${companyToDelete.id}`);
-      setCompanies((prev) => prev.filter((c) => c.id !== companyToDelete.id));
-      setModalOpen(false); // Close the modal on success
-    } catch (error) {
-      console.error(error);
-      alert("Delete failed");
-    } finally {
-      setIsDeleting(false);
-      setCompanyToDelete(null); // Reset the selected company
-    }
-  };
+  const renderLiveButtonArea = (
+    <div className={styles.headerActionArea}>
+      <NavigationBtn href="/company/Addcompany" leftIcon={faPlus}>
+        add company
+      </NavigationBtn>
+    </div>
+  );
 
   return (
     <>
-      {/* --- NEW: The Delete Modal Component --- */}
-<DeleteModal
-  isOpen={modalOpen}
-  onClose={() => setModalOpen(false)}
-  itemName={companyToDelete?.name || ""}
-  name="Company"
-  id={companyToDelete?.id || ""}
-  apiRoute="master-company/company"
-  onDeleteSuccess={(deletedId) => {
-    // This removes the deleted company from your list automatically
-    setCompanies((prev) => prev.filter((c) => c.id !== deletedId));
-  }}
-/>
-
       <PageHeader
         titleData={{
           icon: <FontAwesomeIcon icon={faBuilding} />,
@@ -144,188 +273,139 @@ export default function CompanyPage() {
         }}
         actionNode={renderLiveButtonArea}
       />
-      <div className={styles.gridContainer}>
-        {/* TABLE SECTION */}
-        <section className={styles.gridBox}>
-          <div className={styles.spacer}>
-            <div>
-              <p className={styles.gridBoxTitle}>COMPANY MASTER RECORDS</p>
 
-              <table className={styles.table}>
-                <thead>
-                  <tr>
-                    {TABLE_HEADERS.map((h) => (
-                      <th key={h}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {companies.map((company) => (
-                    <tr
-                      key={company.id}
-                      onClick={() => router.push(`/company/${company.id}`)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <td className={styles.staffInfo}>
-                        {company.logo ? (
-                          <Image
-                            src={company.logo}
-                            alt={company.name}
-                            width={40}
-                            height={40}
-                            className={styles.avatar}
-                            unoptimized
-                          />
-                        ) : (
-                          <div className={styles.placeholderLogo}>
-                            <FontAwesomeIcon icon={faBuilding} />
-                          </div>
-                        )}
-                        {company.name}
-                      </td>
-                      <td>{company.email || "N/A"}</td>
-                      <td>{company.address || "N/A"}</td>
-                      <td>{company.website || "N/A"}</td>
-                      <td>{company.regNo || "N/A"}</td>
-                      <td>{company.phone || "N/A"}</td>
-                      <td onClick={(e) => e.stopPropagation()}>
-                        <button
-  className={styles.deleteBtn}
-  // We use modalOpen to disable the button while the process is happening
-  disabled={modalOpen} 
-  onClick={(e) => {
-    e.stopPropagation(); // Stop from going to the update page
-    setCompanyToDelete({ id: company.id, name: company.company_name || company.name || "" });
-    setModalOpen(true);
-  }}
->
-  <FontAwesomeIcon icon={faTrashCan} />
-</button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+      <PageGridLayout
+        sidebar={
+          <div className={styles.sidebarWrapper}>
+            {/* --- Top Section (Search & Filters) --- */}
+            <div className={styles.topSection}>
+              <p className={styles.gridBoxTitle}>Company Search</p>
+              <hr className={styles.cuttingLine} />
 
-            <div className={styles.pagination}>
-              <p>
-                Showing <span className={styles.spanText}>1</span> to{" "}
-                <span className={styles.spanText}>10</span> of{" "}
-                <span className={styles.spanText}>200</span> total records
-              </p>
-              <div className={styles.pageActions}>
-                <span>
-                  Page <span className={styles.spanText}>1</span> of{" "}
-                  <span className={styles.spanText}>20</span>
-                </span>
-                <button>
-                  <FontAwesomeIcon icon={faAngleLeft} />
-                </button>
-                <button>
-                  <FontAwesomeIcon icon={faAngleRight} />
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* RIGHT PANEL (SIDEBAR) */}
-        <aside className={styles.gridBox}>
-          <p className={styles.gridBoxTitle}>Company Search</p>
-
-          <hr className={styles.cuttingLine} />
-
-          <div className={styles.searchContainer}>
-            <div className={styles.field}>
-              <label className={styles.label}>Searching</label>
-              <div className={styles.inputWrapper}>
-                <input
-                  type="text"
+              <div className={styles.searchContainer}>
+                <TextInput
+                  label="Searching"
                   placeholder="Search by name, email, reg no..."
+                  value={filters.search}
+                  onChange={(e) => updateFilter("search", e.target.value)}
                 />
-              </div>
-            </div>
 
-            <div className={styles.filterRow}>
-              {["From", "To"].map((label) => (
-                <div key={label} className={styles.field}>
-                  <label className={styles.label}>{label}</label>
-                  <div className={styles.inputWrapper}>
-                    <input type="date" className={styles.dateSearch} />
-                    <FontAwesomeIcon
-                      icon={faCalendarDays}
-                      className={styles.icon}
-                    />
-                  </div>
+                <div className={styles.filterRow}>
+                  <DateInput
+                    label="From"
+                    value={filters.startDate}
+                    onChange={(e) => updateFilter("startDate", e.target.value)}
+                    rightIcon={faCalendarDays}
+                  />
+                  <DateInput
+                    label="To"
+                    value={filters.endDate}
+                    onChange={(e) => updateFilter("endDate", e.target.value)}
+                    rightIcon={faCalendarDays}
+                  />
                 </div>
-              ))}
-            </div>
 
-            <div className={styles.filterRow}>
-              {FILTERS.map((filter) => (
-                <div key={filter.label} className={styles.field}>
-                  <label className={styles.label}>{filter.label}</label>
-                  <div className={styles.inputWrapper}>
-                    <select defaultValue="all">
-                      <option value="all">All {filter.label}s</option>
-                      {filter.options.map((opt) => (
-                        <option key={opt} value={opt.toLowerCase()}>
-                          {opt}
-                        </option>
-                      ))}
-                    </select>
-                    <FontAwesomeIcon
-                      icon={faCaretDown}
-                      className={styles.icon}
-                    />
-                  </div>
+                <div className={styles.filterRow}>
+                  <DropdownInput
+                    label="Status"
+                    options={[
+                      { id: "active", name: "Active" },
+                      { id: "inactive", name: "Inactive" },
+                    ]}
+                    valueKey="id"
+                    nameKey="name"
+                    value={(filters.status as string) || "all"}
+                    onChange={(e) => updateFilter("status", e.target.value)}
+                    placeholder="All Status"
+                  />
                 </div>
-              ))}
-            </div>
 
-            <div className={styles.btnBox}>
-              <Button className={styles.resetBtn}>Reset Filters</Button>
-            </div>
-
-            <hr className={styles.cuttingLine} />
-
-            <div className={styles.recentRecord}>
-              <span>
-                <FontAwesomeIcon icon={faClockRotateLeft} />
-              </span>
-              <p className={styles.recentTitle}>RECENT RECORD</p>
-
-              <span />
-              <div className={styles.stat}>
-                <div>
-                  <p className={styles.statLable}>Total Company :</p>
-                  <p className={styles.textDanger}>{companies.length}</p>
-                </div>
-                <div>
-                  <p className={styles.statLable}>Active Company :</p>
-                  <p className={styles.textSuccess}>
-                    {companies.length > 0 ? companies.length - 1 : 0}
-                  </p>
-                </div>
-                <div>
-                  <p className={styles.statLable}>Inactive Company :</p>
-                  <p className={styles.textDanger}>
-                    {companies.length > 0 ? 1 : 0}
-                  </p>
+                <div style={{ alignSelf: "flex-start" }}>
+                  <ActionBtn
+                    type="reset"
+                    variant="action"
+                    fullWidth={false}
+                    onClick={resetFilters}
+                  >
+                    reset
+                  </ActionBtn>
                 </div>
               </div>
             </div>
 
-            <hr className={styles.cuttingLine} />
+            {/* --- Bottom Section (Stats & Records) --- */}
+            <div className={styles.bottomSection}>
+              <hr className={styles.cuttingLine} />
 
-            <p className={styles.lastEdited}>
-              Last Edited :{" "}
-              <span className={styles.spanText}>Nickey (Admin)</span>
-            </p>
+              <div className={styles.recentRecord}>
+                <span>
+                  <FontAwesomeIcon icon={faClockRotateLeft} />
+                </span>
+                <p className={styles.recentTitle}>RECENT RECORD</p>
+                <span />
+
+                <div className={styles.stat}>
+                  <div>
+                    <p className={styles.statLable}>Total Company :</p>
+                    <p className={styles.textDanger}>{totalRecords}</p>
+                  </div>
+                  <div>
+                    <p className={styles.statLable}>Active Company :</p>
+                    <p className={styles.textSuccess}>
+                      {totalRecords > 0 ? totalRecords - 1 : 0}
+                    </p>
+                  </div>
+                  <div>
+                    <p className={styles.statLable}>Inactive Company :</p>
+                    <p className={styles.textDanger}>
+                      {totalRecords > 0 ? 1 : 0}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <hr className={styles.cuttingLine} />
+              <p className={styles.lastEdited}>
+                Last Edited :{" "}
+                <span className={styles.spanText}>Nickey (Admin)</span>
+              </p>
+            </div>
           </div>
-        </aside>
-      </div>
+        }
+      >
+        {/* Main Content Area (Table & Pagination) */}
+        <div>
+          <p className={styles.gridBoxTitle}>COMPANY MASTER RECORDS</p>
+          <DataTable
+            data={companies}
+            columns={columns}
+            onRowClick={(company) =>
+              router.push(`/company/Updatecompany/${company.id}`)
+            }
+          />
+        </div>
+
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalRecords={totalRecords}
+          pageSize={PAGE_SIZE}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
+      </PageGridLayout>
+
+      {/* Delete Modal */}
+      {isDeleteOpen && selectedCompany && (
+        <DeleteModal
+          isOpen={isDeleteOpen}
+          onClose={() => setIsDeleteOpen(false)}
+          itemName={selectedCompany.name}
+          name="Company"
+          id={selectedCompany.id}
+          apiRoute="master-company/company"
+          onDeleteSuccess={handleDeleteSuccess}
+        />
+      )}
     </>
   );
 }
