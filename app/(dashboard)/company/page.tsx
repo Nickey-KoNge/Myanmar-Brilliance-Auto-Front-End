@@ -13,7 +13,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 // Reusable Components များကို Import လုပ်ခြင်း
-import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
+// import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
 import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
 import { DataTable } from "@/app/components/ui/DataTable/DataTable";
 import { Pagination } from "@/app/components/ui/Pagination/Pagination";
@@ -61,7 +61,7 @@ export default function CompanyPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
-  const PAGE_SIZE = 6;
+  const PAGE_SIZE = 10;
 
   // Active Filters State
   const [activeFilters, setActiveFilters] = useState<FilterState>({
@@ -256,28 +256,11 @@ export default function CompanyPage() {
     },
   ];
 
-  const renderLiveButtonArea = (
-    <div className={styles.headerActionArea}>
-      <NavigationBtn href="/company/Addcompany" leftIcon={faPlus}>
-        add company
-      </NavigationBtn>
-    </div>
-  );
-
   return (
     <>
-      <PageHeader
-        titleData={{
-          icon: <FontAwesomeIcon icon={faBuilding} />,
-          text: "Company Management",
-        }}
-        actionNode={renderLiveButtonArea}
-      />
-
       <PageGridLayout
         sidebar={
           <div className={styles.sidebarWrapper}>
-            {/* --- Top Section (Search & Filters) --- */}
             <div className={styles.topSection}>
               <p className={styles.gridBoxTitle}>Company Search</p>
               <hr className={styles.cuttingLine} />
@@ -333,7 +316,6 @@ export default function CompanyPage() {
               </div>
             </div>
 
-            {/* --- Bottom Section (Stats & Records) --- */}
             <div className={styles.bottomSection}>
               <hr className={styles.cuttingLine} />
 
@@ -375,7 +357,25 @@ export default function CompanyPage() {
       >
         {/* Main Content Area (Table & Pagination) */}
         <div>
-          <p className={styles.gridBoxTitle}>COMPANY MASTER RECORDS</p>
+          <div className={styles.tableHeaderArea}>
+            <div className={styles.paginationInfoWrapper}>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalRecords={totalRecords}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCurrentPage}
+                showOnlyInfo={true}
+              />
+            </div>
+            <p className={styles.tableTitle}>COMPANY MASTER RECORDS</p>
+
+            <div className={styles.headerActionArea}>
+              <NavigationBtn href="/company/Addcompany" leftIcon={faPlus}>
+                add company
+              </NavigationBtn>
+            </div>
+          </div>
           <DataTable
             data={companies}
             columns={columns}
@@ -390,7 +390,8 @@ export default function CompanyPage() {
           totalPages={totalPages}
           totalRecords={totalRecords}
           pageSize={PAGE_SIZE}
-          onPageChange={(page) => setCurrentPage(page)}
+          onPageChange={setCurrentPage}
+          showOnlyActions={true}
         />
       </PageGridLayout>
 

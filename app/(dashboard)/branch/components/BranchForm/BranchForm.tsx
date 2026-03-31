@@ -27,17 +27,16 @@ import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 
 interface DropDownConfig {
   label: string;
-  name: string; 
+  name: string;
   options: { id: string; name: string }[];
 }
 
 const MapPicker = dynamic(
   () => import("../../../../components/ui/MapPicker/MapPicker"),
-  { ssr: false }
+  { ssr: false },
 );
 
-
-type FormData = Record<string, any>;
+type FormData = Record<string, unknown>;
 
 interface BranchFormProps {
   mode: "create" | "update";
@@ -45,10 +44,9 @@ interface BranchFormProps {
   onSubmit: SubmitHandler<FormData>;
   loading?: boolean;
   dropdown?: DropDownConfig;
-
-  nameField: string;   
-  nameLabel: string;  
- 
+  nameField: string;
+  nameLabel: string;
+  cancelHref: string;
 }
 
 export const BranchForm: React.FC<BranchFormProps> = ({
@@ -59,7 +57,7 @@ export const BranchForm: React.FC<BranchFormProps> = ({
   dropdown,
   nameField,
   nameLabel,
- 
+  cancelHref,
 }) => {
   const {
     register,
@@ -82,13 +80,11 @@ export const BranchForm: React.FC<BranchFormProps> = ({
           icon: <FontAwesomeIcon icon={faCodeBranch} />,
           text: mode === "create" ? "Create Record" : "Update Record",
           description:
-            mode === "create"
-              ? "Create New Record"
-              : "Update Existing Record",
+            mode === "create" ? "Create New Record" : "Update Existing Record",
         }}
         actionNode={
           <div className={styles.headerActionArea}>
-            <NavigationBtn href="/branch" variant="cancel">
+            <NavigationBtn href={cancelHref} variant="cancel">
               cancel
             </NavigationBtn>
             <ActionBtn

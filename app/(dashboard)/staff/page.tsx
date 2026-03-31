@@ -9,7 +9,6 @@ import {
   faClockRotateLeft,
   faPlus,
   faTrashCan,
-  // faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
 // Components
@@ -78,7 +77,7 @@ export default function StaffPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
-  const PAGE_SIZE = 6;
+  const PAGE_SIZE = 10;
 
   //Active Filters State
   const [activeFilters, setActiveFilters] = useState<FilterState>({
@@ -258,24 +257,8 @@ export default function StaffPage() {
     },
   ];
 
-  // const renderLiveButtonArea = (
-  //   <div className={styles.headerActionArea}>
-  //     <NavigationBtn href="/staff/Addstaff" leftIcon={faPlus}>
-  //       add staff
-  //     </NavigationBtn>
-  //   </div>
-  // );
-
   return (
     <>
-      {/* <PageHeader
-        titleData={{
-          icon: <FontAwesomeIcon icon={faUser} />,
-          text: "Staff Management",
-        }}
-        actionNode={renderLiveButtonArea}
-      /> */}
-
       <PageGridLayout
         sidebar={
           <div className={styles.sidebarWrapper}>
@@ -384,6 +367,16 @@ export default function StaffPage() {
       >
         <div>
           <div className={styles.tableHeaderArea}>
+            <div className={styles.paginationInfoWrapper}>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalRecords={totalRecords}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCurrentPage}
+                showOnlyInfo={true}
+              />
+            </div>
             <p className={styles.tableTitle}>EMPLOYEE MASTER RECORDS</p>
 
             <div className={styles.headerActionArea}>
@@ -408,7 +401,8 @@ export default function StaffPage() {
           totalPages={totalPages}
           totalRecords={totalRecords}
           pageSize={PAGE_SIZE}
-          onPageChange={(page) => setCurrentPage(page)}
+          onPageChange={setCurrentPage}
+          showOnlyActions={true}
         />
       </PageGridLayout>
 

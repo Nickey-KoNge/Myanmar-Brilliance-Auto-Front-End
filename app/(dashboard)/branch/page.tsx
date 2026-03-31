@@ -1,9 +1,8 @@
 "use client";
-import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
+// import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
 import {
   faCalendarDays,
   faClockRotateLeft,
-  faCodeBranch,
   faPlus,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
@@ -48,7 +47,7 @@ export default function BranchPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
-  const PAGE_SIZE = 6;
+  const PAGE_SIZE = 10;
 
   //Active Filters State
   const [activeFilters, setActiveFilters] = useState<FilterState>({
@@ -115,7 +114,7 @@ export default function BranchPage() {
           params.startDate = activeFilters.startDate as string;
         if (activeFilters.endDate)
           params.endDate = activeFilters.endDate as string;
-        
+
         const queryString = new URLSearchParams(params).toString();
         const response = await apiClient.get(
           `/master-company/branches?${queryString}`,
@@ -167,23 +166,8 @@ export default function BranchPage() {
     setBranchData((prevData) => prevData.filter((row) => row.id !== id));
   };
 
-  const renderLiveButtonArea = (
-    <div className={styles.headerActionArea}>
-      <NavigationBtn href="/branch/Addbranch" leftIcon={faPlus}>
-        add branch
-      </NavigationBtn>
-    </div>
-  );
-
   return (
     <>
-      <PageHeader
-        titleData={{
-          icon: <FontAwesomeIcon icon={faCodeBranch} />,
-          text: "Branch Management",
-        }}
-        actionNode={renderLiveButtonArea}
-      />
       <PageGridLayout
         sidebar={
           <div className={styles.sidebarWrapper}>
@@ -267,7 +251,25 @@ export default function BranchPage() {
         }
       >
         <div>
-          <p className={styles.gridBoxTitle}>BRANCHES MASTER RECORDS</p>
+          <div className={styles.tableHeaderArea}>
+            <div className={styles.paginationInfoWrapper}>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalRecords={totalRecords}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCurrentPage}
+                showOnlyInfo={true}
+              />
+            </div>
+            <p className={styles.tableTitle}>BRANCHES MASTER RECORDS</p>
+
+            <div className={styles.headerActionArea}>
+              <NavigationBtn href="/branch/Addbranch" leftIcon={faPlus}>
+                add Branch
+              </NavigationBtn>
+            </div>
+          </div>
 
           <DataTable
             data={branchData}
@@ -283,7 +285,8 @@ export default function BranchPage() {
           totalPages={totalPages}
           totalRecords={totalRecords}
           pageSize={PAGE_SIZE}
-          onPageChange={(page) => setCurrentPage(page)}
+          onPageChange={setCurrentPage}
+          showOnlyActions={true}
         />
       </PageGridLayout>
       {isDeleteOpen && selectedBranch && (

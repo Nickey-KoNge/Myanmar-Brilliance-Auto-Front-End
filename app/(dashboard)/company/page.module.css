@@ -1,4 +1,4 @@
- .sidebarWrapper {
+.sidebarWrapper {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -6,13 +6,11 @@
   /* min-height: calc(100vh - 200px); */
 }
 
-/* အပေါ်ပိုင်း Content */
 .topSection {
   display: flex;
   flex-direction: column;
 }
 
-/* အောက်ပိုင်း Content (အောက်ဆုံးကို ကပ်နေအောင် margin-top: auto သုံးထားပါတယ်) */
 .bottomSection {
   margin-top: auto;
   display: flex;
@@ -28,7 +26,36 @@
   transition: 0.2s;
 }
 
+/* --- Table Header Layout (Title Center, Actions Right, Pagination Left) --- */
+.tableHeaderArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-bottom: 1.5rem;
+  min-height: 50px;
+}
+
+.paginationInfoWrapper {
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.tableTitle {
+  color: var(--text-main);
+  font-weight: 600;
+  margin: 0;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  text-align: center;
+}
+
 .headerActionArea {
+  position: absolute;
+  right: 0;
   display: flex;
   align-items: center;
 }
@@ -197,4 +224,7 @@
   font-size: 11px;
   color: var(--danger);
   margin-top: 4px;
+}
+.spanText{
+  color:var(--color-primary)
 }
