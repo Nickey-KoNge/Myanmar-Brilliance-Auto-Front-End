@@ -120,82 +120,6 @@ export default function VehicleBrandsPage() {
       }
     },
   );
-  // Fetch Staff Data
-  // useEffect(() => {
-  //   const fetchStaffs = async () => {
-  //     try {
-  //       const params: Record<string, string> = {
-  //         page: currentPage.toString(),
-  //         limit: PAGE_SIZE.toString(),
-  //       };
-
-  //       if (activeFilters.search)
-  //         params.search = activeFilters.search as string;
-  //       if (activeFilters.startDate)
-  //         params.startDate = activeFilters.startDate as string;
-  //       if (activeFilters.endDate)
-  //         params.endDate = activeFilters.endDate as string;
-
-  //       if (
-  //         activeFilters.branchId &&
-  //         activeFilters.branchId !== "all" &&
-  //         activeFilters.branchId !== ""
-  //       ) {
-  //         params.branches_id = activeFilters.branchId as string;
-  //       }
-
-  //       if (
-  //         activeFilters.roleId &&
-  //         activeFilters.roleId !== "all" &&
-  //         activeFilters.roleId !== ""
-  //       ) {
-  //         params.role_id = activeFilters.roleId as string;
-  //       }
-
-  //       const queryString = new URLSearchParams(params).toString();
-
-  //       const response = await apiClient.get(
-  //         `/master-company/staff?${queryString}`,
-  //       );
-
-  //       const res = response as unknown as {
-  //         data?:
-  //           | Staff[]
-  //           | { data?: Staff[]; total?: number; totalPages?: number };
-  //         total?: number;
-  //         totalPages?: number;
-  //       };
-
-  //       let staffList: Staff[] = [];
-  //       let total = 0;
-  //       let totalPages = 1;
-
-  //       if (res && typeof res === "object") {
-  //         if (Array.isArray(res.data)) {
-  //           staffList = res.data;
-  //           total = res.total || 0;
-  //           totalPages = res.totalPages || 1;
-  //         } else if (
-  //           res.data &&
-  //           typeof res.data === "object" &&
-  //           Array.isArray(res.data.data)
-  //         ) {
-  //           staffList = res.data.data;
-  //           total = res.data.total || 0;
-  //           totalPages = res.data.totalPages || 1;
-  //         }
-  //       }
-
-  //       setStaffs(staffList);
-  //       setTotalRecords(total);
-  //       setTotalPages(totalPages);
-  //     } catch (error) {
-  //       console.error("Failed to fetch staff:", error);
-  //       setStaffs([]);
-  //     }
-  //   };
-  //   fetchStaffs();
-  // }, [currentPage, activeFilters]);
 
   // fetch Vehicle Brand Data
   useEffect(() => {
@@ -261,23 +185,6 @@ export default function VehicleBrandsPage() {
     fetchVehicleBrands();
   }, [currentPage, activeFilters]);
 
-  // Fetch Filters (Branches/Roles)
-  // useEffect(() => {
-  //   const fetchFilters = async () => {
-  //     try {
-  //       const [branchesRes, rolesRes] = await Promise.all([
-  //         apiClient.get("/master-company/branches"),
-  //         apiClient.get("/master-service/roles"),
-  //       ]);
-  //       setBranches(branchesRes.data);
-  //       setRoles(rolesRes.data);
-  //     } catch (error) {
-  //       console.error("Failed to fetch filters:", error);
-  //     }
-  //   };
-  //   fetchFilters();
-  // }, []);
-
   const openDeleteModal = (id: string, name: string) => {
     setDeleteModal({
       isOpen: true,
@@ -291,49 +198,6 @@ export default function VehicleBrandsPage() {
   };
 
   const columns = [
-    // {
-    //   header: "Staff Info",
-    //   key: "staffName",
-    //   render: (staff: Staff) => (
-    //     <div className={styles.staffInfo}>
-    //       <Image
-    //         src={staff.image || "/default-user.png"}
-    //         alt={staff.staffName}
-    //         width={40}
-    //         height={40}
-    //         unoptimized
-    //         className={styles.staffImg}
-    //       />
-    //       {staff.staffName}
-    //     </div>
-    //   ),
-    // },
-    // { header: "Email", key: "email" },
-    // {
-    //   header: "Address",
-    //   key: "address",
-    //   render: (staff: Staff) => {
-    //     return staff.fullAddress ? staff.fullAddress : "-";
-    //   },
-    // },
-    // { header: "Role", key: "role_name" },
-    // { header: "Branch", key: "branches_name" },
-    // { header: "Phone", key: "phone" },
-    // {
-    //   header: "Actions",
-    //   key: "actions",
-    //   render: (staff: Staff) => (
-    //     <button
-    //       className={styles.deleteBtn}
-    //       onClick={(e) => {
-    //         e.stopPropagation();
-    //         openDeleteModal(staff.id, staff.staffName);
-    //       }}
-    //     >
-    //       <FontAwesomeIcon icon={faTrashCan} />
-    //     </button>
-    //   ),
-    // },
     {
       header: "Vehicle Brand Info",
       key: "vehicle_brand_name",
@@ -372,7 +236,7 @@ export default function VehicleBrandsPage() {
 
   const renderLiveButtonArea = (
     <div className={styles.headerActionArea}>
-      <NavigationBtn href="/staff/Addstaff" leftIcon={faPlus}>
+      <NavigationBtn href="/vehicle-brands/Addvehiclebrands" leftIcon={faPlus}>
         add brand
       </NavigationBtn>
     </div>
@@ -417,34 +281,6 @@ export default function VehicleBrandsPage() {
                     rightIcon={faCalendarDays}
                   />
                 </div>
-
-                {/* <div className={styles.filterRow}>
-                  <DropdownInput
-                    label="Branch"
-                    options={branches.map((b) => ({
-                      id: b.id,
-                      name: b.branches_name,
-                    }))}
-                    valueKey="id"
-                    nameKey="name"
-                    value={(filters.branchId as string) || ""}
-                    onChange={(e) => updateFilter("branchId", e.target.value)}
-                    placeholder="All Branches"
-                  />
-
-                  <DropdownInput
-                    label="Role"
-                    options={roles.map((r) => ({
-                      id: r.id,
-                      name: r.role_name,
-                    }))}
-                    valueKey="id"
-                    nameKey="name"
-                    value={(filters.roleId as string) || ""}
-                    onChange={(e) => updateFilter("roleId", e.target.value)}
-                    placeholder="All Roles"
-                  />
-                </div> */}
 
                 <div style={{ alignSelf: "flex-start" }}>
                   <ActionBtn
@@ -496,20 +332,13 @@ export default function VehicleBrandsPage() {
       >
         <div>
           <p className={styles.gridBoxTitle}>VEHICLE BRANDS MASTER RECORDS</p>
-          {/* <DataTable
-            columns={columns}
-            data={staffs}
-            onRowClick={(staff) =>
-              router.push(`/staff/Updatestaff/${staff.id}`)
-            }
-            emptyMessage="No staff records found."
-          /> */}
-
           <DataTable
             columns={columns}
             data={vehicleBrands}
             onRowClick={(vehicleBrand) =>
-              router.push(`/vehicle-brands/Updatestaff/${vehicleBrand.id}`)
+              router.push(
+                `/vehicle-brands/Updatevehiclebrands/${vehicleBrand.id}`,
+              )
             }
             emptyMessage="No staff records found."
           ></DataTable>
