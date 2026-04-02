@@ -1,35 +1,67 @@
+
 .sidebar {
-  width: 250px;
+  width: 70px;
   background-color: var(--bg-card);
   color: var(--text-main);
   height: 100vh;
-  position: fixed;
-  left: 0;
-  top: 0;
-  border-right: 1px solid var(--border-right-color);
+  position: relative;
+  border-right: 1px solid var(--border-nav-color);
+  box-shadow: 1px 0 20px var(--nav-shadow-color);
   display: flex;
   flex-direction: column;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.sidebar:hover {
+  width: 210px;
   overflow-y: auto;
 }
 
+/* --- Brand Styles --- */
 .brand {
-  height: 80px;
+  height: 60px;
   display: flex;
   align-items: center;
   padding: 0 1.5rem;
   font-weight: 800;
-  font-size: var(--font-size-l);
+  font-size: 1.2rem;
   letter-spacing: 1px;
   color: var(--text-main);
+  gap: 15px;
 }
 
-.brand span {
+.brandIcon {
+  font-size: 1.5rem;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.brand span span {
   color: var(--color-primary);
 }
 
 .menu {
-  padding: 2rem 0 1rem 0;
+  padding: 1rem 0 1rem 0;
 }
+
+.menuText,
+.arrow {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease;
+}
+
+.sidebar:hover .menuText,
+.sidebar:hover .arrow {
+  opacity: 1;
+  visibility: visible;
+}
+
 
 .sectionTitle {
   font-size: 0.65rem;
@@ -37,6 +69,14 @@
   text-transform: uppercase;
   padding: 1rem 1.5rem 0.5rem;
   letter-spacing: 1px;
+  height: 25px;
+}
+
+.sidebar:not(:hover) .sectionTitle {
+  padding: 0;
+  height: 0;
+  margin: 0;
+  overflow: hidden;
 }
 
 .menuItem {
@@ -46,7 +86,7 @@
   color: var(--text-main);
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 500;
   border-right: 3px solid transparent;
   background-color: transparent;
@@ -54,7 +94,7 @@
 
 .menuItem:hover,
 .menuItem.active {
-  color: var(--icon-main);
+  color: var(--text-main);
   background-color: var(--bg-main);
 }
 
@@ -62,23 +102,20 @@
   border-right-color: var(--active-right-link-color);
   background-color: var(--active-link-color);
 }
-.menuItem:hover {
-  color: var(--icon-main);
-  border-right-color: var(--active-right-link-color);
-  background-color: var(--active-link-color);
-}
+
 .icon {
   width: 20px !important;
   height: 20px !important;
-  margin-right: 1rem;
+  margin-right: 1.2rem;
+  flex-shrink: 0;
 }
 
 .arrow {
   margin-left: auto;
   font-size: 0.7rem;
 }
-/* --- Dropdown Sub Menu Styles --- */
 
+/* --- Dropdown Sub Menu Styles --- */
 .navGroup {
   display: flex;
   flex-direction: column;
@@ -97,13 +134,13 @@
   color: var(--text-main);
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 500;
   border-right: 3px solid transparent;
 }
 
 .subMenuItem:hover {
-  color: var(--icon-main);
+  color: var(--nav-main);
   border-right-color: var(--active-right-link-color);
   background-color: var(--active-link-color);
 }
@@ -111,11 +148,12 @@
 .subActive {
   border-right-color: var(--active-right-link-color);
   background-color: var(--active-link-color);
-  color: var(--icon-main);
+  color: var(--nav-main);
 }
 
 .subIcon {
-  width: 16px !important;
-  height: 16px !important;
+  width: 14px !important;
+  height: 14px !important;
   margin-right: 1rem;
+  flex-shrink: 0;
 }

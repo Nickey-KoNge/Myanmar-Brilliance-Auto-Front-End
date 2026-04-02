@@ -1,6 +1,6 @@
 .gridContainer {
   display: grid;
-  grid-template-columns: 3fr 1fr;
+  grid-template-columns: 8fr 1fr;
   gap: 1.5rem;
   flex: 1;
   min-height: 0;
@@ -11,15 +11,21 @@
   display: flex;
   flex-direction: column;
   background: var(--bg-main);
-  padding: 1.5rem;
+  padding: 0.75rem;
   border-radius: var(--radius);
   box-sizing: border-box;
-  
+  /* min-width: 0; */
 }
 
+/* .gridContainer .gridBox:nth-child(2) {
+  border: 1px solid red;
+  width:300px;
+} */
+
 .spacer {
-  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  flex: 1;
 }
+

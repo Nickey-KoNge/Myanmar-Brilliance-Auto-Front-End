@@ -1,17 +1,30 @@
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  z-index: 3;
+  animation: fadeIn 0.3s ease;
+}
 .DeleteModal {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #252526;
+  background-color: var(--bg-delete-card);
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 20px;
   width: 462px;
   text-align: center;
+  z-index: 4;
+  animation: slideUp 0.3s ease;
 }
 .iconContainer {
   display: grid;
@@ -29,7 +42,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #310d0d;
+  background-color:var(--bg-delete);
   border-radius: 50%;
 }
 
@@ -53,12 +66,28 @@
 }
 
 .btnContainer button:first-child {
-  background-color: black;
-  color: white;
+  background-color: var(--bg-btn);
+  color: var(--btn-text);
 }
 
 .textContainer {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  color:var(--text-main);
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
 }

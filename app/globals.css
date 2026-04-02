@@ -60,12 +60,14 @@ button {
   --font-weight-bolder: 900;
   --togglediv-color: #0b0b0e;
   --border-right-color: #402626;
+  --border-nav-color: #402626;
+  --nav-shadow-color: #201717;
   --active-link-color: #6f2f2f;
   --active-right-link-color: #b25151;
   --padding: 1rem;
   --radius: 8px;
   --gap: 1.5rem;
-  --accent: #a33b3b;
+
   /* table css */
   --bg-table: #2d2d30;
   --bg-head: #3b3b41;
@@ -74,6 +76,8 @@ button {
   --bg-btn: #0d0d0d;
   --border-input: #402626;
   /* Btn colors */
+  --bg-delete: #602424;
+  --bg-delete-card: #343434;
   --accent: #a33b3b;
   --accent-hover: #c24646;
   --danger: #ff4d4f;
@@ -81,6 +85,7 @@ button {
   --success-hover: #338f35;
 
   --padding: 1rem;
+  --padding-inside: 0.75rem;
   --margin: 1rem;
 }
 .light-mode {
@@ -94,19 +99,22 @@ button {
   --color-primary-hover: #962e32;
   --text-main: #000000;
   --text-cancel: #eeecec;
-  /* --icon-main: #000000; */
+  --nav-main: #000000;
   --text-muted: #131313;
   --border-color: #cccccc;
   --togglediv-color: #c4c4c4;
   --border-right-color: #402626;
+  --border-nav-color: #e1e1e1;
+  --nav-shadow-color: #d1d1d1;
   --active-right-link-color: #b25151;
-  --active-link-color: #6a6969;
+  --active-link-color: #e2e2e2;
   --accent: #a33b3b;
+  --bg-delete-card: #ffffff;
   /* table css */
-  --bg-head: #ffffff;
-  --bg-table: #e7e7e7;
-  --bg-row-alt: #d1d1d1;
-  --bg-row-hover: #b9b9b9;
+  --bg-head: #d1d1d1;
+  --bg-table: #ffffff;
+  --bg-row-alt: #f3f3f3;
+  --bg-row-hover: #e8e8e8;
 
   --border-input: #402626;
 }

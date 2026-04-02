@@ -1,26 +1,17 @@
-import React, { use, useEffect } from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/app/components/ui/Button/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCancel,
-  faCircleXmark,
-  faCross,
-  faWarning,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCircleXmark, faWarning } from "@fortawesome/free-solid-svg-icons";
 import styles from "./Delete.module.css";
 
 interface DeleteModalProps {
   isOpen: boolean;
   onClose: () => void;
   itemName: string;
-
   name: string;
   isLoading?: boolean;
   id: string;
-  // " apiRoute="master-company/branches""
   apiRoute: string;
-  // function for remove deleted data row from table / filter
   onDeleteSuccess: (id: string) => void;
 }
 
@@ -33,9 +24,9 @@ export default function DeleteModal({
   apiRoute,
   onDeleteSuccess,
 }: DeleteModalProps) {
-  //   const [branchData, setBranchData] = useState<any>(null);
-
   const [isLoading, setIsLoading] = useState(false);
+
+  if (!isOpen) return null;
 
   const handleDelete = async () => {
     setIsLoading(true);
@@ -60,8 +51,10 @@ export default function DeleteModal({
       setIsLoading(false);
     }
   };
+
   return (
     <>
+      <div className={styles.backdrop} onClick={onClose} />
       <div className={styles.DeleteModal}>
         <div className={styles.iconContainer}>
           <div className={styles.iconOne}>
@@ -82,8 +75,9 @@ export default function DeleteModal({
 
           <span>
             Are you sure you want to delete{" "}
-            <span style={{ color: "red" }}>"{itemName}"</span>? This action will
-            remove the <strong>"{name}"</strong> record permanently.
+            <span style={{ color: "red" }}>&quot;{itemName}&quot;</span>? This
+            action will remove the <strong>&quot;{name}&quot;</strong> record
+            permanently.
           </span>
         </div>
         <div className={styles.btnContainer}>

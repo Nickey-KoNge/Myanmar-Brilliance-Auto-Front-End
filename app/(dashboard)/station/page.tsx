@@ -1,5 +1,12 @@
 "use client";
-// import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
+
+import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
+import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
+import { DataTable } from "@/app/components/ui/DataTable/DataTable";
+import DeleteModal from "@/app/components/ui/Delete/DeleteModal";
+import { Pagination } from "@/app/components/ui/Pagination/Pagination";
+import { apiClient } from "@/app/features/lib/api-client";
+import { FilterState, useFilters } from "@/app/hooks/userFilters";
 import {
   faCalendarDays,
   faClockRotateLeft,
@@ -7,56 +14,41 @@ import {
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { Button } from "@/app/components/ui/Button/Button";
-import { useEffect, useState } from "react";
-import React from "react";
-
 import { useRouter } from "next/navigation";
-import { DataTable } from "@/app/components/ui/DataTable/DataTable";
-import { apiClient } from "@/app/features/lib/api-client";
+import { useEffect, useState } from "react"; 
 import styles from "./page.module.css";
-import DeleteModal from "../../components/ui/Delete/DeleteModal";
-import { Pagination } from "@/app/components/ui/Pagination/Pagination";
 import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
 import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
-import { FilterState, useFilters } from "@/app/hooks/userFilters";
-// import { set } from "react-hook-form";
-import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
-import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 
-interface Branch {
+interface Station {
   id: string;
+  station_name: string;
+  branches_id: string;
   branches_name: string;
-  company_id: string;
-  company_name: string;
   gps_location: string;
   phone: string;
   description: string;
   fullAddress: string;
 }
 
-export default function BranchPage() {
+export default function StationPage() {
   const router = useRouter();
-  const [branchData, setBranchData] = React.useState<Branch[]>([]);
-  const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
-  const [selectedBranch, setSelectedBranch] = React.useState<Branch | null>(
-    null,
-  );
+  const [stationData, setStationData] = useState<Station[]>([]);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [selectedStation, setSelectedStation] = useState<Station | null>(null);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
   const PAGE_SIZE = 10;
 
-  //Active Filters State
   const [activeFilters, setActiveFilters] = useState<FilterState>({
     search: "",
     startDate: "",
     endDate: "",
   });
 
-  // Custom Hook
   const { filters, updateFilter, resetFilters } = useFilters(
     { search: "", startDate: "", endDate: "" },
     (debouncedFilters: FilterState) => {
@@ -74,11 +66,8 @@ export default function BranchPage() {
   );
 
   const columns = [
-    {
-      header: "Branches Info",
-      key: "branches_name",
-    },
-    { header: "Company", key: "company_name" },
+    { header: "Stations Info", key: "station_name" },
+    { header: "Branch", key: "branches_name" }, // key ကို branches_name သို့ ပြင်ပါ (Interface နှင့် ကိုက်ရန်)
     { header: "Location", key: "gps_location" },
     { header: "Address", key: "fullAddress" },
     { header: "Description", key: "description" },
@@ -86,12 +75,12 @@ export default function BranchPage() {
     {
       header: "Actions",
       key: "actions",
-      render: (branch: Branch) => (
+      render: (station: Station) => (
         <button
           className={styles.deleteBtn}
           onClick={(e) => {
-            e.stopPropagation(); // Prevent row click trigger
-            setSelectedBranch(branch);
+            e.stopPropagation();
+            setSelectedStation(station);
             setIsDeleteOpen(true);
           }}
         >
@@ -100,79 +89,74 @@ export default function BranchPage() {
       ),
     },
   ];
+
   useEffect(() => {
-    const fetchBranchData = async () => {
+    const fetchData = async () => {
       try {
         const params: Record<string, string> = {
           page: currentPage.toString(),
           limit: PAGE_SIZE.toString(),
         };
-
-        if (activeFilters.search)
-          params.search = activeFilters.search as string;
-        if (activeFilters.startDate)
-          params.startDate = activeFilters.startDate as string;
-        if (activeFilters.endDate)
-          params.endDate = activeFilters.endDate as string;
+        if (activeFilters.search) params.search = activeFilters.search;
+        if (activeFilters.startDate) params.startDate = activeFilters.startDate;
+        if (activeFilters.endDate) params.endDate = activeFilters.endDate;
 
         const queryString = new URLSearchParams(params).toString();
         const response = await apiClient.get(
-          `/master-company/branches?${queryString}`,
+          `/master-company/stations?${queryString}`,
         );
 
         const res = response as unknown as {
           data?:
-            | Branch[]
-            | { data?: Branch[]; total?: number; totalPages?: number };
+            | Station[]
+            | { data?: Station[]; total?: number; totalPages?: number };
           total?: number;
           totalPages?: number;
         };
-        let branchList: Branch[] = [];
+
+        let stationList: Station[] = [];
         let total = 0;
-        let totalPages = 1;
+        let totalPagesCount = 1;
 
         if (res && typeof res === "object") {
           if (Array.isArray(res.data)) {
-            branchList = res.data;
+            stationList = res.data;
             total = res.total || 0;
-            totalPages = res.totalPages || 1;
+            totalPagesCount = res.totalPages || 1;
           } else if (
             res.data &&
             typeof res.data === "object" &&
             Array.isArray(res.data.data)
           ) {
-            branchList = res.data.data;
+            stationList = res.data.data;
             total = res.data.total || 0;
-            totalPages = res.data.totalPages || 1;
+            totalPagesCount = res.data.totalPages || 1;
           }
         }
 
-        setBranchData(branchList);
+        setStationData(stationList);
         setTotalRecords(total);
-        setTotalPages(totalPages);
-      } catch (error) {
-        console.error("Failed to fetch branch:", error);
-        setBranchData([]);
+        setTotalPages(totalPagesCount);
+      } catch (err) {
+        console.error("Failed to fetch:", err);
+        setStationData([]);
       }
     };
 
-    fetchBranchData();
+    fetchData();
   }, [currentPage, activeFilters]);
-
-  console.log("Fetched Branch Data:", branchData);
-
-  // remove deleted branch from table data without refetching
   const handleDeleteSuccess = (id: string) => {
-    setBranchData((prevData) => prevData.filter((row) => row.id !== id));
+    setStationData((prevData) => prevData.filter((row) => row.id !== id));
   };
-
   return (
     <>
+ 
+
       <PageGridLayout
         sidebar={
           <div className={styles.sidebarWrapper}>
             <div className={styles.topSection}>
-              <p className={styles.gridBoxTitle}>Branch Search</p>
+              <p className={styles.gridBoxTitle}>Station Search</p>
               <hr className={styles.cuttingLine} />
 
               <div className={styles.searchContainer}>
@@ -184,17 +168,12 @@ export default function BranchPage() {
                 />
 
                 <div className={styles.filterRow}>
-                  <div className={styles.filterRow}>
-                    <DateInput
-                      label="From"
-                      value={filters.startDate}
-                      onChange={(e) =>
-                        updateFilter("startDate", e.target.value)
-                      }
-                      rightIcon={faCalendarDays}
-                    />
-                  </div>
-
+                  <DateInput
+                    label="From"
+                    value={filters.startDate}
+                    onChange={(e) => updateFilter("startDate", e.target.value)}
+                    rightIcon={faCalendarDays}
+                  />
                   <DateInput
                     label="To"
                     value={filters.endDate}
@@ -227,15 +206,15 @@ export default function BranchPage() {
                 <span />
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLable}>Total Branches :</p>
+                    <p className={styles.statLable}>Total Stations :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Active Branches :</p>
+                    <p className={styles.statLable}>Active Stations :</p>
                     <p className={styles.textSuccess}>36</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Inactive Branches :</p>
+                    <p className={styles.statLable}>Inactive Stations :</p>
                     <p className={styles.textDanger}>4</p>
                   </div>
                 </div>
@@ -262,20 +241,19 @@ export default function BranchPage() {
                 showOnlyInfo={true}
               />
             </div>
-            <p className={styles.tableTitle}>BRANCHES MASTER RECORDS</p>
+            <p className={styles.tableTitle}>STATIONS MASTER RECORDS</p>
 
             <div className={styles.headerActionArea}>
-              <NavigationBtn href="/branch/Addbranch" leftIcon={faPlus}>
-                add Branch
+              <NavigationBtn href="/station/Addstation" leftIcon={faPlus}>
+                add station
               </NavigationBtn>
             </div>
           </div>
-
           <DataTable
-            data={branchData}
+            data={stationData}
             columns={columns}
-            onRowClick={(branch) =>
-              router.push(`/branch/Updatebranch/${branch.id}`)
+            onRowClick={(station) =>
+              router.push(`/station/Updatestation/${station.id}`)
             }
           />
         </div>
@@ -289,14 +267,14 @@ export default function BranchPage() {
           showOnlyActions={true}
         />
       </PageGridLayout>
-      {isDeleteOpen && selectedBranch && (
+      {isDeleteOpen && selectedStation && (
         <DeleteModal
           isOpen={isDeleteOpen}
           onClose={() => setIsDeleteOpen(false)}
-          itemName={selectedBranch.branches_name}
-          name="Branch"
-          id={selectedBranch.id}
-          apiRoute="master-company/branches"
+          itemName={selectedStation.station_name}
+          name="Station"
+          id={selectedStation.id}
+          apiRoute="master-company/stations"
           onDeleteSuccess={handleDeleteSuccess}
         />
       )}

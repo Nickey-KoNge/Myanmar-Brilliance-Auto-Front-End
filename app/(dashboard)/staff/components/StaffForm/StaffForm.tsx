@@ -111,7 +111,7 @@ export const StaffForm: React.FC<StaffFormProps> = ({
   }, [initialData, reset]);
 
   // Fetch Dropdown Options
-useEffect(() => {
+  useEffect(() => {
     const fetchOptions = async () => {
       try {
         const [rolesRes, branchesRes, companiesRes] = await Promise.all([
@@ -120,23 +120,20 @@ useEffect(() => {
           apiClient.get("/master-company/company"),
         ]);
 
-        const rolesData = (
-          (rolesRes as { data?: { data?: Role[] } })?.data?.data ||
+        const rolesData = ((rolesRes as { data?: { data?: Role[] } })?.data
+          ?.data ||
           (rolesRes as { data?: Role[] })?.data ||
-          []
-        ) as Role[];
+          []) as Role[];
 
-        const branchesData = (
-          (branchesRes as { data?: { data?: Branch[] } })?.data?.data ||
+        const branchesData = ((branchesRes as { data?: { data?: Branch[] } })
+          ?.data?.data ||
           (branchesRes as { data?: Branch[] })?.data ||
-          []
-        ) as Branch[];
+          []) as Branch[];
 
-        const companiesData = (
-          (companiesRes as { data?: { data?: Company[] } })?.data?.data ||
+        const companiesData = ((companiesRes as { data?: { data?: Company[] } })
+          ?.data?.data ||
           (companiesRes as { data?: Company[] })?.data ||
-          []
-        ) as Company[];
+          []) as Company[];
 
         setRoles(rolesData);
         setBranches(branchesData);
@@ -172,7 +169,7 @@ useEffect(() => {
             <ActionBtn
               type="submit"
               variant="action"
-              leftIcon={mode === "create" ? faCircleCheck : faArrowsRotate }
+              leftIcon={mode === "create" ? faCircleCheck : faArrowsRotate}
               form="staffForm"
               loading={loading}
             >

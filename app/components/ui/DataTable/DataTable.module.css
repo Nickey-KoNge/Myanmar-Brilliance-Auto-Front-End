@@ -14,7 +14,7 @@
 
 .table th,
 .table td {
-  padding: 1rem;
+  padding: .70rem;
   text-align: start;
   color: var(--text-main);
 }

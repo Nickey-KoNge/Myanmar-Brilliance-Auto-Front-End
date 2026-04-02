@@ -15,51 +15,38 @@ import {
   faCity,
   faArrowsRotate,
 } from "@fortawesome/free-solid-svg-icons";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-// import { Button } from "@/app/components/ui/Button/Button";
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
 import styles from "./page.module.css";
 import dynamic from "next/dynamic";
 import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
-
 import { FormCard } from "@/app/components/ui/FormCard/FormCard";
-import { apiClient } from "@/app/features/lib/api-client";
 import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 
+interface DropDownConfig {
+  label: string;
+  name: string;
+  options: { id: string; name: string }[];
+}
+
 const MapPicker = dynamic(
   () => import("../../../../components/ui/MapPicker/MapPicker"),
-  {
-    ssr: false,
-  },
+  { ssr: false },
 );
 
-interface FormData {
-  branches_name: string;
-  gps_location: string;
-  phone: string;
-  division: string;
-  city: string;
-  address: string;
-  description: string;
-  company_id: string;
-  id: string;
-  staff: string;
-  stations: string;
-  company: string;
-}
-
-interface Company {
-  id: string;
-  company_name: string;
-}
+type FormData = Record<string, unknown>;
 
 interface BranchFormProps {
   mode: "create" | "update";
   initialData?: FormData;
   onSubmit: SubmitHandler<FormData>;
   loading?: boolean;
+  dropdown?: DropDownConfig;
+  nameField: string;
+  nameLabel: string;
+  cancelHref: string;
 }
 
 export const BranchForm: React.FC<BranchFormProps> = ({
@@ -67,6 +54,10 @@ export const BranchForm: React.FC<BranchFormProps> = ({
   initialData,
   onSubmit,
   loading = false,
+  dropdown,
+  nameField,
+  nameLabel,
+  cancelHref,
 }) => {
   const {
     register,
@@ -75,53 +66,25 @@ export const BranchForm: React.FC<BranchFormProps> = ({
     reset,
     formState: { errors },
   } = useForm<FormData>({
-    defaultValues: initialData || { company_id: "" },
+    defaultValues: initialData || {},
   });
-  const [companies, setCompanies] = useState<Company[]>([]);
 
   useEffect(() => {
     reset(initialData);
   }, [initialData, reset]);
-
-  useEffect(() => {
-    const fetchCompanies = async () => {
-      try {
-        const response = await apiClient.get("/master-company/company");
-
-        const result = response as { data?: Company[] | { data?: Company[] } };
-
-        console.log("Fetched Companies:", result);
-
-        if (result && Array.isArray(result.data)) {
-          setCompanies(result.data);
-        } else if (result && result.data && Array.isArray(result.data)) {
-          setCompanies(result.data);
-        } else {
-          setCompanies([]);
-        }
-      } catch (error) {
-        console.error("Error fetching companies:", error);
-      }
-    };
-    fetchCompanies();
-  }, []);
-
-  console.log("Companies list", companies);
 
   return (
     <>
       <PageHeader
         titleData={{
           icon: <FontAwesomeIcon icon={faCodeBranch} />,
-          text: mode === "create" ? "Branch Registration" : "Update Branch",
+          text: mode === "create" ? "Create Record" : "Update Record",
           description:
-            mode === "create"
-              ? "Create New Branches Records"
-              : "Update Existing Branch",
+            mode === "create" ? "Create New Record" : "Update Existing Record",
         }}
         actionNode={
           <div className={styles.headerActionArea}>
-            <NavigationBtn href="/branch" variant="cancel">
+            <NavigationBtn href={cancelHref} variant="cancel">
               cancel
             </NavigationBtn>
             <ActionBtn
@@ -143,41 +106,41 @@ export const BranchForm: React.FC<BranchFormProps> = ({
         className={styles.page}
       >
         <div className={styles.grid}>
-          {/* LEFT — Professional Assignment */}
-          <FormCard title="Professional Assignment" icon={faTable}>
-            <div className={styles.fieldGroup}>
-              <DropdownInput
-                label="Company"
-                placeholder="Select Company"
-                options={companies.map((c) => ({
-                  id: c.id,
-                  name: c.company_name,
-                }))}
-                {...register("company_id")}
-              />
-            </div>
-          </FormCard>
+          {/* Dropdown */}
+          {dropdown && (
+            <FormCard title="Assignment" icon={faTable}>
+              <div className={styles.fieldGroup}>
+                <DropdownInput
+                  label={dropdown.label}
+                  placeholder={`Select ${dropdown.label}`}
+                  options={dropdown.options}
+                  {...register(dropdown.name)}
+                />
+              </div>
+            </FormCard>
+          )}
 
-          {/* RIGHT — Core Identity */}
-          <FormCard title="Core Identity Attributes" icon={faIdCard}>
+          {/* Name + GPS */}
+          <FormCard title="Core Info" icon={faIdCard}>
             <div className={styles.row}>
               <Input
-                label="BRANCHE NAME"
+                label={nameLabel}
                 type="text"
-                placeholder="Enter Your Branches Name..."
+                placeholder={`Enter ${nameLabel}`}
                 icon={<FontAwesomeIcon icon={faUser} />}
-                error={errors.branches_name?.message}
-                {...register("branches_name", {
-                  required: "Branch name is required",
+                error={errors[nameField]?.message as string}
+                {...register(nameField, {
+                  required: `${nameLabel} is required`,
                 })}
               />
+
               <Input
                 readOnly
                 label="GPS LOCATION"
                 type="text"
-                placeholder="Enter Your GPS Location..."
+                placeholder="Enter GPS Location..."
                 icon={<FontAwesomeIcon icon={faMapLocation} />}
-                error={errors.gps_location?.message}
+                error={errors.gps_location?.message as string}
                 {...register("gps_location", {
                   required: "GPS location is required",
                 })}
@@ -186,30 +149,30 @@ export const BranchForm: React.FC<BranchFormProps> = ({
 
             <Input
               label="DESCRIPTION"
-              placeholder="Enter Your Description...."
-              error={errors.description?.message}
+              placeholder="Enter Description..."
+              error={errors.description?.message as string}
               {...register("description", {
                 required: "Description is required",
               })}
             />
           </FormCard>
 
-          {/* LEFT — Location Map */}
+          {/* Map */}
           <FormCard title="Location Map" icon={faLocationDot}>
             <div className={styles.mapPlaceholder}>
               <MapPicker setValue={setValue} />
             </div>
           </FormCard>
 
-          {/* RIGHT — Contact & Address Details */}
-          <FormCard title="Contact & Address Details" icon={faAddressBook}>
+          {/* Contact */}
+          <FormCard title="Contact & Address" icon={faAddressBook}>
             <div className={styles.row}>
               <Input
                 label="PHONE NUMBER"
                 type="text"
-                placeholder="+95 9 xxx xxx xxx"
+                placeholder="+95..."
                 icon={<FontAwesomeIcon icon={faPhone} />}
-                error={errors.phone?.message}
+                error={errors.phone?.message as string}
                 {...register("phone", {
                   required: "Phone number is required",
                 })}
@@ -218,9 +181,9 @@ export const BranchForm: React.FC<BranchFormProps> = ({
               <Input
                 label="DIVISION"
                 type="text"
-                placeholder="Enter Division..."
+                placeholder="Division"
                 icon={<FontAwesomeIcon icon={faMapPin} />}
-                error={errors.division?.message}
+                error={errors.division?.message as string}
                 {...register("division", {
                   required: "Division is required",
                 })}
@@ -232,7 +195,7 @@ export const BranchForm: React.FC<BranchFormProps> = ({
               type="text"
               placeholder="City"
               icon={<FontAwesomeIcon icon={faCity} />}
-              error={errors.city?.message}
+              error={errors.city?.message as string}
               {...register("city", { required: "City is required" })}
             />
 
@@ -240,8 +203,10 @@ export const BranchForm: React.FC<BranchFormProps> = ({
               <label className={styles.textareaLabel}>Street Address</label>
               <textarea
                 className={styles.textarea}
-                placeholder="Enter Your Address...."
-                {...register("address", { required: "Address is required" })}
+                placeholder="Enter Address..."
+                {...register("address", {
+                  required: "Address is required",
+                })}
               />
             </div>
           </FormCard>

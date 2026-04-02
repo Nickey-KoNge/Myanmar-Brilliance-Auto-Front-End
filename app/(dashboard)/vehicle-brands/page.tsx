@@ -1,85 +1,86 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBuilding,
   faCalendarDays,
   faClockRotateLeft,
   faPlus,
   faTrashCan,
+  // faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
-// Reusable Components များကို Import လုပ်ခြင်း
+// Components
 // import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
-import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
 import { DataTable } from "@/app/components/ui/DataTable/DataTable";
+//pagination components
 import { Pagination } from "@/app/components/ui/Pagination/Pagination";
+import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
+// Styles
+import styles from "./page.module.css";
+
+import { apiClient } from "@/app/features/lib/api-client";
 import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
 import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
-import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
+// import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
+
+// Hook
+import { useFilters, FilterState } from "@/app/hooks/userFilters";
 import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 import DeleteModal from "@/app/components/ui/Delete/DeleteModal";
-
-import { apiClient } from "@/app/features/lib/api-client";
-import { FilterState, useFilters } from "@/app/hooks/userFilters";
-import styles from "./page.module.css";
-
-interface Company {
+interface VehicleBrand {
   id: string;
-  company_name?: string;
-  reg_number: string;
-  phone: string;
-  email: string;
-  owner_name: string;
-  owner_phone: string;
-  owner_email: string;
+  vehicle_brand_name: string;
+  country_of_origin: string;
+  manufacturer: string;
   image: string;
-  fullAddress: string;
-  website_url: string;
-  establish_year: string;
-  reg_exp_date: string;
+  description: string;
+  status: string;
 }
 
-export default function CompanyPage() {
+export default function VehicleBrandsPage() {
   const router = useRouter();
 
-  // Data States
-  const [companies, setCompanies] = useState<Company[]>([]);
+  const [vehicleBrands, setVehicleBrands] = useState<VehicleBrand[]>([]);
 
-  // Modal States
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [selectedCompany, setSelectedCompany] = useState<{
-    id: string;
+  const [deleteModal, setDeleteModal] = useState<{
+    isOpen: boolean;
+    id: string | null;
     name: string;
-  } | null>(null);
+  }>({
+    isOpen: false,
+    id: null,
+    name: "",
+  });
 
-  // Pagination States
+  //for Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
   const PAGE_SIZE = 10;
 
-  // Active Filters State
+  //Active Filters State
   const [activeFilters, setActiveFilters] = useState<FilterState>({
     search: "",
     startDate: "",
     endDate: "",
-    status: "",
+    branchId: "",
+    roleId: "",
   });
 
-  // Custom Hook for Filters
+  // Custom Hook
   const { filters, updateFilter, resetFilters } = useFilters(
-    { search: "", startDate: "", endDate: "", status: "all" },
-    (debouncedFilters: FilterState) => {
+    { search: "", startDate: "", endDate: "", branchId: "", roleId: "" },
+    (debouncedFilters) => {
       const isFilterChanged =
         activeFilters.search !== debouncedFilters.search ||
         activeFilters.startDate !== debouncedFilters.startDate ||
         activeFilters.endDate !== debouncedFilters.endDate ||
-        activeFilters.status !== debouncedFilters.status;
+        activeFilters.branchId !== debouncedFilters.branchId ||
+        activeFilters.roleId !== debouncedFilters.roleId;
 
       setActiveFilters(debouncedFilters);
 
@@ -89,9 +90,9 @@ export default function CompanyPage() {
     },
   );
 
-  // Fetch API Data
+  // fetch Vehicle Brand Data
   useEffect(() => {
-    const fetchCompanies = async () => {
+    const fetchVehicleBrands = async () => {
       try {
         const params: Record<string, string> = {
           page: currentPage.toString(),
@@ -106,148 +107,91 @@ export default function CompanyPage() {
           params.endDate = activeFilters.endDate as string;
 
         const queryString = new URLSearchParams(params).toString();
+
         const response = await apiClient.get(
-          `/master-company/company?${queryString}`,
+          `/master-vehicle/vehicle-brands?${queryString}`,
         );
 
         const res = response as unknown as {
           data?:
-            | Company[]
-            | { data?: Company[]; total?: number; totalPages?: number };
+            | VehicleBrand[]
+            | { data?: VehicleBrand[]; total?: number; totalPages?: number };
           total?: number;
           totalPages?: number;
         };
 
-        let companyList: Company[] = [];
+        let vehicleBrandList: VehicleBrand[] = [];
         let total = 0;
-        let totalPagesCount = 1;
+        let totalPages = 1;
 
         if (res && typeof res === "object") {
+          console.log(res.data);
           if (Array.isArray(res.data)) {
-            companyList = res.data;
+            vehicleBrandList = res.data;
             total = res.total || 0;
-            totalPagesCount = res.totalPages || 1;
+            totalPages = res.totalPages || 1;
           } else if (
             res.data &&
             typeof res.data === "object" &&
             Array.isArray(res.data.data)
           ) {
-            companyList = res.data.data;
+            vehicleBrandList = res.data.data;
             total = res.data.total || 0;
-            totalPagesCount = res.data.totalPages || 1;
+            totalPages = res.data.totalPages || 1;
           }
         }
 
-        setCompanies(companyList);
+        setVehicleBrands(vehicleBrandList);
         setTotalRecords(total);
-        setTotalPages(totalPagesCount);
+        setTotalPages(totalPages);
       } catch (error) {
-        console.error("Failed to fetch companies:", error);
-        setCompanies([]);
+        console.error("Failed to fetch vehicle brands:", error);
+        setVehicleBrands([]);
       }
     };
-
-    fetchCompanies();
+    fetchVehicleBrands();
   }, [currentPage, activeFilters]);
 
-  const handleDeleteSuccess = (id: string) => {
-    setCompanies((prev) => prev.filter((c) => c.id !== id));
+  const openDeleteModal = (id: string, name: string) => {
+    setDeleteModal({
+      isOpen: true,
+      id,
+      name,
+    });
   };
-
+  const handleDeleteSuccess = (id: string) => {
+    setVehicleBrands((prev) => prev.filter((v) => v.id !== id));
+  };
   const columns = [
     {
-      header: "Company Info",
-      key: "companyInfo",
-      render: (company: Company) => {
-        const compName = company.company_name || "Unknown";
-        return (
-          <div className={styles.staffInfo}>
-            {company.image ? (
-              <Image
-                src={company.image}
-                alt={compName}
-                width={40}
-                height={40}
-                className={styles.avatar}
-                unoptimized
-              />
-            ) : (
-              <div className={styles.placeholderLogo}>
-                <FontAwesomeIcon icon={faBuilding} />
-              </div>
-            )}
-            <div>
-              <div style={{ fontWeight: "600" }}>{compName}</div>
-              <div style={{ fontSize: "11px", color: "#666" }}>
-                Reg: {company.reg_number}
-              </div>
-            </div>
-          </div>
-        );
-      },
-    },
-    {
-      header: "Owner Details",
-      key: "owner",
-      render: (company: Company) => (
-        <div>
-          <div style={{ fontWeight: "500" }}>{company.owner_name}</div>
-          <div style={{ fontSize: "12px", color: "#007bff" }}>
-            {company.owner_email}
-          </div>
-          <div style={{ fontSize: "12px" }}>{company.owner_phone}</div>
+      header: "Vehicle Brand Info",
+      key: "vehicle_brand_name",
+      render: (vehicleBrand: VehicleBrand) => (
+        <div className={styles.vehiclebrandnfo}>
+          <Image
+            src={vehicleBrand.image || "/default-user.png"}
+            alt={vehicleBrand.vehicle_brand_name}
+            width={40}
+            height={40}
+            unoptimized
+            className={styles.vehiclebrandImg}
+          />
+          {vehicleBrand.vehicle_brand_name}
         </div>
       ),
     },
-    {
-      header: "Contact & Web",
-      key: "contact",
-      render: (company: Company) => (
-        <div>
-          <div>{company.email}</div>
-          <div style={{ fontSize: "12px", color: "gray" }}>
-            {company.website_url}
-          </div>
-          <div style={{ fontSize: "12px" }}>{company.phone}</div>
-        </div>
-      ),
-    },
-    {
-      header: "Full Address",
-      key: "fullAddress",
-      render: (company: Company) => (
-        <div title={company.fullAddress} className={styles.addressCell}>
-          {company.fullAddress || "-"}
-        </div>
-      ),
-    },
-    {
-      header: "Timeline",
-      key: "dates",
-      render: (company: Company) => (
-        <div>
-          <div className={styles.timelineText}>
-            Est: {company.establish_year}
-          </div>
-          <div className={styles.expireText}>
-            Exp: {company.reg_exp_date?.split("T")[0] || "-"}
-          </div>
-        </div>
-      ),
-    },
+    { header: "Country", key: "country_of_origin" },
+    { header: "Manufacturer", key: "manufacturer" },
+    { header: "Description", key: "description" },
     {
       header: "Actions",
       key: "actions",
-      render: (company: Company) => (
+      render: (vehicleBrand: VehicleBrand) => (
         <button
           className={styles.deleteBtn}
           onClick={(e) => {
             e.stopPropagation();
-            setSelectedCompany({
-              id: company.id,
-              name: company.company_name || "",
-            });
-            setIsDeleteOpen(true);
+            openDeleteModal(vehicleBrand.id, vehicleBrand.vehicle_brand_name);
           }}
         >
           <FontAwesomeIcon icon={faTrashCan} />
@@ -262,13 +206,13 @@ export default function CompanyPage() {
         sidebar={
           <div className={styles.sidebarWrapper}>
             <div className={styles.topSection}>
-              <p className={styles.gridBoxTitle}>Company Search</p>
+              <p className={styles.gridBoxTitle}>Vehicle Brand Search</p>
               <hr className={styles.cuttingLine} />
 
               <div className={styles.searchContainer}>
                 <TextInput
                   label="Searching"
-                  placeholder="Search by name, email, reg no..."
+                  placeholder="Search by name, email..."
                   value={filters.search}
                   onChange={(e) => updateFilter("search", e.target.value)}
                 />
@@ -285,21 +229,6 @@ export default function CompanyPage() {
                     value={filters.endDate}
                     onChange={(e) => updateFilter("endDate", e.target.value)}
                     rightIcon={faCalendarDays}
-                  />
-                </div>
-
-                <div className={styles.filterRow}>
-                  <DropdownInput
-                    label="Status"
-                    options={[
-                      { id: "active", name: "Active" },
-                      { id: "inactive", name: "Inactive" },
-                    ]}
-                    valueKey="id"
-                    nameKey="name"
-                    value={(filters.status as string) || "all"}
-                    onChange={(e) => updateFilter("status", e.target.value)}
-                    placeholder="All Status"
                   />
                 </div>
 
@@ -328,20 +257,16 @@ export default function CompanyPage() {
 
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLable}>Total Company :</p>
+                    <p className={styles.statLable}>Total Staff :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Active Company :</p>
-                    <p className={styles.textSuccess}>
-                      {totalRecords > 0 ? totalRecords - 1 : 0}
-                    </p>
+                    <p className={styles.statLable}>Active Staff :</p>
+                    <p className={styles.textSuccess}>36</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Inactive Company :</p>
-                    <p className={styles.textDanger}>
-                      {totalRecords > 0 ? 1 : 0}
-                    </p>
+                    <p className={styles.statLable}>Inactive Staff :</p>
+                    <p className={styles.textDanger}>4</p>
                   </div>
                 </div>
               </div>
@@ -355,7 +280,6 @@ export default function CompanyPage() {
           </div>
         }
       >
-        {/* Main Content Area (Table & Pagination) */}
         <div>
           <div className={styles.tableHeaderArea}>
             <div className={styles.paginationInfoWrapper}>
@@ -368,20 +292,27 @@ export default function CompanyPage() {
                 showOnlyInfo={true}
               />
             </div>
-            <p className={styles.tableTitle}>COMPANY MASTER RECORDS</p>
+            <p className={styles.tableTitle}>VEHICLE BRANDS MASTER RECORDS</p>
 
             <div className={styles.headerActionArea}>
-              <NavigationBtn href="/company/Addcompany" leftIcon={faPlus}>
-                add company
+              <NavigationBtn
+                href="/vehicle-brands/Addvehiclebrands"
+                leftIcon={faPlus}
+              >
+                add brand
               </NavigationBtn>
             </div>
           </div>
+
           <DataTable
-            data={companies}
             columns={columns}
-            onRowClick={(company) =>
-              router.push(`/company/Updatecompany/${company.id}`)
+            data={vehicleBrands}
+            onRowClick={(vehicleBrand) =>
+              router.push(
+                `/vehicle-brands/Updatevehiclebrands/${vehicleBrand.id}`,
+              )
             }
+            emptyMessage="No vehicle brands record records found."
           />
         </div>
 
@@ -395,15 +326,14 @@ export default function CompanyPage() {
         />
       </PageGridLayout>
 
-      {/* Delete Modal */}
-      {isDeleteOpen && selectedCompany && (
+      {deleteModal.isOpen && deleteModal.id && (
         <DeleteModal
-          isOpen={isDeleteOpen}
-          onClose={() => setIsDeleteOpen(false)}
-          itemName={selectedCompany.name}
-          name="Company"
-          id={selectedCompany.id}
-          apiRoute="master-company/company"
+          isOpen={deleteModal.isOpen}
+          onClose={() => setDeleteModal({ isOpen: false, id: null, name: "" })}
+          itemName={deleteModal.name}
+          name="vehicle-brand"
+          id={deleteModal.id}
+          apiRoute="master-vehicle/vehicle-brands"
           onDeleteSuccess={handleDeleteSuccess}
         />
       )}

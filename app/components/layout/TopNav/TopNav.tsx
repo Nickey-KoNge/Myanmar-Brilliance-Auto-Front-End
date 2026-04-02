@@ -71,13 +71,16 @@ export const TopNav = () => {
 
       <div className={styles.actions}>
         <div className={styles.togglediv}>
-          <div
-            className={styles.iconBtn}
+          <button
+            className={styles.themeToggle}
+            aria-label="Toggle Theme"
             onClick={toggleTheme}
-            style={{ cursor: "pointer" }}
           >
-            <FontAwesomeIcon icon={isLight ? faMoon : faSun} />
-          </div>
+            <FontAwesomeIcon
+              icon={isLight ? faMoon : faSun}
+              className={styles.toggleIcon}
+            />
+          </button>
 
           <div className={styles.alertBtn}>
             <FontAwesomeIcon icon={faBell} />
