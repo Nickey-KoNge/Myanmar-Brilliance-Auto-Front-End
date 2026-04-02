@@ -1,0 +1,53 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr; /* ဘယ်ဘက် Card ကို ပိုကျဉ်းစေရန် */
+  gap: var(--gap);
+  align-items: start;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+}
+
+.textarea {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px;
+  color: var(--text-main);
+  min-height: 100px;
+  resize: none;
+  font-family: inherit;
+}
+
+.headerActionArea {
+  display: flex;
+  gap: 12px;
+}
+
+.dropdownWrapper {
+  margin-top: 10px;
+}
