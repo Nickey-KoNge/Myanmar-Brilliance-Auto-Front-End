@@ -181,14 +181,14 @@
 }
 
 /* --- Added for Company Avatar Display --- */
-.staffInfo {
+.companyInfo {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.avatar {
-  border-radius: 50%;
+.companyImg {
+  border-radius: var(--img-border-radius);
   object-fit: cover;
 }
 

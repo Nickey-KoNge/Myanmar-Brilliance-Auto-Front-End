@@ -67,6 +67,7 @@ button {
   --padding: 1rem;
   --radius: 8px;
   --gap: 1.5rem;
+  --img-border-radius:50%;
 
   /* table css */
   --bg-table: #2d2d30;

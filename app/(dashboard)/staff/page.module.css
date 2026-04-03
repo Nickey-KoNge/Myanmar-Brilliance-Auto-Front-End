@@ -159,7 +159,7 @@
 }
 
 .staffImg {
-  border-radius: 50%;
+  border-radius: var(--img-border-radius);
   object-fit: cover;
 }
 

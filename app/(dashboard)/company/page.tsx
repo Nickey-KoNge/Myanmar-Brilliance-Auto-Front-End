@@ -161,14 +161,14 @@ export default function CompanyPage() {
       render: (company: Company) => {
         const compName = company.company_name || "Unknown";
         return (
-          <div className={styles.staffInfo}>
+          <div className={styles.companyInfo}>
             {company.image ? (
               <Image
                 src={company.image}
                 alt={compName}
                 width={40}
                 height={40}
-                className={styles.avatar}
+                className={styles.companyImg}
                 unoptimized
               />
             ) : (
