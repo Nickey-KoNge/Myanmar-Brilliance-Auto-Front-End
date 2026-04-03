@@ -44,6 +44,7 @@ export default function UpdateBranch() {
 
         // TypeScript error 2352 ကို ရှောင်ရန် unknown သို့ အရင် cast လုပ်ပါ
         const rawData = (response as { data?: unknown }).data || response;
+
         const typedData = rawData as StationFormData;
 
         if (typedData) {
@@ -99,6 +100,8 @@ export default function UpdateBranch() {
       console.error("Error updating station:", error);
     }
   };
+
+  console.log("Station Data:", stationData);
 
   if (!stationData) {
     return <div style={{ padding: "2rem" }}>Loading...</div>;
