@@ -7,9 +7,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
   faTrashCan,
-  faUser,
-  faRotateLeft,
   faClockRotateLeft,
+  faIdCard,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { DataTable } from "@/app/components/ui/DataTable/DataTable";
@@ -35,7 +34,7 @@ export default function DriverListPage() {
   const [search, setSearch] = useState("");
   const [activeRecords, setActiveRecords] = useState(0);
   const [inactiveRecords, setInactiveRecords] = useState(0);
-  const [fromDate, setFromDate] = useState(""); // <--- အသစ်ထည့်ပါ
+  const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
@@ -56,8 +55,6 @@ export default function DriverListPage() {
       });
 
       const resData = response?.data || response;
-
-      console.log("Fetched Data:", resData);
 
       if (resData && resData.items) {
         setDrivers(resData.items);
@@ -80,10 +77,7 @@ export default function DriverListPage() {
       header: "Driver Info",
       key: "driver_name",
       render: (driver: any) => {
-        // ပုံမရှိရင်ပြဖို့ Default avatar
         const defaultImage = "/default-user.png";
-
-        // Backend က full URL ပေးထားရင် အဲ့ဒါသုံးမယ်၊ မဟုတ်ရင် path ဆက်ပေးမယ်
         const src = driver.image
           ? driver.image.startsWith("http")
             ? driver.image
@@ -99,7 +93,7 @@ export default function DriverListPage() {
                 width={40}
                 height={40}
                 className={styles.staffImg}
-                unoptimized // localhost မှာ စမ်းသပ်နေချိန် image optimization error မတက်အောင် သုံးနိုင်ပါတယ်
+                unoptimized
               />
             </div>
             <span className={styles.mainName}>{driver.driver_name}</span>
@@ -117,7 +111,7 @@ export default function DriverListPage() {
       key: "actions",
       render: (driver: any) => (
         <button
-          className={styles.actionIconBtn} // Class နာမည်အသစ်
+          className={styles.actionIconBtn}
           onClick={(e) => {
             e.stopPropagation();
             setDeleteModal({
@@ -135,6 +129,19 @@ export default function DriverListPage() {
 
   return (
     <>
+      {/* Header Card Section */}
+      <div className={styles.headerCard}>
+        <div className={styles.headerTitleGroup}>
+          <div className={styles.headerIconBox}>
+            <FontAwesomeIcon icon={faIdCard} className={styles.headerIcon} />
+          </div>
+          <h2 className={styles.headerTitle}>Driver Management</h2>
+        </div>
+        <NavigationBtn href="/driver/Adddriver" leftIcon={faPlus}>
+          ADD DRIVER
+        </NavigationBtn>
+      </div>
+
       <PageGridLayout
         sidebar={
           <div className={styles.sidebarWrapper}>
@@ -159,15 +166,14 @@ export default function DriverListPage() {
                     onChange={(e: any) => setToDate(e.target.value)}
                   />
                 </div>
-
                 <ActionBtn
                   variant="action"
                   className={styles.resetBtn}
                   onClick={() => {
-                    setSearch(""); // Search အလွတ်ဖြစ်အောင် လုပ်မယ်
-                    setFromDate(""); // From Date အလွတ်ဖြစ်အောင် လုပ်မယ်
-                    setToDate(""); // To Date အလွတ်ဖြစ်အောင် လုပ်မယ်
-                    setCurrentPage(1); // Page 1 ကို ပြန်သွားမယ်
+                    setSearch("");
+                    setFromDate("");
+                    setToDate("");
+                    setCurrentPage(1);
                   }}
                 >
                   Reset Filters
@@ -205,30 +211,31 @@ export default function DriverListPage() {
           </div>
         }
       >
-        <div className={styles.tableContainer}>
-          <div className={styles.tableHeaderArea}>
-            <p className={styles.tableTitle}>DRIVER MASTER RECORDS</p>
-            <div className={styles.headerActionArea}>
-              <NavigationBtn href="/driver/Adddriver" leftIcon={faPlus}>
-                ADD DRIVER
-              </NavigationBtn>
+        <div className={styles.tablePageWrapper}>
+          <div className={styles.tableMainContent}>
+            <div className={styles.tableHeaderArea}>
+              <p className={styles.tableTitle}>DRIVER MASTER RECORDS</p>
+            </div>
+
+            <div className={styles.dataTable}>
+              <DataTable
+                columns={columns}
+                data={drivers}
+                onRowClick={(d) => router.push(`/driver/Updatedriver/${d.id}`)}
+              />
             </div>
           </div>
 
-          <DataTable
-            columns={columns}
-            data={drivers}
-            onRowClick={(d) => router.push(`/driver/Updatedriver/${d.id}`)}
-          />
-
-          <div className={styles.bottomPagination}>
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              totalRecords={totalRecords}
-              pageSize={PAGE_SIZE}
-              onPageChange={setCurrentPage}
-            />
+          <div className={styles.stickyFooterPagination}>
+            <div className={styles.paginationWrapper}>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalRecords={totalRecords}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCurrentPage}
+              />
+            </div>
           </div>
         </div>
       </PageGridLayout>
