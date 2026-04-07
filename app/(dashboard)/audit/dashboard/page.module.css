@@ -1,36 +1,77 @@
 .dashboardContainer {
   padding: 1.5rem;
   background-color: var(--bg-main);
-  ာငည-height: 100vh;
+  border-radius: var(--radius);
+  min-height: max-content;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  gap: var(--gap);
+  gap: 1.5rem;
 }
+
+/* Header Section */
+.headerSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
 .pageTitle {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-xl, 1.5rem);
+  font-weight: 700;
   color: var(--text-main);
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  margin: 0;
 }
 
 .titleIcon {
   color: var(--color-primary);
 }
 
-/* Summary Cards Grid */
+/* 🛑 Header Actions Layout */
+.headerActions {
+  display: flex;
+/* align-items: baseline; */
+  gap: 0.75rem;
+}
+
+.filterRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filterRow :global(label) {
+  font-size: 0.65rem !important;
+  font-weight: 700 !important;
+  color: var(--text-main) !important;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.actionBtnsGroup {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  /* margin-bottom: 2px; */
+}
+
+/* Summary Cards */
 .summaryGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: var(--gap);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
 }
 
 .summaryCard {
-  background-color: var(--bg-card);
+  background-color: var(--bg-card, #fff);
   padding: 1.5rem;
-  border-radius: var(--radius);
-  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  border: 1px solid var(--border-color, #e5e7eb);
   border-left-width: 4px;
   display: flex;
   align-items: center;
@@ -38,50 +79,119 @@
 }
 
 .cardLogs {
-  border-left-color: #3b82f6;
-}
-.cardUsers {
   border-left-color: var(--success);
 }
+.cardAlerts {
+  border-left-color: var(--danger);
+}
+.cardUsers {
+  border-left-color: var(--infor);
+}
 .cardModule {
-  border-left-color: #a855f7;
+  border-left-color: var(--selected);
 }
 
 .cardLabel {
-  font-size: var(--font-size-s);
+  font-size: 0.875rem;
   color: var(--text-muted);
-  font-weight: var(--font-weight-bold);
-  margin-bottom: 0.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
 .cardValue {
-  font-size: 2rem;
-  font-weight: var(--font-weight-bolder);
+  font-size: 1.75rem;
+  font-weight: 700;
   color: var(--text-main);
+  margin: 0;
 }
 
 .cardIcon {
-  font-size: 2.5rem;
-  opacity: 0.2;
+  font-size: 2rem;
+  color: var(--color-primary);
+}
+
+/* Charts & Bottom */
+.chartsGridRow,
+.bottomSection {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+.chartWrapper,
+.recentLogsWrapper {
+  background-color: var(--bg-card, #fff);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 1rem;
+}
+
+.logList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.logItem {
+  font-size: 0.875rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #f3f4f6;
   color: var(--text-main);
 }
 
-/* Charts Grid */
-.chartsGridRow {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--gap);
+.logBadge {
+  font-size: 0.7rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-weight: 600;
+  margin-right: 0.5rem;
 }
 
-.bottomChartRow {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--gap);
+.badgeDanger {
+  background: #fee2e2;
+  color: #991b1b;
+}
+.badgeWarning {
+  background: #fef3c7;
+  color: #92400e;
+}
+.badgeSuccess {
+  background: #d1fae5;
+  color: #065f46;
+}
+.badgeInfo {
+  background: #dbeafe;
+  color: #1e40af;
 }
 
-/* Responsive */
+.logTime {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.btnViewAll {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  background-color: var(--color-primary);
+  color: #fff;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+}
+
 @media (max-width: 1024px) {
-  .chartsGridRow {
+  .chartsGridRow,
+  .bottomSection {
     grid-template-columns: 1fr;
   }
 }

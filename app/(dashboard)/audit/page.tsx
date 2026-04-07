@@ -32,28 +32,27 @@ interface AuditLog {
 }
 
 export default function AuditLogPage() {
-  // const router = useRouter();
   const [auditData, setAuditData] = useState<AuditLog[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
   const PAGE_SIZE = 6;
 
-  // Active Filters State
   const [activeFilters, setActiveFilters] = useState<FilterState>({
     search: "",
     startDate: "",
     endDate: "",
+    entityName: "",
   });
 
-  // Custom Hook for Filters
   const { filters, updateFilter, resetFilters } = useFilters(
-    { search: "", startDate: "", endDate: "" },
+    { search: "", startDate: "", endDate: "", entityName: "" },
     (debouncedFilters: FilterState) => {
       const isFilterChanged =
         activeFilters.search !== debouncedFilters.search ||
         activeFilters.startDate !== debouncedFilters.startDate ||
-        activeFilters.endDate !== debouncedFilters.endDate;
+        activeFilters.endDate !== debouncedFilters.endDate ||
+        activeFilters.entityName !== debouncedFilters.entityName;
 
       setActiveFilters(debouncedFilters);
 
@@ -70,12 +69,12 @@ export default function AuditLogPage() {
         limit: PAGE_SIZE.toString(),
       };
 
-      if (activeFilters.search)
-        params.entity_name = activeFilters.search as string;
+      if (activeFilters.search) params.search = String(activeFilters.search);
       if (activeFilters.startDate)
-        params.startDate = activeFilters.startDate as string;
-      if (activeFilters.endDate)
-        params.endDate = activeFilters.endDate as string;
+        params.startDate = String(activeFilters.startDate);
+      if (activeFilters.endDate) params.endDate = String(activeFilters.endDate);
+      if (activeFilters.entityName)
+        params.entity_name = String(activeFilters.entityName);
 
       const queryString = new URLSearchParams(params).toString();
       const response = await apiClient.get(`/master-audit?${queryString}`);
@@ -145,7 +144,30 @@ export default function AuditLogPage() {
       toast.error("Failed to restore data.");
     }
   };
+  const formatValue = (val: unknown) => {
+    if (val === null || val === undefined || val === "") return "-";
 
+    if (typeof val === "object") {
+      if (Array.isArray(val)) {
+        return val.length > 0
+          ? val
+              .map((v) =>
+                typeof v === "object" ? JSON.stringify(v) : String(v),
+              )
+              .join(", ")
+          : "-";
+      }
+
+      const obj = val as Record<string, unknown>;
+      const displayName =
+        (obj.company_name as string) ||
+        (obj.name as string) ||
+        (obj.branches_name as string);
+      return displayName ? String(displayName) : JSON.stringify(obj);
+    }
+
+    return String(val);
+  };
   // DataTable Columns Setup
   const columns = [
     {
@@ -154,7 +176,6 @@ export default function AuditLogPage() {
       render: (item: AuditLog) => (
         <div className={styles.userInfoCell}>
           <span className={styles.userName}>{item.performed_by}</span>
-
           <span className={styles.dateText}>
             {new Date(item.created_at).toLocaleString()}
           </span>
@@ -187,42 +208,135 @@ export default function AuditLogPage() {
     {
       header: "Before Change",
       key: "olddata",
-      render: (item: AuditLog) => (
-        <div className={`${styles.changesCell} ${styles.dataColumn}`}>
-          {item.old_values && (
-            <div className={styles.oldValue}>
-              {Object.entries(item.old_values).map(([key, value]) => (
-                <div key={key} className={styles.dataRow}>
-                  <span className={styles.dataKey}>
-                    <b>{key} : </b>
-                  </span>
-                  <span className={styles.dataVal}>{String(value)}</span>
+      render: (item: AuditLog) => {
+        let parsedOld = item.old_values;
+        if (typeof parsedOld === "string") {
+          try {
+            parsedOld = JSON.parse(parsedOld);
+          } catch {}
+        }
+        const hasOldData = parsedOld && Object.keys(parsedOld).length > 0;
+
+        return (
+          <div className={`${styles.changesCell} ${styles.dataColumn}`}>
+            {item.action === "RESTORE" && !hasOldData ? (
+              <span
+                style={{
+                  color: "#9ca3af",
+                  fontStyle: "italic",
+                  fontSize: "0.875rem",
+                }}
+              >
+                Deleted / Previous State
+              </span>
+            ) : (
+              hasOldData && (
+                <div className={styles.oldValue}>
+                  {Object.entries(parsedOld as Record<string, unknown>).map(
+                    ([key, value]) => {
+                      if (key === "deleted_at" || key === "updated_at")
+                        return null;
+                      return (
+                        <div key={key} className={styles.dataRow}>
+                          <span className={styles.dataKey}>
+                            <b>
+                              {key
+                                .split("_")
+                                .map(
+                                  (w) => w.charAt(0).toUpperCase() + w.slice(1),
+                                )
+                                .join(" ")}{" "}
+                              :{" "}
+                            </b>
+                          </span>
+
+                          <span className={styles.dataVal}>
+                            {formatValue(value)}
+                          </span>
+                        </div>
+                      );
+                    },
+                  )}
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
-      ),
+              )
+            )}
+          </div>
+        );
+      },
     },
     {
       header: "After Change",
       key: "newdata",
-      render: (item: AuditLog) => (
-        <div className={`${styles.changesCell} ${styles.dataColumn}`}>
-          {item.new_values && (
-            <div className={styles.newValue}>
-              {Object.entries(item.new_values).map(([key, value]) => (
-                <div key={key} className={styles.dataRow}>
-                  <span className={styles.dataKey}>
-                    <b>{key} : </b>
-                  </span>
-                  <span className={styles.dataVal}>{String(value)}</span>
+      render: (item: AuditLog) => {
+        let parsedNew = item.new_values;
+        if (typeof parsedNew === "string") {
+          try {
+            parsedNew = JSON.parse(parsedNew);
+          } catch {}
+        }
+        const hasNewData = parsedNew && Object.keys(parsedNew).length > 0;
+
+        return (
+          <div className={`${styles.changesCell} ${styles.dataColumn}`}>
+            {item.action === "RESTORE" && !hasNewData ? (
+              <span
+                style={{
+                  color: "#059669",
+                  fontWeight: 500,
+                  fontStyle: "italic",
+                  fontSize: "0.875rem",
+                }}
+              >
+                Successfully Restored
+              </span>
+            ) : (
+              hasNewData && (
+                <div className={styles.newValue}>
+                  {item.action === "RESTORE" && (
+                    <div
+                      style={{
+                        color: "#059669",
+                        fontSize: "0.75rem",
+                        fontWeight: "bold",
+                        marginBottom: "4px",
+                        borderBottom: "1px solid #a7f3d0",
+                        paddingBottom: "2px",
+                      }}
+                    >
+                      ✅ Restored Data:
+                    </div>
+                  )}
+                  {Object.entries(parsedNew as Record<string, unknown>).map(
+                    ([key, value]) => {
+                      if (key === "deleted_at" || key === "updated_at")
+                        return null;
+                      return (
+                        <div key={key} className={styles.dataRow}>
+                          <span className={styles.dataKey}>
+                            <b>
+                              {key
+                                .split("_")
+                                .map(
+                                  (w) => w.charAt(0).toUpperCase() + w.slice(1),
+                                )
+                                .join(" ")}{" "}
+                              :{" "}
+                            </b>
+                          </span>
+                         
+                          <span className={styles.dataVal}>
+                            {formatValue(value)}
+                          </span>
+                        </div>
+                      );
+                    },
+                  )}
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
-      ),
+              )
+            )}
+          </div>
+        );
+      },
     },
     {
       header: "Actions",
@@ -242,6 +356,7 @@ export default function AuditLogPage() {
         ),
     },
   ];
+
   return (
     <PageGridLayout
       sidebar={
@@ -252,22 +367,29 @@ export default function AuditLogPage() {
 
             <div className={styles.searchContainer}>
               <TextInput
-                label="Record Type (e.g. branches)"
-                placeholder="Search module..."
-                value={filters.search}
+                label="Global Search"
+                placeholder="Search user, action, type..."
+                value={String(filters.search || "")}
                 onChange={(e) => updateFilter("search", e.target.value)}
+              />
+
+              <TextInput
+                label="Record Type (e.g. branches)"
+                placeholder="Search Record Type..."
+                value={String(filters.entityName || "")}
+                onChange={(e) => updateFilter("entityName", e.target.value)}
               />
 
               <div className={styles.filterRow}>
                 <DateInput
                   label="From Date"
-                  value={filters.startDate}
+                  value={String(filters.startDate || "")}
                   onChange={(e) => updateFilter("startDate", e.target.value)}
                   rightIcon={faCalendarDays}
                 />
                 <DateInput
                   label="To Date"
-                  value={filters.endDate}
+                  value={String(filters.endDate || "")}
                   onChange={(e) => updateFilter("endDate", e.target.value)}
                   rightIcon={faCalendarDays}
                 />

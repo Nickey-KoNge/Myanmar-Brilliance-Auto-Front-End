@@ -13,13 +13,41 @@ import { useState, useEffect } from "react";
 import { apiClient } from "@/app/features/lib/api-client";
 import styles from "./ActionTypePieChart.module.css";
 
-const COLORS = ["#22c55e", "#3b82f6", "#ef4444", "#f59e0b"]; // CREATE (Green), UPDATE (Blue), DELETE (Red), RESTORE (Yellow)
+const COLORS = ["#22c55e", "#3b82f6", "#ef4444", "#f59e0b"]; // CREATE, UPDATE, DELETE, RESTORE
 
-export function ActionTypePieChart() {
+// 🛑 TypeScript Error မတက်စေရန် Interface များ ထပ်ထည့်ပေးထားပါသည်
+interface RawActionData {
+  action?: string;
+  actionCount?: string | number;
+}
+
+interface ChartData {
+  name: string;
+  value: number;
+}
+
+type ApiResponse =
+  | RawActionData[]
+  | { data?: RawActionData[] | { data?: RawActionData[] } };
+
+export function ActionTypePieChart({
+  startDate,
+  endDate,
+}: {
+  startDate?: string;
+  endDate?: string;
+}) {
   const [data, setData] = useState<ChartData[]>([]);
+
   useEffect(() => {
+    // 🛑 Start Date နှင့် End Date များကို Query Parameter အဖြစ် တည်ဆောက်ခြင်း
+    const params = new URLSearchParams();
+    if (startDate) params.append("startDate", startDate);
+    if (endDate) params.append("endDate", endDate);
+    const queryStr = params.toString() ? `?${params.toString()}` : "";
+
     apiClient
-      .get("/master-audit/analytics/action-types")
+      .get(`/master-audit/analytics/action-types${queryStr}`) // 🛑 Query တွဲပို့ပါမည်
       .then((res: unknown) => {
         const response = res as ApiResponse;
         let rawData: RawActionData[] = [];
@@ -51,7 +79,7 @@ export function ActionTypePieChart() {
         setData(formattedData);
       })
       .catch((err) => console.error("Error fetching pie chart data:", err));
-  }, []);
+  }, [startDate, endDate]); // 🛑 Date ပြောင်းတိုင်း Data ပြန်ခေါ်ပါမည်
 
   return (
     <div className={styles.card}>

@@ -28,12 +28,24 @@ type ApiResponse =
   | RawModuleData[]
   | { data?: RawModuleData[] | { data?: RawModuleData[] } };
 
-export function ModuleActivityChart() {
+export function ModuleActivityChart({
+  startDate,
+  endDate,
+}: {
+  startDate?: string;
+  endDate?: string;
+}) {
   const [data, setData] = useState<ChartData[]>([]);
 
   useEffect(() => {
+    // 🛑 Start Date နှင့် End Date များကို Query Parameter အဖြစ် တည်ဆောက်ခြင်း
+    const params = new URLSearchParams();
+    if (startDate) params.append("startDate", startDate);
+    if (endDate) params.append("endDate", endDate);
+    const queryStr = params.toString() ? `?${params.toString()}` : "";
+
     apiClient
-      .get("/master-audit/analytics/module-activity")
+      .get(`/master-audit/analytics/module-activity${queryStr}`) // 🛑 Query တွဲပို့ပါမည်
       .then((res: unknown) => {
         const response = res as ApiResponse;
         let rawData: RawModuleData[] = [];
@@ -58,7 +70,6 @@ export function ModuleActivityChart() {
         }
 
         const formattedData: ChartData[] = rawData.map((item) => ({
-          // entity_name ကို အကြီးအသေးလှအောင် Capitalize လုပ်ပါသည်
           moduleName: item.entity_name
             ? item.entity_name.charAt(0).toUpperCase() +
               item.entity_name.slice(1)
@@ -69,7 +80,7 @@ export function ModuleActivityChart() {
         setData(formattedData);
       })
       .catch((err) => console.error("Error fetching module chart data:", err));
-  }, []);
+  }, [startDate, endDate]); // 🛑 Date ပြောင်းတိုင်း Data ပြန်ခေါ်ပါမည်
 
   return (
     <div className={styles.card}>

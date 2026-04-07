@@ -84,7 +84,8 @@ button {
   --danger: #ff4d4f;
   --success: #2b7a2c;
   --success-hover: #338f35;
-
+  --infor: rgb(77, 82, 216);
+  --selected: rgb(216, 202, 77);
   --padding: 1rem;
   --padding-inside: 0.75rem;
   --margin: 1rem;
