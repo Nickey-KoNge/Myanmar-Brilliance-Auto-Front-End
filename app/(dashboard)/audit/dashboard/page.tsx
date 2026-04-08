@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { UserActivityChart } from "@/app/components/activitychart/UserActivityChart";
 import { ActionTypePieChart } from "@/app/components/activitychart/ActionTypePieChart";
 import { ModuleActivityChart } from "@/app/components/activitychart/ModuleActivityChart";
@@ -20,6 +20,8 @@ import {
 import Link from "next/link";
 import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
+import toast from "react-hot-toast";
+import Cookies from "js-cookie";
 
 interface SummaryData {
   totalLogs: number;
@@ -76,7 +78,15 @@ export default function AuditDashboardPage() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  const fetchDashboardData = useCallback(async () => {
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [exportOptions, setExportOptions] = useState({
+    entityName: "",
+    action: "",
+  });
+
+  const [triggerFetch, setTriggerFetch] = useState(0);
+
+  const fetchDashboardData = async () => {
     try {
       const params = new URLSearchParams();
       if (startDate) params.append("startDate", startDate);
@@ -115,12 +125,73 @@ export default function AuditDashboardPage() {
     } catch (error) {
       console.error("Error fetching audit dashboard data:", error);
     }
-  }, [startDate, endDate]);
+  };
+
+  const handleRefresh = () => {
+    setStartDate("");
+    setEndDate("");
+
+    setTriggerFetch((prev) => prev + 1);
+  };
+  const handleExport = async () => {
+    try {
+      const params = new URLSearchParams({
+        startDate,
+        endDate,
+        entity_name: exportOptions.entityName,
+        search: exportOptions.action,
+      });
+
+      const apiUrl = "http://localhost:3001";
+
+      const token = Cookies.get("access_token");
+
+      if (!token) {
+        toast.error("Authentication Error: Please login again.");
+        return;
+      }
+
+      const response = await fetch(
+        `${apiUrl}/master-audit/export/excel?${params.toString()}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`, // Token ထည့်ပေးခြင်း
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(`Server Error: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+
+      const today = new Date().toISOString().slice(0, 10);
+      link.setAttribute("download", `Audit_Report_${today}.xlsx`);
+
+      document.body.appendChild(link);
+      link.click();
+
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+
+      setShowExportModal(false);
+      toast.success("Excel exported successfully!");
+    } catch (error) {
+      console.error("Export Error:", error);
+      toast.error("Export failed! Check console.");
+    }
+  };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchDashboardData();
-  }, [fetchDashboardData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [startDate, endDate, triggerFetch]);
 
   return (
     <div className={styles.dashboardContainer}>
@@ -150,11 +221,16 @@ export default function AuditDashboardPage() {
               type="button"
               variant="action"
               fullWidth={false}
-              onClick={fetchDashboardData}
+              onClick={handleRefresh}
             >
               <FontAwesomeIcon icon={faRotateRight} />
             </ActionBtn>
-            <ActionBtn type="button" variant="action" fullWidth={false}>
+            <ActionBtn
+              type="button"
+              variant="action"
+              fullWidth={false}
+              onClick={() => setShowExportModal(true)}
+            >
               <FontAwesomeIcon icon={faDownload} /> Export Report
             </ActionBtn>
           </div>
@@ -242,6 +318,52 @@ export default function AuditDashboardPage() {
           </Link>
         </div>
       </div>
+
+      {/* Modal JSX */}
+      {showExportModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.exportModal}>
+            <h3>Export Audit Report</h3>
+            <div className={styles.modalBody}>
+              <p>
+                Current Range: {startDate || "All"} to {endDate || "Today"}
+              </p>
+
+              <label>Filter by Module:</label>
+              <select
+                onChange={(e) =>
+                  setExportOptions({
+                    ...exportOptions,
+                    entityName: e.target.value,
+                  })
+                }
+              >
+                <option value="">All Modules</option>
+                <option value="branches">Branches</option>
+                <option value="company">Company</option>
+              </select>
+
+              <label>Filter by Action:</label>
+              <select
+                onChange={(e) =>
+                  setExportOptions({ ...exportOptions, action: e.target.value })
+                }
+              >
+                <option value="">All Actions</option>
+                <option value="DELETE">Delete (Critical)</option>
+                <option value="CREATE">Create</option>
+                <option value="UPDATE">Update</option>
+              </select>
+            </div>
+            <div className={styles.modalFooter}>
+              <button onClick={() => setShowExportModal(false)}>Cancel</button>
+              <button className={styles.btnDownload} onClick={handleExport}>
+                Download Excel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
