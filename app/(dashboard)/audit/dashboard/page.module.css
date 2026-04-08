@@ -35,7 +35,7 @@
 /* 🛑 Header Actions Layout */
 .headerActions {
   display: flex;
-/* align-items: baseline; */
+  /* align-items: baseline; */
   gap: 0.75rem;
 }
 
@@ -194,4 +194,58 @@
   .bottomSection {
     grid-template-columns: 1fr;
   }
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.exportModal {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 400px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.modalBody label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.modalBody select {
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.btnDownload {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
 }
