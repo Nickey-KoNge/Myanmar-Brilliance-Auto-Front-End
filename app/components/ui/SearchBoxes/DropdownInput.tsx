@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
+import { faCaretDown, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import styles from "./page.module.css";
 
 export interface Option {
@@ -19,6 +19,7 @@ interface DropdownProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   leftIcon?: IconProp;
   rightIcon?: IconProp;
   placeholder?: string;
+  isLoading?: boolean;
 }
 
 const DropdownInput = forwardRef<HTMLSelectElement, DropdownProps>(
@@ -26,17 +27,21 @@ const DropdownInput = forwardRef<HTMLSelectElement, DropdownProps>(
     {
       label,
       error,
-      options,
+      options = [],
       valueKey = "id",
       nameKey = "name",
       leftIcon,
       rightIcon = faCaretDown,
       placeholder,
       className,
+      isLoading = false,
+      disabled,
       ...props
     },
     ref,
   ) => {
+    const currentRightIcon = isLoading ? faSpinner : rightIcon;
+
     return (
       <div className={`${styles.field} ${className || ""}`}>
         {label && <label className={styles.label}>{label}</label>}
@@ -50,35 +55,39 @@ const DropdownInput = forwardRef<HTMLSelectElement, DropdownProps>(
 
           <select
             ref={ref}
+            disabled={disabled || isLoading}
             className={`
               ${styles.selectInput}
               ${leftIcon ? styles.withLeftIcon : ""}
               ${rightIcon ? styles.withRightIcon : ""}
               ${error ? styles.inputError : ""}
+              ${isLoading ? styles.loadingSelect : ""}
             `}
             {...props}
           >
-            {placeholder && (
-              <option value="">
-                {placeholder}
-              </option>
+            {isLoading ? (
+              <option value="">Loading options...</option>
+            ) : (
+              <>
+                {placeholder && <option value="">{placeholder}</option>}
+                {!placeholder && label && <option value="">All {label}</option>}
+              </>
             )}
 
-            {!placeholder && label && <option value="">All {label}</option>}
-
-            {options.map((opt) => (
-              <option key={opt[valueKey]} value={opt[valueKey]}>
-                {opt[nameKey]}
-              </option>
-            ))}
+            {!isLoading &&
+              options.map((opt) => (
+                <option key={opt[valueKey]} value={opt[valueKey]}>
+                  {opt[nameKey]}
+                </option>
+              ))}
           </select>
 
-          {rightIcon && (
+          {currentRightIcon && (
             <span
-              className={styles.iconRight}
+              className={`${styles.iconRight} ${isLoading ? styles.spin : ""}`}
               style={{ pointerEvents: "none" }}
             >
-              <FontAwesomeIcon icon={rightIcon} />
+              <FontAwesomeIcon icon={currentRightIcon} spin={isLoading} />
             </span>
           )}
         </div>
