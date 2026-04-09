@@ -30,6 +30,7 @@ import {
   faClipboardList,
   faGauge,
   faTableList,
+  faPersonCirclePlus,
 } from "@fortawesome/free-solid-svg-icons";
 
 const NavItem = ({
@@ -214,6 +215,11 @@ export const SideNav = () => {
               icon: faBuildingFlag,
               label: "Vehicle Brands",
               href: "/vehicle-brands",
+            },
+            {
+              icon: faPersonCirclePlus,
+              label: "Assignments",
+              href: "/vehicle-driver-assign",
             },
           ]}
           isOpen={openDropdown === "Fleet"}

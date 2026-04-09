@@ -1,0 +1,19 @@
+.container {
+  height: 100vh;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.columnContent {
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: calc(var(--padding) / 2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1/1;
+  text-align: center;
+}
