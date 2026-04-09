@@ -32,7 +32,7 @@ export interface VehicleModelFormData {
   fuel_type: string;
   transmission: string;
   engine_capacity: string;
-  year_of_release: string; // ERD အရ DATE() type ဖြစ်သော်လည်း Form တွင် string အဖြစ်လက်ခံပါသည်
+  year_of_release: string;
   status: string;
 }
 
@@ -71,7 +71,6 @@ export const VehicleModelForm: React.FC<VehicleModelFormProps> = ({
   useEffect(() => {
     const fetchBrands = async () => {
       try {
-        // Driver service ၏ findAll logic အတိုင်း list API ကို ခေါ်ယူခြင်း
         const response = await apiClient.get("/vehicle-model/list");
         const res = response?.data || response;
         if (res && res.brands) setBrands(res.brands);
@@ -123,7 +122,6 @@ export const VehicleModelForm: React.FC<VehicleModelFormProps> = ({
         onSubmit={handleSubmit(onSubmit)}
         className={styles.formGridContainer}
       >
-        {/* Section: Basic Identity (ERD: Model Name, Brand, Release Year) */}
         <section className={styles.formGridBox}>
           <header className={styles.gridBoxTitle}>
             <span className={styles.pill} />
@@ -178,7 +176,6 @@ export const VehicleModelForm: React.FC<VehicleModelFormProps> = ({
           </header>
           <hr className={styles.cuttingLine} />
 
-          {/* filterContainer သည် grid-template-columns: 1fr 1fr ဖြစ်သောကြောင့် input များကို အစီအစဉ်လိုက် ထည့်သွင်းပေးရန်လိုအပ်သည် */}
           <div className={styles.filterContainer}>
             <TextInput
               label="Engine Capacity"
@@ -208,7 +205,6 @@ export const VehicleModelForm: React.FC<VehicleModelFormProps> = ({
               {...register("transmission")}
             />
 
-            {/* Body Type ကို ဤနေရာသို့ ပြောင်းရွှေ့လိုက်ခြင်းဖြင့် Transmission ၏ ဘေးတွင် ပေါ်လာမည်ဖြစ်သည် */}
             <DropdownInput
               label="Body Type"
               placeholder="Select Body Type"

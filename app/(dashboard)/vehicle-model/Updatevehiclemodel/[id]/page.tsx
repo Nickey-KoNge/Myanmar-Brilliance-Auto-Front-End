@@ -15,7 +15,6 @@ export default function EditVehicleModelPage() {
     useState<Partial<VehicleModelFormData> | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // ၁။ အချက်အလက်ဟောင်းများကို Fetch လုပ်ခြင်း
   useEffect(() => {
     const fetchVehicleModel = async () => {
       try {
@@ -30,23 +29,18 @@ export default function EditVehicleModelPage() {
     if (id) fetchVehicleModel();
   }, [id]);
 
-  // ၂။ Update ပြုလုပ်ခြင်း
   const handleUpdate = async (data: any) => {
     setLoading(true);
     try {
-      /** * Destructuring အသုံးပြုပြီး မလိုအပ်သော field များကို ဖယ်ထုတ်ခြင်း
-       * id နှင့် vehicle_brand_name တို့ကို payload ထဲတွင် မပါဝင်စေရန် ဤနေရာတွင် ခွဲထုတ်လိုက်သည်
-       */
       const {
         id: _,
         vehicle_brand_name,
         createdAt,
         updatedAt,
-        brands, // brand list ပါလာပါက ဖယ်ရန်
+        brands,
         ...cleanData
       } = data;
 
-      // ERD ပါ DATE() type ဖြစ်သော field ကို ISO String ပြောင်းရန်
       const payload = {
         ...cleanData,
         year_of_release: cleanData.year_of_release
@@ -54,7 +48,6 @@ export default function EditVehicleModelPage() {
           : null,
       };
 
-      // Backend Controller သို့ သန့်စင်ပြီးသား payload ကိုသာ ပေးပို့ခြင်း
       await apiClient.patch(`/vehicle-model/${id}`, payload);
 
       alert("Vehicle Model Updated Successfully!");

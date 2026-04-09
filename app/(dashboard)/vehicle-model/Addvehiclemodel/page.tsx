@@ -15,19 +15,13 @@ export default function AddVehicleModelPage() {
   const handleSave = async (data: VehicleModelFormData) => {
     setLoading(true);
     try {
-      // Vehicle Model သည် Driver ကဲ့သို့ image upload မပါသောကြောင့်
-      // FormData အစား JSON object အနေဖြင့် တိုက်ရိုက် ပို့ပေးရပါမည်။
-
       const payload = {
         ...data,
-        // လိုအပ်ပါက status သို့မဟုတ် အခြား default value များ ထည့်သွင်းနိုင်သည်
         status: data.status || "Active",
       };
 
-      // Backend Controller ၏ @Post('register') သို့ ပို့ခြင်း
       await apiClient.post("/vehicle-model/register", payload);
 
-      // အောင်မြင်ပါက List view သို့ ပြန်သွားမည်
       router.push("/vehicle-model");
     } catch (error: any) {
       const errorMsg =
