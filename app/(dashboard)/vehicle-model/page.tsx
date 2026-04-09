@@ -56,7 +56,17 @@ export default function VehicleModelListPage() {
       const resData = response?.data || response;
 
       if (resData && resData.items) {
-        setModels(resData.items);
+        const mappedItems = resData.items.map((item: any) => {
+          const brand = resData.brands?.find(
+            (b: any) => b.id === item.vehicle_brand_id,
+          );
+          return {
+            ...item,
+            vehicle_brand_name: brand ? brand.name : "N/A", // Table တွင် ပြမည့် field name
+          };
+        });
+
+        setModels(mappedItems);
         setTotalPages(resData.meta?.totalPages || 1);
         setTotalRecords(resData.meta?.totalItems || 0);
         setActiveRecords(resData.meta.activeItems || 0);
