@@ -213,7 +213,7 @@ export default function VehicleListPage() {
                 ]);
                 setStations(stationsResponse.data || []);
                 setGroups(groupsResponse?.data || groupsResponse.items || []);
-                setVehicleModels(vehicleModelsResponse?.data || vehicleModelsResponse || []);
+                setVehicleModels(vehicleModelsResponse?.data || vehicleModelsResponse.items || []);
                
             } catch (error) {
                 console.error("Error fetching filters:", error);

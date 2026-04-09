@@ -95,8 +95,8 @@ export default function UpdateVehicle(){
                     apiClient.get("/vehicle-model/list"),
                 ]);
                 setStations(stationsRes.data);
-                setGroups(groupsRes.data);
-                setVehicleModels(vehicleModelsRes.data);
+                setGroups(groupsRes?.data || groupsRes.items);
+                setVehicleModels(vehicleModelsRes?.data || vehicleModelsRes.items);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }

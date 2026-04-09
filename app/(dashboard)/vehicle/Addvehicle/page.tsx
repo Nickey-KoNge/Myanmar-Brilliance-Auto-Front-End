@@ -88,7 +88,7 @@ export default function AddVehiclePage() {
                 ]);
                 setStations(stationsRes.data);
                 setGroups(groupsRes?.data|| groupsRes.items);
-                setVehicleModels(vehicleModelsRes?.data || vehicleModelsRes);
+                setVehicleModels(vehicleModelsRes?.data || vehicleModelsRes.items || []);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
