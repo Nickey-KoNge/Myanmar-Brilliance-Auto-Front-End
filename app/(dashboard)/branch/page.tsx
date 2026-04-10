@@ -39,6 +39,10 @@ interface Branch {
 export default function BranchPage() {
   const router = useRouter();
   const [branchData, setBranchData] = React.useState<Branch[]>([]);
+
+  const [activeRecords, setActiveRecords] = useState(0);
+  const [inactiveRecords, setInactiveRecords] = useState(0);
+  const [lastEditedBy, setLastEditedBy] = useState("Unknown");
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
   const [selectedBranch, setSelectedBranch] = React.useState<Branch | null>(
     null,
@@ -123,9 +127,19 @@ export default function BranchPage() {
         const res = response as unknown as {
           data?:
             | Branch[]
-            | { data?: Branch[]; total?: number; totalPages?: number };
+            | {
+                data?: Branch[];
+                total?: number;
+                totalPages?: number;
+                activeCount?: number;
+                inactiveCount?: number;
+                lastEditedBy: string;
+              };
           total?: number;
           totalPages?: number;
+          activeCount?: number;
+          inactiveCount?: number;
+          lastEditedBy?: string;
         };
         let branchList: Branch[] = [];
         let total = 0;
@@ -136,6 +150,9 @@ export default function BranchPage() {
             branchList = res.data;
             total = res.total || 0;
             totalPages = res.totalPages || 1;
+            setActiveRecords(res.activeCount || 0);
+            setInactiveRecords(res.inactiveCount || 0);
+            setLastEditedBy(res.lastEditedBy || "Unknown");
           } else if (
             res.data &&
             typeof res.data === "object" &&
@@ -159,7 +176,7 @@ export default function BranchPage() {
     fetchBranchData();
   }, [currentPage, activeFilters]);
 
-  console.log("Fetched Branch Data:", branchData);
+  // console.log("Fetched Branch Data:", branchData);
 
   // remove deleted branch from table data without refetching
   const handleDeleteSuccess = (id: string) => {
@@ -232,11 +249,11 @@ export default function BranchPage() {
                   </div>
                   <div>
                     <p className={styles.statLable}>Active Branches :</p>
-                    <p className={styles.textSuccess}>36</p>
+                    <p className={styles.textSuccess}>{activeRecords}</p>
                   </div>
                   <div>
                     <p className={styles.statLable}>Inactive Branches :</p>
-                    <p className={styles.textDanger}>4</p>
+                    <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>
               </div>
@@ -244,7 +261,7 @@ export default function BranchPage() {
               <hr className={styles.cuttingLine} />
               <p className={styles.lastEdited}>
                 Last Edited :{" "}
-                <span className={styles.spanText}>Nickey (Admin)</span>
+                <span className={styles.spanText}>{lastEditedBy}</span>
               </p>
             </div>
           </div>

@@ -131,6 +131,8 @@ export default function AuditLogPage() {
         url = `/master-company/branches/restore/${auditId}`;
       } else if (entityName === "company") {
         url = `/master-company/company/restore/${auditId}`;
+      } else if (entityName === "staff") {
+        url = `/master-company/staff/restore/${auditId}`;
       } else {
         toast.error("Restore not supported for this module yet.");
         return;
@@ -323,7 +325,7 @@ export default function AuditLogPage() {
                               :{" "}
                             </b>
                           </span>
-                         
+
                           <span className={styles.dataVal}>
                             {formatValue(value)}
                           </span>

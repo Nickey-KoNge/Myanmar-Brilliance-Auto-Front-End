@@ -49,6 +49,9 @@ export default function CompanyPage() {
 
   // Data States
   const [companies, setCompanies] = useState<Company[]>([]);
+  const [activeRecords, setActiveRecords] = useState(0);
+  const [inactiveRecords, setInactiveRecords] = useState(0);
+  const [lastEditedBy, setLastEditedBy] = useState("Unknown");
 
   // Modal States
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -113,9 +116,19 @@ export default function CompanyPage() {
         const res = response as unknown as {
           data?:
             | Company[]
-            | { data?: Company[]; total?: number; totalPages?: number };
+            | {
+                data?: Company[];
+                total?: number;
+                totalPages?: number;
+                activeCount?: number;
+                inactiveCount?: number;
+                lastEditedBy: string;
+              };
           total?: number;
           totalPages?: number;
+          activeCount?: number;
+          inactiveCount?: number;
+          lastEditedBy?: string;
         };
 
         let companyList: Company[] = [];
@@ -127,6 +140,9 @@ export default function CompanyPage() {
             companyList = res.data;
             total = res.total || 0;
             totalPagesCount = res.totalPages || 1;
+            setActiveRecords(res.activeCount || 0);
+            setInactiveRecords(res.inactiveCount || 0);
+            setLastEditedBy(res.lastEditedBy || "Unknown");
           } else if (
             res.data &&
             typeof res.data === "object" &&
@@ -333,15 +349,11 @@ export default function CompanyPage() {
                   </div>
                   <div>
                     <p className={styles.statLable}>Active Company :</p>
-                    <p className={styles.textSuccess}>
-                      {totalRecords > 0 ? totalRecords - 1 : 0}
-                    </p>
+                    <p className={styles.textSuccess}>{activeRecords}</p>
                   </div>
                   <div>
                     <p className={styles.statLable}>Inactive Company :</p>
-                    <p className={styles.textDanger}>
-                      {totalRecords > 0 ? 1 : 0}
-                    </p>
+                    <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>
               </div>
@@ -349,7 +361,7 @@ export default function CompanyPage() {
               <hr className={styles.cuttingLine} />
               <p className={styles.lastEdited}>
                 Last Edited :{" "}
-                <span className={styles.spanText}>Nickey (Admin)</span>
+                <span className={styles.spanText}>{lastEditedBy}</span>
               </p>
             </div>
           </div>
