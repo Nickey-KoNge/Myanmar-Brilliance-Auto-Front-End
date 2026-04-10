@@ -121,31 +121,43 @@ export default function UpdateVehicle(){
         // } = data;
 const handleUpdate = async (data: any) => {
     try {
-        const payload = { ...data };
-
-       
-        delete payload.station_name;
-        delete payload.group_name;
-        delete payload.vehicle_model_name;
-        delete payload.image; 
-        delete payload.id;   
+        const formData = new FormData();
 
 
-   
-        if (!payload.station_id) delete payload.station_id;
-        if (!payload.group_id) delete payload.group_id;
-        if (!payload.vehicle_model_id) delete payload.vehicle_model_id;
+        const cleanFields = [
+            'station_name', 
+            'group_name', 
+            'vehicle_model_name', 
+            'id'
+        ];
 
-        console.log("Final Payload being sent:", payload);
+     
+        Object.keys(data).forEach((key) => {
+            if (cleanFields.includes(key)) return;
 
+            const value = data[key];
+
+                if (key === 'image') {
+                    if (value && typeof value !== "string" && value.length > 0) {
+                    formData.append('image', value[0]);
+                }
+            }
+         
+            else if (value !== null && value !== undefined && value !== "") {
+                formData.append(key, value);
+            }
+        });
+
+        console.log("Sending FormData update...");
+
+        await apiClient.patch(`/master-vehicle/vehicles/${vehicleId}`, formData);
         
-        await apiClient.patch(`/master-vehicle/vehicles/${vehicleId}`, payload);
         router.push("/vehicle");
-    } catch (error) {
-        console.error("Error updating vehicle:", error);
+    } catch (error: any) {
+  
+        console.error("Error updating vehicle:", error.response?.data || error.message);
     }
 };
-
 
 
 

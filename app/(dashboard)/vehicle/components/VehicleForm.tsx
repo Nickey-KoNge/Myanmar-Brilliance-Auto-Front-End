@@ -301,7 +301,7 @@ export const VehicleForm:React.FC<VehicleFormProps> = ({
               <label htmlFor="image" className={styles.imageUploadBox}>
                 {preview ? (
                   <>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
+              
                     <img
                       src={preview}
                       alt="Preview"
