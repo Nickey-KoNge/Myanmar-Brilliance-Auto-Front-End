@@ -43,21 +43,33 @@ export const GroupsForm: React.FC<GroupsFormProps> = ({
   onSubmit,
   loading = false,
 }) => {
-  const { 
-    register, 
-    handleSubmit, 
-    formState: { errors }, 
-    setValue, 
-    reset,
-    watch 
-  } = useForm<GroupsFormData>();
 
-  // Update mode ဖြစ်ပါက initialData ကို Form ထဲသို့ ထည့်သွင်းခြင်း
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    reset,
+    watch,
+  } = useForm<GroupsFormData>({
+    defaultValues: {
+      station_id: "",
+      group_name: "",
+      group_type: "",
+      description: "",
+    },
+  });
+
+  // Update mode → fill form
   useEffect(() => {
     if (initialData) {
       reset(initialData);
     }
   }, [initialData, reset]);
+
+  const stationValue = watch("station_id") || "";
+
+  
 
   return (
     <>
@@ -65,11 +77,17 @@ export const GroupsForm: React.FC<GroupsFormProps> = ({
         titleData={{
           icon: <FontAwesomeIcon icon={faLayerGroup} />,
           text: mode === "create" ? "Groups Registration" : "Update Groups",
-          description: mode === "create" ? "CREATE NEW GROUPS RECORD" : "UPDATE EXISTING GROUPS RECORD",
+          description:
+            mode === "create"
+              ? "CREATE NEW GROUPS RECORD"
+              : "UPDATE EXISTING GROUPS RECORD",
         }}
         actionNode={
           <div className={styles.headerActionArea}>
-            <NavigationBtn href="/groups" variant="cancel">CANCEL</NavigationBtn>
+            <NavigationBtn href="/groups" variant="cancel">
+              CANCEL
+            </NavigationBtn>
+
             <ActionBtn
               type="submit"
               variant="action"
@@ -83,27 +101,46 @@ export const GroupsForm: React.FC<GroupsFormProps> = ({
         }
       />
 
-      <form id="groupsForm" onSubmit={handleSubmit(onSubmit)} className={styles.page}>
+      <form
+        id="groupsForm"
+        onSubmit={handleSubmit(onSubmit)}
+        className={styles.page}
+      >
         <div className={styles.grid}>
-          
-          {/* LEFT SECTION — PROFESSIONAL ASSIGNMENT */}
+
+          {/* LEFT SECTION */}
           <FormCard title="PROFESSIONAL ASSIGNMENT" icon={faThLarge}>
-             <div className={styles.fieldGroup}>
-                <label className={styles.label}>STATIONS</label>
-                <div className={styles.dropdownWrapper}>
-                  <DropdownInput
-                    options={[{ id: "1", name: "All Stations" }, { id: "2", name: "Main Station" }]}
-                    valueKey="id"
-                    nameKey="name"
-                    value={watch("station_id")} // Update mode အတွက် လက်ရှိ value ကို ပြရန်
-                    placeholder="Select Station"
-                    onChange={(e) => setValue("station_id", e.target.value)}
-                  />
-                </div>
-             </div>
+            <div className={styles.fieldGroup}>
+              <label className={styles.label}>STATIONS</label>
+
+              <div className={styles.dropdownWrapper}>
+                <DropdownInput
+                  options={[
+                    { id: "019d7144-4f46-7d43-bf2d-64a71e2bd80f", name: "All Stations" },
+                    { id: "2", name: "Main Station" },
+                  ]}
+                  valueKey="id"
+                  nameKey="name"
+                  value={stationValue}
+                  placeholder="Select Station"
+                  onChange={(e) => {
+                    setValue("station_id", e.target.value, {
+                      shouldValidate: true,
+                    });
+                  }}
+                />
+              </div>
+
+              {/* ✅ Error */}
+              {errors.station_id && (
+                <span className={styles.errorText}>
+                  {errors.station_id.message}
+                </span>
+              )}
+            </div>
           </FormCard>
 
-          {/* RIGHT SECTION — CORE IDENTITY ATTRIBUTES */}
+          {/* RIGHT SECTION */}
           <FormCard title="CORE IDENTITY ATTRIBUTES" icon={faUserTag}>
             <div className={styles.row}>
               <Input
@@ -111,14 +148,19 @@ export const GroupsForm: React.FC<GroupsFormProps> = ({
                 placeholder="Enter Your Group Name...."
                 icon={<FontAwesomeIcon icon={faTags} />}
                 error={errors.group_name?.message}
-                {...register("group_name", { required: "Group Name is required" })}
+                {...register("group_name", {
+                  required: "Group Name is required",
+                })}
               />
+
               <Input
                 label="GROUP TYPE"
                 placeholder="Enter Your Group Type ..."
                 icon={<FontAwesomeIcon icon={faAddressCard} />}
                 error={errors.group_type?.message}
-                {...register("group_type")}
+                {...register("group_type", {
+                  required: "Group Type is required",
+                })}
               />
             </div>
 
