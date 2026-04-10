@@ -1,19 +1,23 @@
+/* Column.module.css */
+
 .column {
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius);
-  background-color: var(--bg-main);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: var(--radius, 12px);
+  background-color: var(--bg-main, #ffffff);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  height: 100%;
+  height: calc(100vh - 40px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .columnHeader {
   display: flex;
   align-items: center;
-  padding: var(--padding);
+  padding: 1rem;
   flex-shrink: 0;
   gap: 10px;
+  border-bottom: 1px solid var(--border-color, #f1f5f9);
 }
 
 .headerLeft {
@@ -21,59 +25,64 @@
   align-items: center;
   gap: 10px;
   flex-grow: 1;
-  overflow: hidden;
 }
 
 .titleText {
-  color: var(--text-main);
-  font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-m);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  color: var(--text-main, #1e293b);
+  font-weight: 700;
+  font-size: 1rem;
 }
 
 .countBadge {
-  background-color: var(--success);
-  color: var(--text-scuccess);
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: var(--font-size-s);
-  font-weight: var(--font-weight-bold);
+  background-color: var(--success, #10b981);
+  color: #ffffff;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
   margin-left: auto;
-  flex-shrink: 0;
 }
 
 .columnSearch {
-  padding: 0 var(--padding);
+  padding: 1rem 1rem;
+  padding-bottom: 0;
   flex-shrink: 0;
 }
 
 .columnBody {
-  padding: var(--padding);
-  padding-top: calc(var(--padding) / 2);
+  padding: 1rem;
+  padding-top: 0.5rem;
   display: grid;
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(calc(30% - var(--gap) / 2), 1fr)
-  );
-  gap: var(--padding-inside);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 31%), 1fr));
+  gap: 12px;
+
   flex-grow: 1;
   overflow-y: auto;
   align-content: start;
 
   scrollbar-width: thin;
-  scrollbar-color: var(--accent) transparent;
+  scrollbar-color: var(--accent, #3b82f6) transparent;
 }
 
-/* Scrollbar - Webkit */
+.columnBody > div {
+  position: relative;
+  width: 100%;
+  margin-top: 5px;
+  margin-right: 5px;
+}
+
 .columnBody::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 .columnBody::-webkit-scrollbar-track {
   background: transparent;
 }
 .columnBody::-webkit-scrollbar-thumb {
-  background-color: var(--accent);
+  background-color: var(--accent, #3b82f6);
   border-radius: 10px;
+}
+
+@media (max-width: 1200px) {
+  .columnBody {
+    grid-template-columns: 1fr;
+  }
 }

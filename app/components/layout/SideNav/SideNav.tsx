@@ -130,7 +130,7 @@ export const SideNav = () => {
   const getActiveMenu = (path: string) => {
     if (path.match(/^\/(staff|customer|supplier|driver)/)) return "Personnel";
     if (path.match(/^\/(company|branch|station|groups)/)) return "Entity";
-    if (path.match(/^\/(vehicle-brands|vehicle-models|vehicles)/))
+    if (path.match(/^\/(vehicle-brands|vehicle-models|vehicle)/))
       return "Fleet";
     return null;
   };
@@ -215,6 +215,11 @@ export const SideNav = () => {
               icon: faBuildingFlag,
               label: "Vehicle Brands",
               href: "/vehicle-brands",
+            },
+            {
+              icon: faBuildingFlag,
+              label: "Vehicle",
+              href: "/vehicle",
             },
             {
               icon: faPersonCirclePlus,

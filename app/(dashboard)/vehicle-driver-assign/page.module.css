@@ -1,19 +1,238 @@
+/* Layout Container */
 .container {
-  height: 100vh;
-  max-height: 100%;
+  position: relative;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  /* Add padding at bottom so modal doesn't hide last cards */
+  padding-bottom: 100px;
 }
 
-.columnContent {
+/* Selection Highlights */
+.selectedBlue {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: outline 0.2s ease;
+}
+
+.selectedGreen {
+  outline: 2px solid #16a34a;
+  outline-offset: 2px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: outline 0.2s ease;
+}
+
+/* Assigned Card Styling */
+.assignedCard {
   border: 1px solid var(--accent);
+  padding: var(--padding);
   border-radius: var(--radius);
-  padding: calc(var(--padding) / 2);
+  display: grid;
+  gap: calc(var(--gap) / 2);
+  grid-column: 1 / -1;
+  background-color: rgba(255, 255, 255, 0.02); /* Slight lift */
+}
+
+.assignedCardHeader {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.assignedCardHeaderContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--padding);
+  border: 1px solid var(--accent);
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  color: var(--text-muted);
+}
+
+.assignedCardHeaderImage {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  border: 2px solid var(--accent);
+}
+
+.assignedCardHeaderImage img {
+  object-fit: cover;
+}
+
+.assignedCardHeaderBadge {
+  background-color: var(--accent);
+  color: var(--text-main);
+  padding: 6px 12px;
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Assigned Card Body */
+.assignedCardBody {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.assignedCardSeparator {
+  border: 0;
+  border-top: 1px solid var(--accent);
+  margin: 4px 0;
+  opacity: 0.5;
+}
+
+.assignedCardCar {
+  font-weight: bold;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.assignedCardLicense {
+  display: flex;
+  align-items: center;
+  background-color: var(--accent);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-family: monospace;
+}
+
+/* Completion Button */
+.assignBtn {
+  background-color: var(--accent);
+  color: var(--text-main);
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--radius);
+  transition: all 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  margin-top: 8px;
+}
+
+.assignBtn:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+/* Floating Bottom Modal */
+.bottomModal {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e293b; /* Slate 800 */
+  color: white;
+  padding: 14px 28px;
+  border-radius: 100px;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.4),
+    0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  z-index: 2000;
+  border: 1px solid #334155;
+  animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modalContent {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  white-space: nowrap;
+}
+
+.modalContent p {
+  margin: 0;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+}
+
+.modalActions {
+  display: flex;
+  gap: 10px;
+}
+
+.confirmBtn,
+.cancelBtn {
+  padding: 8px 18px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.confirmBtn {
+  background: #22c55e; /* Green 500 */
+  color: white;
+}
+
+.cancelBtn {
+  background: #ef4444; /* Red 500 */
+  color: white;
+}
+
+.confirmBtn:hover,
+.cancelBtn:hover {
+  filter: brightness(1.1);
+  transform: scale(1.05);
+}
+
+/* Animations */
+@keyframes slideUp {
+  from {
+    transform: translate(-50%, 150%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+.selectionBadge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #3b82f6; /* Blue for drivers */
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
   align-items: center;
   justify-content: center;
-  aspect-ratio: 1/1;
-  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border: 2px solid white;
+}
+
+.activeSelection {
+  transform: translateY(-2px);
+  transition: transform 0.2s ease;
 }

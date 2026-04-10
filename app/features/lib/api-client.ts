@@ -17,7 +17,8 @@ apiClient.interceptors.request.use((config) => {
 // Response Interceptor ✅ FIXED
 apiClient.interceptors.response.use(
   (response) => {
-    return response.data; // ✅ IMPORTANT (not data.data)
+    // return response.data; // ✅ IMPORTANT (not data.data)
+    return response.data.data;
   },
   async (error) => {
     const originalRequest = error.config;
@@ -36,7 +37,7 @@ apiClient.interceptors.response.use(
           "http://localhost:3001/credentials/refresh",
           {
             refresh_token: refreshToken,
-          }
+          },
         );
 
         const { access_token, refresh_token } = res.data.data;
@@ -53,7 +54,7 @@ apiClient.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 const handleLogout = () => {
