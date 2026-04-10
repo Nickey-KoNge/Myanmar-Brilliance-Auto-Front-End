@@ -110,6 +110,7 @@
   border-radius: 4px;
   font-size: 0.85rem;
   font-family: monospace;
+  gap: calc(var(--gap) / 4);
 }
 
 /* Completion Button */
@@ -235,4 +236,94 @@
 .activeSelection {
   transform: translateY(-2px);
   transition: transform 0.2s ease;
+}
+
+.dragging {
+  opacity: 0.4;
+  border: 2px dashed #3b82f6;
+}
+
+.dropTarget {
+  transform: scale(1.02);
+  border: 2px solid #10b981 !important;
+  background-color: rgba(16, 185, 129, 0.05);
+  transition: transform 0.1s ease;
+}
+
+.dropOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(16, 185, 129, 0.8);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border-radius: 8px;
+  z-index: 10;
+  pointer-events: none; /* Crucial so it doesn't interrupt the drop event */
+}
+
+/* Driver Floating Modal */
+.driverFloatingModal {
+  position: fixed;
+  z-index: 10000;
+  background-color: var(--bg-card);
+  padding: 15px;
+  border-radius: var(--radius);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--accent);
+  min-width: 220px;
+  pointer-events: none;
+  transition: background-color 0.3s ease;
+}
+
+.modalTitle {
+  font-weight: var(--font-weight-bold);
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  color: var(--color-primary);
+  font-size: var(--font-size-m);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modalTitle img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent);
+}
+
+.modalRow {
+  font-size: var(--font-size-s);
+  margin-bottom: 6px;
+  color: var(--text-main);
+  display: flex;
+  gap: 8px;
+}
+
+.modalLabel {
+  color: var(--text-muted);
+  min-width: 40px;
+}
+
+.modalRow:last-of-type .modalLabel {
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  background-color: var(--accent);
+  text-align: center;
+  color: var(--text-main);
+  padding: 0 4px;
+}
+
+.modalValue {
+  font-weight: var(--font-weight-normal);
+  color: var(--text-main);
 }
