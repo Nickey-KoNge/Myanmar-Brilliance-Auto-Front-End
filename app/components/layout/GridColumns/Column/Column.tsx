@@ -2,12 +2,12 @@ import { ReactNode } from "react";
 import styles from "./Column.module.css";
 
 type ColumnProps = {
-  title: string;
+  title?: string;
   count?: number | string;
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
   searchSlot?: ReactNode;
-  children: ReactNode;
+  children?: ReactNode;
 };
 
 export default function Column({
@@ -20,7 +20,7 @@ export default function Column({
 }: ColumnProps) {
   return (
     <div className={styles.column}>
-      {/* Header Section */}
+      {/* Header Section: Remains fixed at the top */}
       <div className={styles.columnHeader}>
         <div className={styles.headerLeft}>
           {leftIcon && <span className={styles.iconWrapper}>{leftIcon}</span>}
@@ -33,10 +33,10 @@ export default function Column({
         {rightIcon && <div className={styles.headerRight}>{rightIcon}</div>}
       </div>
 
-      {/* Search/Filter Section */}
+      {/* Search Section: Remains fixed below the header */}
       {searchSlot && <div className={styles.columnSearch}>{searchSlot}</div>}
 
-      {/* Scrollable Body */}
+      {/* Body Section: This is the only part that scrolls */}
       <div className={styles.columnBody}>{children}</div>
     </div>
   );

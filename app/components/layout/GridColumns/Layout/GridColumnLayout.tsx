@@ -8,5 +8,5 @@ type GridColumnsLayoutProps = {
 export default function GridColumnsLayout({
   children,
 }: GridColumnsLayoutProps) {
-  return <div className={styles.container}>{children}</div>;
+  return <main className={styles.container}>{children}</main>;
 }
