@@ -78,16 +78,22 @@ export default function VehicleListPage() {
         search: "",
         startDate: "",
         endDate: "",
+        groupId: "",
+        stationId: "",
+        vehicleModelId: "",
       });
 
 
       const { filters, updateFilter, resetFilters } = useFilters(
-        { search: "", startDate: "", endDate: "" },
+        { search: "", startDate: "", endDate: "" , groupId: "", stationId: "", vehicleModelId: ""},
         (debouncedFilters: FilterState) => {
             const isFilterChanged =
             activeFilters.search !== debouncedFilters.search ||
             activeFilters.startDate !== debouncedFilters.startDate ||
-            activeFilters.endDate !== debouncedFilters.endDate;
+            activeFilters.endDate !== debouncedFilters.endDate ||
+            activeFilters.groupId !== debouncedFilters.groupId ||
+            activeFilters.stationId !== debouncedFilters.stationId ||
+            activeFilters.vehicleModelId !== debouncedFilters.vehicleModelId;
             setActiveFilters(debouncedFilters);
 
             if (isFilterChanged) {
@@ -165,6 +171,10 @@ export default function VehicleListPage() {
                 if (activeFilters.search) params.search = activeFilters.search;
                 if (activeFilters.startDate) params.startDate = activeFilters.startDate;
                 if (activeFilters.endDate) params.endDate = activeFilters.endDate;
+                if (activeFilters.groupId && activeFilters.groupId !== "all" && activeFilters.groupId !== "") params.group_id = activeFilters.groupId as string;
+                if (activeFilters.stationId && activeFilters.stationId !== "all" && activeFilters.stationId !== "") params.station_id = activeFilters.stationId as string;
+                if (activeFilters.vehicleModelId && activeFilters.vehicleModelId !== "all" && activeFilters.vehicleModelId !== "") params.vehicle_model_id = activeFilters.vehicleModelId as string;
+
                 const queryString = new URLSearchParams(params).toString();
                 const response = await apiClient.get(`/master-vehicle/vehicles?${queryString}`);
                 const res = response as unknown as {
@@ -276,8 +286,8 @@ export default function VehicleListPage() {
                     }))}
                     valueKey="id"
                     nameKey="name"
-                    value={(filters.branchId as string) || ""}
-                    onChange={(e) => updateFilter("branchId", e.target.value)}
+                    value={(filters.vehicleModelId as string) || ""}
+                    onChange={(e) => updateFilter("vehicleModelId", e.target.value)}
                     placeholder="All Vehicle Models"
                   />
 
@@ -289,8 +299,8 @@ export default function VehicleListPage() {
                     }))}
                     valueKey="id"
                     nameKey="name"
-                    value={(filters.roleId as string) || ""}
-                    onChange={(e) => updateFilter("roleId", e.target.value)}
+                    value={(filters.stationId as string) || ""}
+                    onChange={(e) => updateFilter("stationId", e.target.value)}
                     placeholder="All Stations"
                   />
 
@@ -302,8 +312,8 @@ export default function VehicleListPage() {
                     }))}
                     valueKey="id"
                     nameKey="name"
-                    value={(filters.roleId as string) || ""}
-                    onChange={(e) => updateFilter("roleId", e.target.value)}
+                    value={(filters.groupId as string) || ""}
+                    onChange={(e) => updateFilter("groupId", e.target.value)}
                     placeholder="All Group"
                   />
                 </div>
