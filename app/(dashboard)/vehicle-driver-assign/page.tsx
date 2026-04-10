@@ -89,9 +89,11 @@ export default function VehicleDriverAssignPage() {
           "http://localhost:3001/master-vehicle/vehicle-driver-assign",
         ),
       ]);
+
       setDrivers(driversRes.items || []);
       setVehicles(vehiclesRes.data || []);
       setAssigned(assignedRes.data || []);
+      console.log(driversRes);
     } catch (error) {
       console.error("Fetch error:", error);
     }
