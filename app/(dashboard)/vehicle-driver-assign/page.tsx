@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAddressCard,
@@ -14,6 +14,7 @@ import {
   faCheck,
   faTimes,
   faPhone,
+  faFilter,
 } from "@fortawesome/free-solid-svg-icons";
 
 import GridColumnsLayout from "@/app/components/layout/GridColumns/Layout/GridColumnLayout";
@@ -66,6 +67,15 @@ export default function VehicleDriverAssignPage() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [assigned, setAssigned] = useState<Assigned[]>([]);
 
+  // --- Search & Filter States ---
+  const [driverSearch, setDriverSearch] = useState("");
+  const [vehicleSearch, setVehicleSearch] = useState("");
+  const [assignSearch, setAssignSearch] = useState("");
+  // New state for horizontal filter
+  const [selectedVehicleName, setSelectedVehicleName] = useState<string | null>(
+    null,
+  );
+
   // Selection
   const [selectedDriverIds, setSelectedDriverIds] = useState<string[]>([]);
   const [selectedVehicleIds, setSelectedVehicleIds] = useState<string[]>([]);
@@ -93,7 +103,6 @@ export default function VehicleDriverAssignPage() {
       setDrivers(driversRes.items || []);
       setVehicles(vehiclesRes.data || []);
       setAssigned(assignedRes.data || []);
-      console.log(driversRes);
     } catch (error) {
       console.error("Fetch error:", error);
     }
@@ -103,15 +112,55 @@ export default function VehicleDriverAssignPage() {
     fetchApis();
   }, []);
 
+  // --- Filtered Lists ---
+  const filteredDrivers = useMemo(() => {
+    return drivers
+      .filter((d) => d.status === "Active")
+      .filter(
+        (d) =>
+          d.driver_name.toLowerCase().includes(driverSearch.toLowerCase()) ||
+          d.license_no.toLowerCase().includes(driverSearch.toLowerCase()),
+      );
+  }, [drivers, driverSearch]);
+
+  // --- Unique Vehicle Names for Filter ---
+  const uniqueVehicleNames = useMemo(() => {
+    const names = vehicles.map((v) => v.vehicle_name);
+    return Array.from(new Set(names)).sort();
+  }, [vehicles]);
+
+  const filteredVehicles = useMemo(() => {
+    return vehicles
+      .filter((v) => v.status === "Active")
+      .filter((v) => {
+        const matchesSearch =
+          v.vehicle_name.toLowerCase().includes(vehicleSearch.toLowerCase()) ||
+          v.license_plate.toLowerCase().includes(vehicleSearch.toLowerCase());
+
+        const matchesNameFilter =
+          !selectedVehicleName || v.vehicle_name === selectedVehicleName;
+
+        return matchesSearch && matchesNameFilter;
+      });
+  }, [vehicles, vehicleSearch, selectedVehicleName]);
+
+  const filteredAssigned = useMemo(() => {
+    return assigned
+      .filter((a) => a.status === "Ongoing")
+      .filter(
+        (a) =>
+          a.driver_name.toLowerCase().includes(assignSearch.toLowerCase()) ||
+          a.vehicle_name.toLowerCase().includes(assignSearch.toLowerCase()) ||
+          a.vehicle_license.toLowerCase().includes(assignSearch.toLowerCase()),
+      );
+  }, [assigned, assignSearch]);
+
   // --- Helpers ---
   const formatSmartDate = (dateStr: string) => {
     const date = new Date(dateStr);
     const now = new Date();
     return date.toDateString() === now.toDateString()
-      ? date.toLocaleTimeString("en-US", {
-          hour: "2-digit",
-          minute: "2-digit",
-        })
+      ? date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })
       : date.toLocaleDateString("en-CA");
   };
 
@@ -121,32 +170,17 @@ export default function VehicleDriverAssignPage() {
     return index !== -1 ? index + 1 : null;
   };
 
-  // --- Selection Logic (CLEAN PAIRING) ---
+  // --- Selection Logic ---
   const handleDriverSelect = (id: string) => {
-    setSelectedDriverIds((prev) => {
-      const isSelected = prev.includes(id);
-
-      if (isSelected) {
-        return prev.filter((i) => i !== id);
-      }
-
-      return [...prev, id];
-    });
+    setSelectedDriverIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
+    );
   };
 
   const handleVehicleSelect = (id: string) => {
     setSelectedVehicleIds((prev) => {
-      const isSelected = prev.includes(id);
-
-      if (isSelected) {
-        return prev.filter((i) => i !== id);
-      }
-
-      if (selectedDriverIds.length === 1) {
-        return [id];
-      }
-
-      return [...prev, id];
+      if (prev.includes(id)) return prev.filter((i) => i !== id);
+      return selectedDriverIds.length === 1 ? [id] : [...prev, id];
     });
   };
 
@@ -155,7 +189,7 @@ export default function VehicleDriverAssignPage() {
     else handleVehicleSelect(id);
   };
 
-  // --- Drag & Drop (Single Pair) ---
+  // --- Drag & Drop ---
   const handleDragStart = (e: React.DragEvent, id: string) => {
     setDraggedDriverId(id);
     e.dataTransfer.setData("driverId", id);
@@ -164,56 +198,41 @@ export default function VehicleDriverAssignPage() {
   const handleDrop = (e: React.DragEvent, vehicleId: string) => {
     e.preventDefault();
     const driverId = e.dataTransfer.getData("driverId");
-
     setDropTargetId(null);
     setDraggedDriverId(null);
-
     if (!driverId) return;
 
     setSelectedDriverIds((prevDrivers) => {
-      let nextDrivers = prevDrivers;
-
-      if (!prevDrivers.includes(driverId)) {
-        nextDrivers = [...prevDrivers, driverId];
-      }
-
+      const nextDrivers = prevDrivers.includes(driverId)
+        ? prevDrivers
+        : [...prevDrivers, driverId];
       setSelectedVehicleIds((prevVehicles) => {
         if (prevVehicles.includes(vehicleId)) return prevVehicles;
-
-        if (nextDrivers.length === 1) {
-          return [vehicleId];
-        }
-
-        return [...prevVehicles, vehicleId];
+        return nextDrivers.length === 1
+          ? [vehicleId]
+          : [...prevVehicles, vehicleId];
       });
-
       return nextDrivers;
     });
   };
 
-  // Driver Modal Handlers
   const handleDriverHover = (e: React.MouseEvent, assign: Assigned) => {
     setHoveredAssign(assign);
     setModalPos({ x: e.clientX, y: e.clientY });
   };
 
-  const handleDriverLeave = () => {
-    setHoveredAssign(null);
-  };
+  const handleDriverLeave = () => setHoveredAssign(null);
 
-  // --- Modal ---
   useEffect(() => {
     setShowModal(selectedDriverIds.length > 0 && selectedVehicleIds.length > 0);
   }, [selectedDriverIds, selectedVehicleIds]);
 
-  // --- Actions ---
   const confirmAssignment = async () => {
+    if (selectedDriverIds.length !== selectedVehicleIds.length) {
+      alert("Driver and Vehicle count must match!");
+      return;
+    }
     try {
-      if (selectedDriverIds.length !== selectedVehicleIds.length) {
-        alert("Driver and Vehicle count must match!");
-        return;
-      }
-
       const promises = selectedDriverIds.map((driverId, index) =>
         apiClient.post(
           "http://localhost:3001/master-vehicle/vehicle-driver-assign",
@@ -223,7 +242,6 @@ export default function VehicleDriverAssignPage() {
           },
         ),
       );
-
       await Promise.all(promises);
       await fetchApis();
       cancelSelection();
@@ -256,181 +274,195 @@ export default function VehicleDriverAssignPage() {
         <Column
           title="Available Drivers"
           leftIcon={<FontAwesomeIcon icon={faUser} />}
-          count={drivers.filter((d) => d.status === "Active").length}
+          count={filteredDrivers.length}
           searchSlot={
-            <TextInput placeholder="Search Drivers" leftIcon={faSearch} />
+            <TextInput
+              placeholder="Search Drivers"
+              leftIcon={faSearch}
+              value={driverSearch}
+              onChange={(e) => setDriverSearch(e.target.value)}
+            />
           }
         >
-          {drivers
-            .filter((d) => d.status === "Active")
-            .map((driver) => {
-              const index = getSelectionIndex(driver.id, "driver");
-              return (
-                <div
-                  key={driver.id}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, driver.id)}
-                  onClick={() => toggleSelection(driver.id, "driver")}
-                  className={`${styles.cardWrapper} ${
-                    index ? styles.activeSelection : ""
-                  } ${draggedDriverId === driver.id ? styles.dragging : ""}`}
-                >
-                  {index && (
-                    <div className={styles.selectionBadge}>{index}</div>
-                  )}
-                  <ColumnCard
-                    title={driver.driver_name}
-                    image={driver.image}
-                    badge={driver.license_no}
-                    nrc={driver.nrc}
-                    phone={driver.phone}
-                  />
-                </div>
-              );
-            })}
+          {filteredDrivers.map((driver) => {
+            const index = getSelectionIndex(driver.id, "driver");
+            return (
+              <div
+                key={driver.id}
+                draggable
+                onDragStart={(e) => handleDragStart(e, driver.id)}
+                onClick={() => toggleSelection(driver.id, "driver")}
+                className={`${styles.cardWrapper} ${index ? styles.activeSelection : ""} ${draggedDriverId === driver.id ? styles.dragging : ""}`}
+              >
+                {index && <div className={styles.selectionBadge}>{index}</div>}
+                <ColumnCard
+                  title={driver.driver_name}
+                  image={driver.image}
+                  badge={driver.license_no}
+                  nrc={driver.nrc}
+                  phone={driver.phone}
+                />
+              </div>
+            );
+          })}
         </Column>
 
         {/* Vehicles */}
         <Column
           title="Available Vehicles"
           leftIcon={<FontAwesomeIcon icon={faCar} />}
-          count={vehicles.filter((v) => v.status === "Active").length}
+          count={filteredVehicles.length}
           searchSlot={
-            <TextInput placeholder="Search Vehicles" leftIcon={faSearch} />
+            <TextInput
+              placeholder="Search Vehicles"
+              leftIcon={faSearch}
+              value={vehicleSearch}
+              onChange={(e) => setVehicleSearch(e.target.value)}
+            />
+          }
+          filterSlot={
+            <div className={styles.horizontalFilter}>
+              <button
+                className={`${styles.filterChip} ${!selectedVehicleName ? styles.activeFilter : ""}`}
+                onClick={() => setSelectedVehicleName(null)}
+              >
+                All
+              </button>
+              {uniqueVehicleNames.map((name) => (
+                <button
+                  key={name}
+                  className={`${styles.filterChip} ${selectedVehicleName === name ? styles.activeFilter : ""}`}
+                  onClick={() => setSelectedVehicleName(name === selectedVehicleName ? null : name)}
+                >
+                  {name}
+                </button>
+              ))}
+            </div>
           }
         >
-          {vehicles
-            .filter((v) => v.status === "Active")
-            .map((vehicle) => {
-              const index = getSelectionIndex(vehicle.id, "vehicle");
-              const isOver = dropTargetId === vehicle.id;
-
-              return (
-                <div
-                  key={vehicle.id}
-                  onDragOver={(e) => {
-                    e.preventDefault();
-                    setDropTargetId(vehicle.id);
-                  }}
-                  onDragLeave={() => setDropTargetId(null)}
-                  onDrop={(e) => handleDrop(e, vehicle.id)}
-                  onClick={() => toggleSelection(vehicle.id, "vehicle")}
-                  className={`${styles.cardWrapper} ${
-                    index ? styles.activeSelection : ""
-                  } ${isOver ? styles.dropTarget : ""}`}
-                >
-                  {index && (
-                    <div
-                      className={styles.selectionBadge}
-                      style={{ backgroundColor: "#10b981" }}
-                    >
-                      {index}
-                    </div>
-                  )}
-
-                  {isOver && (
-                    <div className={styles.dropOverlay}>Drop to assign</div>
-                  )}
-
-                  <ColumnCard
-                    title={vehicle.vehicle_name}
-                    backgroundImage={vehicle.image}
-                    badge={vehicle.license_plate}
-                    odometer={vehicle.current_odometer}
-                  />
-                </div>
-              );
-            })}
+          {filteredVehicles.map((vehicle) => {
+            const index = getSelectionIndex(vehicle.id, "vehicle");
+            const isOver = dropTargetId === vehicle.id;
+            return (
+              <div
+                key={vehicle.id}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setDropTargetId(vehicle.id);
+                }}
+                onDragLeave={() => setDropTargetId(null)}
+                onDrop={(e) => handleDrop(e, vehicle.id)}
+                onClick={() => toggleSelection(vehicle.id, "vehicle")}
+                className={`${styles.cardWrapper} ${index ? styles.activeSelection : ""} ${isOver ? styles.dropTarget : ""}`}
+              >
+                {index && (
+                  <div
+                    className={styles.selectionBadge}
+                    style={{ backgroundColor: "#10b981" }}
+                  >
+                    {index}
+                  </div>
+                )}
+                {isOver && (
+                  <div className={styles.dropOverlay}>Drop to assign</div>
+                )}
+                <ColumnCard
+                  title={vehicle.vehicle_name}
+                  backgroundImage={vehicle.image}
+                  badge={vehicle.license_plate}
+                  odometer={vehicle.current_odometer}
+                />
+              </div>
+            );
+          })}
         </Column>
 
         {/* In Transit */}
         <Column
           leftIcon={<FontAwesomeIcon icon={faCaretRight} />}
           title="In-Transit"
-          count={assigned.filter((a) => a.status === "Ongoing").length}
+          count={filteredAssigned.length}
           searchSlot={
-            <TextInput placeholder="Search Assigns" leftIcon={faSearch} />
+            <TextInput
+              placeholder="Search Assigns"
+              leftIcon={faSearch}
+              value={assignSearch}
+              onChange={(e) => setAssignSearch(e.target.value)}
+            />
           }
         >
-          {assigned
-            .filter((assign) => assign.status === "Ongoing")
-            .map((assign) => (
-              <div className={styles.assignedCard} key={assign.id}>
-                {/* Header Section */}
-                <div className={styles.assignedCardHeader}>
-                  <div className={styles.assignedCardHeaderContent}>
-                    <div className={styles.assignedCardHeaderImage}>
-                      <Image
-                        src={assign.driver_image}
-                        alt="D"
-                        width={40}
-                        height={40}
-                        unoptimized
-                      />
-                    </div>
-                    <FontAwesomeIcon icon={faArrowRight} />
-                    <div className={styles.assignedCardHeaderImage}>
-                      <Image
-                        src={assign.vehicle_image}
-                        alt="V"
-                        width={40}
-                        height={40}
-                        unoptimized
-                      />
-                    </div>
+          {filteredAssigned.map((assign) => (
+            <div className={styles.assignedCard} key={assign.id}>
+              <div className={styles.assignedCardHeader}>
+                <div className={styles.assignedCardHeaderContent}>
+                  <div className={styles.assignedCardHeaderImage}>
+                    <Image
+                      src={assign.driver_image}
+                      alt="D"
+                      width={40}
+                      height={40}
+                      unoptimized
+                    />
                   </div>
-                  <div className={styles.assignedCardHeaderBadge}>
-                    <FontAwesomeIcon icon={faClock} />{" "}
-                    {formatSmartDate(assign.createdAt)}
+                  <FontAwesomeIcon icon={faArrowRight} />
+                  <div className={styles.assignedCardHeaderImage}>
+                    <Image
+                      src={assign.vehicle_image}
+                      alt="V"
+                      width={40}
+                      height={40}
+                      unoptimized
+                    />
                   </div>
                 </div>
-
-                {/* Vehicle Section */}
-                <div className={styles.assignedCardBody}>
-                  <div className={styles.assignedCardCar}>
-                    <FontAwesomeIcon icon={faCar} /> {assign.vehicle_name}
-                  </div>
-                  <div className={styles.assignedCardLicense}>
-                    {assign.vehicle_license}
-                  </div>
-                </div>
-
-                <hr className={styles.assignedCardSeparator} />
-
-                {/* Driver Name Section (Hover trigger) */}
-                <div className={styles.assignedCardBody}>
-                  <div
-                    className={styles.assignedCardCar}
-                    style={{ cursor: "pointer" }}
-                    onMouseEnter={(e) => handleDriverHover(e, assign)}
-                    onMouseMove={(e) =>
-                      setModalPos({ x: e.clientX, y: e.clientY })
-                    }
-                    onMouseLeave={handleDriverLeave}
-                    onClick={(e) => handleDriverHover(e, assign)}
-                  >
-                    <FontAwesomeIcon icon={faUser} /> {assign.driver_name}
-                  </div>
-                  <div className={styles.assignedCardLicense}>
-                    <FontAwesomeIcon icon={faAddressCard} />
-                    {assign.driver_license}
-                  </div>
-                </div>
-
-                {/* Footer Action */}
-                <div className={styles.assignedCardFooter}>
-                  <button
-                    className={styles.assignBtn}
-                    onClick={() => completeTrip(assign.id)}
-                  >
-                    <FontAwesomeIcon icon={faUndo} /> Complete Trip
-                  </button>
+                <div className={styles.assignedCardHeaderBadge}>
+                  <FontAwesomeIcon icon={faClock} />{" "}
+                  {formatSmartDate(assign.createdAt)}
                 </div>
               </div>
-            ))}
+
+              <div className={styles.assignedCardBody}>
+                <div className={styles.assignedCardCar}>
+                  <FontAwesomeIcon icon={faCar} /> {assign.vehicle_name}
+                </div>
+                <div className={styles.assignedCardLicense}>
+                  {assign.vehicle_license}
+                </div>
+              </div>
+
+              <hr className={styles.assignedCardSeparator} />
+
+              <div className={styles.assignedCardBody}>
+                <div
+                  className={styles.assignedCardCar}
+                  style={{ cursor: "pointer" }}
+                  onMouseEnter={(e) => handleDriverHover(e, assign)}
+                  onMouseMove={(e) =>
+                    setModalPos({ x: e.clientX, y: e.clientY })
+                  }
+                  onMouseLeave={handleDriverLeave}
+                  onClick={(e) => handleDriverHover(e, assign)}
+                >
+                  <FontAwesomeIcon icon={faUser} /> {assign.driver_name}
+                </div>
+                <div className={styles.assignedCardLicense}>
+                  <FontAwesomeIcon icon={faAddressCard} />{" "}
+                  {assign.driver_license}
+                </div>
+              </div>
+
+              <div className={styles.assignedCardFooter}>
+                <button
+                  className={styles.assignBtn}
+                  onClick={() => completeTrip(assign.id)}
+                >
+                  <FontAwesomeIcon icon={faUndo} /> Complete Trip
+                </button>
+              </div>
+            </div>
+          ))}
         </Column>
       </GridColumnsLayout>
-
       {/* 1. Selection Confirmation Modal (Bottom Bar) */}
       {showModal && (
         <div className={styles.bottomModal}>

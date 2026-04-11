@@ -48,6 +48,11 @@
   flex-shrink: 0;
 }
 
+.columnFilter {
+  padding: 0 1rem 0 1rem;
+  flex-shrink: 0;
+}
+
 .columnBody {
   padding: 1rem;
   padding-top: 0.5rem;

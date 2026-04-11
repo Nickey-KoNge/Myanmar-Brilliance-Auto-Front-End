@@ -7,6 +7,7 @@ type ColumnProps = {
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
   searchSlot?: ReactNode;
+  filterSlot?: ReactNode;
   children?: ReactNode;
 };
 
@@ -16,6 +17,7 @@ export default function Column({
   leftIcon,
   rightIcon,
   searchSlot,
+  filterSlot,
   children,
 }: ColumnProps) {
   return (
@@ -35,6 +37,7 @@ export default function Column({
 
       {/* Search Section: Remains fixed below the header */}
       {searchSlot && <div className={styles.columnSearch}>{searchSlot}</div>}
+      {filterSlot && <div className={styles.columnFilter}>{filterSlot}</div>}
 
       {/* Body Section: This is the only part that scrolls */}
       <div className={styles.columnBody}>{children}</div>
