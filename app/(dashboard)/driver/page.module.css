@@ -1,0 +1,230 @@
+/* --- Layout Containers --- */
+.tablePageWrapper {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: calc(100vh - 160px);
+  overflow: hidden;
+}
+
+.tableMainContent {
+  flex: 1;
+  overflow-y: auto;
+  /* background: #1a1a1a; */
+  border-radius: 12px;
+  padding-bottom: 80px;
+}
+
+/* --- Header Card --- */
+.headerCard {
+  background: #1e1e1e;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+  border: 1px solid #333;
+}
+
+.headerTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.headerIconBox {
+  background: #c0392b;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+
+.headerIcon {
+  color: #fff;
+  font-size: 1.1rem;
+}
+.headerTitle {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* --- Table Area --- */
+.tableHeaderArea {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+}
+
+.dataTable {
+  padding: 1.5rem 2rem;
+  /* margin-bottom: 14rem; */
+}
+
+.tableTitle {
+  color: #888;
+  font-weight: bold;
+  letter-spacing: 2px;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+/* --- Pagination Footer --- */
+.stickyFooterPagination {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 0 0 4rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.showingInfo {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.redHighlight {
+  color: #e74c3c;
+  font-weight: 600;
+  margin: 0 4px;
+}
+
+.paginationWrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* --- Sidebar Search UI Fix --- */
+.sidebarWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.searchCard,
+.statsCard {
+  /* background: #232323; */
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.sidebarTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #888;
+  text-align: center;
+  margin-bottom: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Searching Label alignment */
+.searchContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.searchLabel {
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 0.2rem;
+  display: block;
+}
+
+/* Date Grid */
+.filterRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 0.5rem;
+}
+
+/* Global Input Override for Sidebar */
+.searchContent :global(input) {
+  background: #1a1a1a !important;
+  border: 1px solid #333 !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+  padding: 10px 12px !important;
+  font-size: 0.85rem !important;
+  width: 100%;
+}
+
+.resetBtn {
+  margin-top: 1rem;
+  width: 100%;
+  background-color: #c0392b !important;
+  border-radius: 8px;
+  font-weight: 600;
+  height: 40px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* --- Stats & Records --- */
+.statList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.statItem {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #bbb;
+}
+
+.lastEdited {
+  font-size: 0.75rem;
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #666;
+  border-top: 1px solid #333;
+  padding-top: 1rem;
+}
+
+/* --- Table Info --- */
+.staffInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.staffImg {
+  border-radius: 50%;
+  border: 1px solid #444;
+}
+.addressCell {
+  max-width: 200px;
+  font-size: 0.85rem;
+  color: #bbb;
+}
+.actionIconBtn {
+  background: transparent;
+  border: none;
+  color: #e74c3c;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+.textDanger {
+  color: #e74c3c;
+  font-weight: 600;
+}
+.textSuccess {
+  color: #2ecc71;
+  font-weight: 600;
+}

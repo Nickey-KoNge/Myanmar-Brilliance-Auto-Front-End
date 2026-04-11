@@ -3,6 +3,7 @@ import { Button } from "@/app/components/ui/Button/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark, faWarning } from "@fortawesome/free-solid-svg-icons";
 import styles from "./Delete.module.css";
+import { apiClient } from "@/app/features/lib/api-client";
 
 interface DeleteModalProps {
   isOpen: boolean;
@@ -31,14 +32,7 @@ export default function DeleteModal({
   const handleDelete = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`http://localhost:3001/${apiRoute}/${id}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || `Failed to delete ${name}`);
-      }
+      await apiClient.delete(`/${apiRoute}/${id}`);
 
       onDeleteSuccess(id);
       onClose();

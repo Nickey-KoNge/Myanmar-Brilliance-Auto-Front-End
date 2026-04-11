@@ -13,8 +13,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { PageHeader } from "../../components/ui/PageHeader/pageheader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { isAxiosError } from "axios";
 
-// ၁။ သင်၏ api-client ကို Import လုပ်ပါ
 import { apiClient } from "../../features/lib/api-client";
 
 export default function DashboardPage() {
@@ -26,25 +26,36 @@ export default function DashboardPage() {
     try {
       setApiStatus("Fetching data...");
 
-      // Protected route တစ်ခုကို ခေါ်ယူခြင်း (Access Token လိုအပ်သော route)
       const response = await apiClient.get("/master-company/staff");
-      console.log(response);
+      const responseData = response.data.data || response.data;
+      const totalStaff =
+        response.data.total !== undefined
+          ? response.data.total
+          : responseData.length;
 
-      setStaffCount(response.data.length || 0);
+      console.log("Total Staff Loaded:", totalStaff);
+
+      setStaffCount(totalStaff || 0);
       setApiStatus("API Success: Data Loaded!");
-      console.log("Dashboard Data:", response.data);
-    } catch (error: any) {
-      setApiStatus(
-        `API Failed: ${error.response?.data?.message || error.message}`,
-      );
-      console.error("Dashboard API Error:", error);
+    } catch (error: unknown) {
+      let errorMessage = "Unknown error occurred";
+
+      if (isAxiosError(error)) {
+        errorMessage = error.response?.data?.message || error.message;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      setApiStatus(`API Failed: ${errorMessage}`);
     }
   };
 
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    const timeoutId = setTimeout(() => {
+      fetchDashboardData();
+    }, 0);
 
+    return () => clearTimeout(timeoutId);
+  }, []);
   const renderLiveButtonArea = (
     <div className={styles.headerActionArea}>
       <button className={styles.calendarIconBtn} onClick={fetchDashboardData}>
@@ -65,7 +76,6 @@ export default function DashboardPage() {
         actionNode={renderLiveButtonArea}
       />
 
-      {/* API Testing Status Box (စမ်းသပ်ရန်အတွက်သာ) */}
       <div
         style={{
           padding: "10px",

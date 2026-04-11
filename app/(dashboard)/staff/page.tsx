@@ -75,6 +75,9 @@ export default function StaffPage() {
 
   //for Pagination
   const [currentPage, setCurrentPage] = useState(1);
+  const [activeRecords, setActiveRecords] = useState(0);
+  const [inactiveRecords, setInactiveRecords] = useState(0);
+  const [lastEditedBy, setLastEditedBy] = useState("Unknown");
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
   const PAGE_SIZE = 10;
@@ -140,18 +143,29 @@ export default function StaffPage() {
 
         const queryString = new URLSearchParams(params).toString();
 
-        const response = await apiClient.get(
+        const response: unknown = await apiClient.get(
           `/master-company/staff?${queryString}`,
         );
+        console.log("api staff return data :" , response);
 
         const res = response as unknown as {
           data?:
             | Staff[]
-            | { data?: Staff[]; total?: number; totalPages?: number };
+            | {
+                data?: Staff[];
+                total?: number;
+                totalPages?: number;
+                activeCount?: number;
+                inactiveCount?: number;
+                lastEditedBy: string;
+              };
           total?: number;
           totalPages?: number;
+          activeCount?: number;
+          inactiveCount?: number;
+          lastEditedBy?: string;
         };
-
+console.log("res return data :" , response);
         let staffList: Staff[] = [];
         let total = 0;
         let totalPages = 1;
@@ -161,6 +175,9 @@ export default function StaffPage() {
             staffList = res.data;
             total = res.total || 0;
             totalPages = res.totalPages || 1;
+            setActiveRecords(res.activeCount || 0);
+            setInactiveRecords(res.inactiveCount || 0);
+            setLastEditedBy(res.lastEditedBy || "Unknown");
           } else if (
             res.data &&
             typeof res.data === "object" &&
@@ -347,11 +364,11 @@ export default function StaffPage() {
                   </div>
                   <div>
                     <p className={styles.statLable}>Active Staff :</p>
-                    <p className={styles.textSuccess}>36</p>
+                    <p className={styles.textSuccess}>{activeRecords}</p>
                   </div>
                   <div>
                     <p className={styles.statLable}>Inactive Staff :</p>
-                    <p className={styles.textDanger}>4</p>
+                    <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>
               </div>
@@ -359,7 +376,7 @@ export default function StaffPage() {
               <hr className={styles.cuttingLine} />
               <p className={styles.lastEdited}>
                 Last Edited :{" "}
-                <span className={styles.spanText}>Nickey (Admin)</span>
+                <span className={styles.spanText}>{lastEditedBy}</span>
               </p>
             </div>
           </div>

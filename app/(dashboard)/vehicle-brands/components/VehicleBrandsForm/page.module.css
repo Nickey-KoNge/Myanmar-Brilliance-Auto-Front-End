@@ -2,7 +2,7 @@
 .formGridContainer {
   display: grid;
   grid-template-columns: 1.25fr 2fr;
-  gap:  var(--gap);
+  gap: var(--gap);
 }
 
 .formGridBox {
@@ -26,7 +26,8 @@
 .filterContainer {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap:  var(--gap);
+  gap: var(--gap);
+  row-gap: unset;
   margin-bottom: 0;
 }
 
@@ -67,8 +68,8 @@
 
 .imageUploadWrapper {
   position: relative;
-  width: 234px;
-  height: 234px;
+  width: 430px;
+  height: 430px;
   margin: 1rem auto;
 }
 

@@ -182,7 +182,7 @@ export const VehicleBrandsForm: React.FC<VehicleBrandsFormProps> = ({
           </header>
           <hr className={styles.cuttingLine} />
 
-          <div className={styles.filterContainer}>
+          {/* <div className={styles.filterContainer}> */}
             <TextInput
               label="Vehicle Brand Name"
               placeholder="TOYOTA"
@@ -223,7 +223,7 @@ export const VehicleBrandsForm: React.FC<VehicleBrandsFormProps> = ({
                 required: "Description is required",
               })}
             />
-          </div>
+          {/* </div> */}
         </section>
       </form>
     </>

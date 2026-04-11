@@ -212,7 +212,7 @@ export default function VehicleBrandsPage() {
               <div className={styles.searchContainer}>
                 <TextInput
                   label="Searching"
-                  placeholder="Search by name, email..."
+                  placeholder="Search by brand, manufacturer, country..."
                   value={filters.search}
                   onChange={(e) => updateFilter("search", e.target.value)}
                 />
@@ -257,15 +257,15 @@ export default function VehicleBrandsPage() {
 
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLable}>Total Staff :</p>
+                    <p className={styles.statLable}>Total Brands :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Active Staff :</p>
+                    <p className={styles.statLable}>Active Brands :</p>
                     <p className={styles.textSuccess}>36</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Inactive Staff :</p>
+                    <p className={styles.statLable}>Inactive Brands :</p>
                     <p className={styles.textDanger}>4</p>
                   </div>
                 </div>

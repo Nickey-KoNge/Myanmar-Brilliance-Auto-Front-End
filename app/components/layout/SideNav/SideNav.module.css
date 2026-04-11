@@ -67,7 +67,7 @@
   font-size: 0.65rem;
   color: var(--text-main);
   text-transform: uppercase;
-  padding: 1rem 1.5rem 0.5rem;
+  padding: 1rem 1.5rem 1rem;
   letter-spacing: 1px;
   height: 25px;
 }

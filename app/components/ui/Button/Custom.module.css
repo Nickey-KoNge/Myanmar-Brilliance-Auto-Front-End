@@ -25,16 +25,19 @@
 
 /* Variants */
 .actionBtn {
+  min-height: 52px;
   background: var(--accent);
   color: var(--btn-text);
   text-transform: uppercase;
 }
 .successBtn {
+   min-height: 52px;
   background: var(--success);
   color: var(--btn-text);
   text-transform: uppercase;
 }
 .cancelBtn {
+   min-height: 52px;
   background: var(--bg-btn);
   color: var(--btn-text);
   text-transform: uppercase;

@@ -15,6 +15,7 @@ interface BranchFormData {
   address: string;
   description: string;
   company_id: string;
+  company_name: string;
   id: string;
   company?: string;
   staff?: string;
@@ -74,6 +75,7 @@ export default function UpdateBranch() {
         const companyArray = raw as Company[];
 
         setCompanies(Array.isArray(companyArray) ? companyArray : []);
+        console.log("Fetched companies:", companyArray); 
       } catch (error) {
         console.error("Error fetching companies:", error);
       }
@@ -82,6 +84,8 @@ export default function UpdateBranch() {
     fetchCompanies();
   }, []);
 
+  console.log("Branch Data:", branchData);
+
   const handleUpdate = async (data: FieldValues) => {
     try {
       // 🛑 ESLint Unused-vars Fix:
@@ -89,6 +93,7 @@ export default function UpdateBranch() {
       const payload = { ...data };
       delete payload.id;
       delete payload.company;
+      delete payload.company_name;
       delete payload.staff;
       delete payload.stations;
 
