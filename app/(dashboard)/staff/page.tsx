@@ -143,9 +143,10 @@ export default function StaffPage() {
 
         const queryString = new URLSearchParams(params).toString();
 
-        const response = await apiClient.get(
+        const response: unknown = await apiClient.get(
           `/master-company/staff?${queryString}`,
         );
+        console.log("api staff return data :" , response);
 
         const res = response as unknown as {
           data?:
@@ -164,7 +165,7 @@ export default function StaffPage() {
           inactiveCount?: number;
           lastEditedBy?: string;
         };
-
+console.log("res return data :" , response);
         let staffList: Staff[] = [];
         let total = 0;
         let totalPages = 1;
