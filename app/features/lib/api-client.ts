@@ -17,12 +17,7 @@ apiClient.interceptors.request.use((config) => {
 // ၂။ Response Interceptor
 apiClient.interceptors.response.use(
   (response) => {
-<<<<<<< Updated upstream
-    // return response.data; // ✅ IMPORTANT (not data.data)
-    return response.data;
-=======
    return response.data?.data !== undefined ? response.data.data : response.data;
->>>>>>> Stashed changes
   },
   async (error) => {
     const originalRequest = error.config;
