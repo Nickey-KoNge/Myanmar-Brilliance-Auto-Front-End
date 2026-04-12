@@ -7,30 +7,22 @@ import {
   GroupsFormData,
 } from "../../components/GroupsForm/GroupForm";
 import { apiClient } from "@/app/features/lib/api-client";
-import { FieldValues } from "react-hook-form";
 
-interface GroupFormData {
-  [key: string]: string | undefined;
-  group_name: string;
-  group_type: string;
-  station_id: string;
-  id: string;
-  description: string;
-  stations?: string;
-}
 interface Station {
   id: string;
   station_name: string;
 }
+
 export default function UpdateGroupPage() {
   const params = useParams();
-  const groupId = params.id;
+  const groupId = params.id as string;
   const router = useRouter();
 
   const [groupData, setGroupData] = useState<GroupsFormData | undefined>(
     undefined,
   );
   const [station, setStations] = useState<Station[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchGroupData = async () => {
@@ -40,7 +32,7 @@ export default function UpdateGroupPage() {
         );
 
         const rawData = (response as { data?: unknown }).data || response;
-        const typedData = rawData as GroupFormData;
+        const typedData = rawData as GroupsFormData;
 
         if (typedData) {
           setGroupData({
@@ -67,7 +59,6 @@ export default function UpdateGroupPage() {
         const stationArray = raw as Station[];
 
         setStations(Array.isArray(stationArray) ? stationArray : []);
-        console.log("Fetched stations:", stationArray);
       } catch (error) {
         console.error("Error fetching stations:", error);
       }
@@ -76,20 +67,30 @@ export default function UpdateGroupPage() {
     fetchStation();
   }, []);
 
-  const handleUpdate = async (data: FieldValues) => {
+  const handleUpdate = async (data: GroupsFormData) => {
+    setLoading(true);
     try {
-      const payload = { ...data };
-      delete payload.id;
-      delete payload.stations;
+      const payload: Record<string, string> = {
+        group_name: data.group_name,
+        group_type: data.group_type,
+        description: data.description || "",
+      };
 
-      if (!payload.station_id) {
-        delete payload.station_id
+      if (data.station_id) {
+        payload.station_id = data.station_id;
       }
+      // delete payload.id;
+      // delete payload.stations;
 
+      // if (!payload.station_id) {
+      //   delete payload.station_id;
+      // }
       await apiClient.patch(`/master-company/groups/${groupId}`, payload);
       router.push("/groups");
     } catch (error) {
       console.error("Error updating groups:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -100,8 +101,19 @@ export default function UpdateGroupPage() {
   return (
     <GroupsForm
       mode="update"
-      initialData={initialData}
+      initialData={groupData}
       onSubmit={handleUpdate}
+      nameField="group_name"
+      nameLabel="Group Name"
+      cancelHref="/groups"
+      dropdown={{
+        label: "Stations",
+        name: "station_id",
+        options: station.map((s) => ({
+          id: s.id,
+          name: s.station_name,
+        })),
+      }}
       loading={loading}
     />
   );

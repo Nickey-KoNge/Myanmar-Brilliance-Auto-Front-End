@@ -57,7 +57,7 @@ export default function AddGroupsPage() {
       nameLabel="Group Name"
       cancelHref="/groups"
       dropdown={{
-        label: "Group",
+        label: "Stations",
         name: "station_id",
         options: station.map((s) => ({
           id: s.id,

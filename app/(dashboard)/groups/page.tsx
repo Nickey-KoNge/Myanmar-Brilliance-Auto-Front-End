@@ -29,10 +29,28 @@ interface Group {
   group_name: string;
   group_type: string;
   station_id: string;
+  station_name: string;
   description: string;
   status: string;
 }
 
+interface PaginatedGroupResponse {
+  data?:
+    | Group[]
+    | {
+        data?: Group[];
+        total?: number;
+        totalPages?: number;
+        activeCount?: number;
+        inactiveCount?: number;
+        lastEditedBy?: string;
+      };
+  total?: number;
+  totalPages?: number;
+  activeCount?: number;
+  inactiveCount?: number;
+  lastEditedBy?: string;
+}
 export default function GroupPage() {
   const router = useRouter();
 
@@ -78,8 +96,8 @@ export default function GroupPage() {
       key: "group_type",
     },
     {
-      header: "Station ID",
-      key: "station_id",
+      header: "Station Name",
+      key: "station_name",
     },
 
     {
@@ -115,23 +133,7 @@ export default function GroupPage() {
           `master-company/groups?${queryString}`,
         );
 
-        const res = response as unknown as {
-          data?:
-            | Group[]
-            | {
-                data?: Group[];
-                total?: number;
-                totalPages?: number;
-                activeCount?: number;
-                inactiveCount?: number;
-                lastEditedBy: string;
-              };
-          total?: number;
-          totalPages?: number;
-          activeCount?: number;
-          inactiveCount?: number;
-          lastEditedBy?: string;
-        };
+        const res = response as unknown as PaginatedGroupResponse;
 
         let groupList: Group[] = [];
         let total = 0;
