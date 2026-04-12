@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faLayerGroup,
   faCalendarDays,
   faClockRotateLeft,
   faPlus,
@@ -12,7 +11,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 // UI Components
-import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
 import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
 import { DataTable } from "@/app/components/ui/DataTable/DataTable";
 import { Pagination } from "@/app/components/ui/Pagination/Pagination";
@@ -23,98 +21,85 @@ import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 import DeleteModal from "@/app/components/ui/Delete/DeleteModal";
 
 import { apiClient } from "@/app/features/lib/api-client";
-import { useFilters } from "@/app/hooks/userFilters";
+import { FilterState, useFilters } from "@/app/hooks/userFilters";
 import styles from "./page.module.css";
-
-const USE_DUMMY = false;
 
 interface Group {
   id: string;
   group_name: string;
   group_type: string;
   station_id: string;
+  station_name: string;
   description: string;
   status: string;
 }
 
+interface PaginatedGroupResponse {
+  data?:
+    | Group[]
+    | {
+        data?: Group[];
+        total?: number;
+        totalPages?: number;
+        activeCount?: number;
+        inactiveCount?: number;
+        lastEditedBy?: string;
+      };
+  total?: number;
+  totalPages?: number;
+  activeCount?: number;
+  inactiveCount?: number;
+  lastEditedBy?: string;
+}
 export default function GroupPage() {
   const router = useRouter();
 
-  const [groups, setGroups] = useState<Group[]>([]);
+  const [groupsData, setGroupsData] = useState<Group[]>([]);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState<{ id: string; name: string } | null>(null);
+  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
 
+  const [activeRecords, setActiveRecords] = useState(0);
+  const [inactiveRecords, setInactiveRecords] = useState(0);
+  const [lastEditedBy, setLastEditedBy] = useState("Unknown");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
   const PAGE_SIZE = 10;
 
+  const [activeFilters, setActiveFilters] = useState<FilterState>({
+    search: "",
+    startDate: "",
+    endDate: "",
+  });
   const { filters, updateFilter, resetFilters } = useFilters(
-    { search: "", fromDate: "", toDate: "" },
-    () => setCurrentPage(1)
-  );
+    { search: "", startDate: "", endDate: "" },
+    (debouncedFilters: FilterState) => {
+      const isFilterChanged =
+        activeFilters.search !== debouncedFilters.search ||
+        activeFilters.startDate !== debouncedFilters.startDate ||
+        activeFilters.endDate !== debouncedFilters.endDate;
 
-  const fetchGroups = useCallback(async () => {
-    if (USE_DUMMY) return;
-  
-    try {
-      const params = new URLSearchParams({
-        page: currentPage.toString(),
-        limit: PAGE_SIZE.toString(),
-        search: String(filters.search || ""),
-        fromDate: String(filters.fromDate || ""),
-        toDate: String(filters.toDate || ""),
-      });
-  
-      const response = await apiClient.get(`/group/list`);
-console.log(response);
-  
-      const res = response?.data || response;
-  
-      console.log("API RESPONSE:", res); // debug
-  
-      // ✅ FIX HERE
-      if (res && res.items) {
-        setGroups(res.items || []);
-        setTotalRecords(res.meta?.totalItems || 0);
-        setTotalPages(res.meta?.totalPages || 1);
+      setActiveFilters(debouncedFilters);
+
+      if (isFilterChanged) {
+        setCurrentPage(1);
       }
-    } catch (error) {
-      console.error("Fetch error:", error);
-      setGroups([]);
-      setTotalRecords(0);
-    }
-  }, [currentPage, filters]);
-
-  useEffect(() => {
-    fetchGroups();
-  }, [fetchGroups]);
-
+    },
+  );
   const columns = [
     {
       header: "Groups Name",
       key: "group_name",
-      render: (group: Group) => <div style={{ fontWeight: "600" }}>{group.group_name}</div>,
     },
     {
       header: "Groups Type",
       key: "group_type",
-      render: (group: Group) => <div>{group.group_type}</div>,
     },
     {
-      header: "Station ID",
-      key: "station_id",
-      render: (group: Group) => <div>{group.station_id}</div>,
+      header: "Station Name",
+      key: "station_name",
     },
-    {
-      header: "Status",
-      key: "status",
-      render: (group: Group) => (
-        <div className={group.status === 'Active' ? styles.textSuccess : styles.textDanger}>
-          {group.status}
-        </div>
-      ),
-    },
+
     {
       header: "Actions",
       key: "actions",
@@ -123,7 +108,7 @@ console.log(response);
           className={styles.deleteBtn}
           onClick={(e) => {
             e.stopPropagation();
-            setSelectedGroup({ id: group.id, name: group.group_name });
+            setSelectedGroup(group);
             setIsDeleteOpen(true);
           }}
         >
@@ -132,16 +117,63 @@ console.log(response);
       ),
     },
   ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const params: Record<string, string> = {
+          page: currentPage.toString(),
+          limit: PAGE_SIZE.toString(),
+        };
+        if (activeFilters.search) params.search = activeFilters.search;
+        if (activeFilters.startDate) params.startDate = activeFilters.startDate;
+        if (activeFilters.endDate) params.endDate = activeFilters.endDate;
 
+        const queryString = new URLSearchParams(params).toString();
+        const response = await apiClient.get(
+          `master-company/groups?${queryString}`,
+        );
+
+        const res = response as unknown as PaginatedGroupResponse;
+
+        let groupList: Group[] = [];
+        let total = 0;
+        let totalPagesCount = 1;
+
+        if (res && typeof res === "object") {
+          if (Array.isArray(res.data)) {
+            groupList = res.data;
+            total = res.total || 0;
+            totalPagesCount = res.totalPages || 1;
+            setActiveRecords(res.activeCount || 0);
+            setInactiveRecords(res.inactiveCount || 0);
+            setLastEditedBy(res.lastEditedBy || "Unknown");
+          } else if (
+            res.data &&
+            typeof res.data === "object" &&
+            Array.isArray(res.data.data)
+          ) {
+            groupList = res.data.data;
+            total = res.data.total || 0;
+            totalPagesCount = res.data.totalPages || 1;
+          }
+        }
+
+        setGroupsData(groupList);
+        setTotalRecords(total);
+        setTotalPages(totalPagesCount);
+      } catch (err) {
+        console.error("Failed to fetch:", err);
+        setGroupsData([]);
+      }
+    };
+
+    fetchData();
+  }, [currentPage, activeFilters]);
+  const handleDeleteSuccess = (id: string) => {
+    setGroupsData((prevData) => prevData.filter((row) => row.id !== id));
+  };
   return (
     <>
-      <PageHeader
-        titleData={{ icon: <FontAwesomeIcon icon={faLayerGroup} />, text: "Groups Management" }}
-        actionNode={
-          <NavigationBtn href="/groups/Addgroup" leftIcon={faPlus}>Add Groups</NavigationBtn>
-        }
-      />
-
       <PageGridLayout
         sidebar={
           <div className={styles.sidebarWrapper}>
@@ -151,73 +183,114 @@ console.log(response);
               <div className={styles.searchContainer}>
                 <TextInput
                   label="SEARCH"
-                  placeholder="Search group..."
-                  value={String(filters.search)}
+                  placeholder="Search by group name, group type..."
+                  value={filters.search}
                   onChange={(e) => updateFilter("search", e.target.value)}
                 />
                 <div className={styles.filterRow}>
                   <DateInput
-                    label="FROM"
-                    value={String(filters.fromDate)}
-                    onChange={(e) => updateFilter("fromDate", e.target.value)}
+                    label="From"
+                    value={filters.startDate}
+                    onChange={(e) => updateFilter("startDate", e.target.value)}
                     rightIcon={faCalendarDays}
                   />
                   <DateInput
-                    label="TO"
-                    value={String(filters.toDate)}
-                    onChange={(e) => updateFilter("toDate", e.target.value)}
+                    label="To"
+                    value={filters.endDate}
+                    onChange={(e) => updateFilter("endDate", e.target.value)}
                     rightIcon={faCalendarDays}
                   />
                 </div>
-                <ActionBtn onClick={resetFilters}>RESET</ActionBtn>
+                <div style={{ alignSelf: "flex-start" }}>
+                  <ActionBtn
+                    type="reset"
+                    variant="action"
+                    fullWidth={false}
+                    onClick={resetFilters}
+                  >
+                    reset
+                  </ActionBtn>
+                </div>
               </div>
             </div>
-            
+
             <div className={styles.bottomSection}>
               <hr className={styles.cuttingLine} />
               <div className={styles.recentRecord}>
-                <span className={styles.iconBox}><FontAwesomeIcon icon={faClockRotateLeft} /></span>
-                <div className={styles.recordContent}>
-                  <p className={styles.recentTitle}>TOTAL RECORDS</p>
-                  <p className={styles.textDanger} style={{ fontSize: '20px', fontWeight: 'bold' }}>
-                    {totalRecords}
-                  </p>
+                <span>
+                  <FontAwesomeIcon icon={faClockRotateLeft} />
+                </span>
+                <p className={styles.recentTitle}>RECENT RECORD</p>
+                <span />
+                <div className={styles.stat}>
+                  <div>
+                    <p className={styles.statLable}>Total Groups :</p>
+                    <p className={styles.textDanger}>{totalRecords}</p>
+                  </div>
+                  <div>
+                    <p className={styles.statLable}>Active Groups :</p>
+                    <p className={styles.textSuccess}>{activeRecords}</p>
+                  </div>
+                  <div>
+                    <p className={styles.statLable}>Inactive Groups :</p>
+                    <p className={styles.textDanger}>{inactiveRecords}</p>
+                  </div>
                 </div>
               </div>
+              <hr className={styles.cuttingLine} />
+              <p className={styles.lastEdited}>
+                Last Edited :{" "}
+                <span className={styles.spanText}>{lastEditedBy}</span>
+              </p>
             </div>
           </div>
         }
       >
-        <div className={styles.mainTableArea}>
-          <p className={styles.gridBoxTitle}>GROUPS MASTER RECORDS</p>
+        <div>
+          <div className={styles.tableHeaderArea}>
+            <div className={styles.paginationInfoWrapper}>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalRecords={totalRecords}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCurrentPage}
+                showOnlyInfo={true}
+              />
+            </div>
+            <p className={styles.tableTitle}>GROUPS MASTER RECORDS</p>
+            <div className={styles.headerActionArea}>
+              <NavigationBtn href="/groups/Addgroup" leftIcon={faPlus}>
+                add group
+              </NavigationBtn>
+            </div>
+          </div>
           <DataTable
-            data={groups}
+            data={groupsData}
             columns={columns}
-            onRowClick={(g) => router.push(`/groups/Updategroup/${g.id}`)}
+            onRowClick={(group) =>
+              router.push(`/groups/Updategroup/${group.id}`)
+            }
           />
         </div>
-
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
           totalRecords={totalRecords}
           pageSize={PAGE_SIZE}
           onPageChange={setCurrentPage}
+          showOnlyActions={true}
         />
       </PageGridLayout>
-
       {isDeleteOpen && selectedGroup && (
         <DeleteModal
           isOpen={isDeleteOpen}
           onClose={() => setIsDeleteOpen(false)}
-          itemName={selectedGroup.name}
-          name="Group"
+          itemName={selectedGroup.group_name}
+          name="Station"
           id={selectedGroup.id}
-          apiRoute="group"
-          onDeleteSuccess={() => {
-            setIsDeleteOpen(false);
-            fetchGroups(); // List ကို ပြန် update လုပ်တယ်
-          }}
+          apiRoute="master-company/groups"
+          onDeleteSuccess={handleDeleteSuccess}
         />
       )}
     </>

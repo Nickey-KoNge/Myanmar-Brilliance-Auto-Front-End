@@ -133,6 +133,10 @@ export default function AuditLogPage() {
         url = `/master-company/company/restore/${auditId}`;
       } else if (entityName === "staff") {
         url = `/master-company/staff/restore/${auditId}`;
+      } else if (entityName === "stations") {
+        url = `/master-company/stations/restore/${auditId}`;
+      } else if (entityName === "groups") {
+        url = `/master-company/groups/restore/${auditId}`;
       } else {
         toast.error("Restore not supported for this module yet.");
         return;

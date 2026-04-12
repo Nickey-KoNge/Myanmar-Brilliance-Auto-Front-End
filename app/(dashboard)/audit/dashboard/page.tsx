@@ -339,9 +339,12 @@ export default function AuditDashboardPage() {
                 }
               >
                 <option value="">All Modules</option>
-                <option value="staff">Staff</option>
-                <option value="branches">Branches</option>
                 <option value="company">Company</option>
+                <option value="branches">Branches</option>
+                <option value="stations">Stations</option>
+                <option value="groups">Groups</option>
+                <option value="staff">Staff</option>
+                
               </select>
 
               <label>Filter by Action:</label>

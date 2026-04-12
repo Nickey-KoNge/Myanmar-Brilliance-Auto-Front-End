@@ -1,16 +1,16 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faLayerGroup,
   faCircleCheck,
   faArrowsRotate,
-  faThLarge,
   faUserTag,
   faTags,
-  faAddressCard
+  faAddressCard,
+  faTable,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
@@ -22,19 +22,30 @@ import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 
 import styles from "./page.module.css";
 
+interface DropDownConfig {
+  label: string;
+  name: keyof GroupsFormData;
+  options: { id: string; name: string }[];
+}
+
 export interface GroupsFormData {
   id?: string;
-  station_id: string;
+  station_id?: string;
   group_name: string;
   group_type: string;
   description: string;
+  stations?: unknown;
 }
 
 interface GroupsFormProps {
   mode: "create" | "update";
-  initialData?: GroupsFormData;
-  onSubmit: (data: GroupsFormData) => void;
+  initialData?: Partial<GroupsFormData>;
+  onSubmit: SubmitHandler<GroupsFormData>;
   loading?: boolean;
+  dropdown?: DropDownConfig;
+  nameField: "group_name";
+  nameLabel: string;
+  cancelHref: string;
 }
 
 export const GroupsForm: React.FC<GroupsFormProps> = ({
@@ -42,34 +53,25 @@ export const GroupsForm: React.FC<GroupsFormProps> = ({
   initialData,
   onSubmit,
   loading = false,
+  dropdown,
+  nameField,
+  nameLabel,
+  cancelHref,
 }) => {
-
   const {
     register,
     handleSubmit,
-    formState: { errors },
-    setValue,
     reset,
-    watch,
+    formState: { errors },
   } = useForm<GroupsFormData>({
-    defaultValues: {
-      station_id: "",
-      group_name: "",
-      group_type: "",
-      description: "",
-    },
+    defaultValues: initialData || {},
   });
 
-  // Update mode → fill form
   useEffect(() => {
-    if (initialData) {
+    if (initialData && Object.keys(initialData).length > 0) {
       reset(initialData);
     }
   }, [initialData, reset]);
-
-  const stationValue = watch("station_id") || "";
-
-  
 
   return (
     <>
@@ -84,8 +86,8 @@ export const GroupsForm: React.FC<GroupsFormProps> = ({
         }}
         actionNode={
           <div className={styles.headerActionArea}>
-            <NavigationBtn href="/groups" variant="cancel">
-              CANCEL
+            <NavigationBtn href={cancelHref} variant="cancel">
+              cancel
             </NavigationBtn>
 
             <ActionBtn
@@ -107,49 +109,29 @@ export const GroupsForm: React.FC<GroupsFormProps> = ({
         className={styles.page}
       >
         <div className={styles.grid}>
-
-          {/* LEFT SECTION */}
-          <FormCard title="PROFESSIONAL ASSIGNMENT" icon={faThLarge}>
-            <div className={styles.fieldGroup}>
-              <label className={styles.label}>STATIONS</label>
-
-              <div className={styles.dropdownWrapper}>
+          {dropdown && (
+            <FormCard title="Assignment" icon={faTable}>
+              <div className={styles.fieldGroup}>
                 <DropdownInput
-                  options={[
-                    { id: "019d7144-4f46-7d43-bf2d-64a71e2bd80f", name: "All Stations" },
-                    { id: "2", name: "Main Station" },
-                  ]}
-                  valueKey="id"
-                  nameKey="name"
-                  value={stationValue}
-                  placeholder="Select Station"
-                  onChange={(e) => {
-                    setValue("station_id", e.target.value, {
-                      shouldValidate: true,
-                    });
-                  }}
+                  label={dropdown.label}
+                  placeholder={`Select ${dropdown.label}`}
+                  options={dropdown.options}
+                  {...register(dropdown.name)}
                 />
               </div>
-
-              {/* ✅ Error */}
-              {errors.station_id && (
-                <span className={styles.errorText}>
-                  {errors.station_id.message}
-                </span>
-              )}
-            </div>
-          </FormCard>
+            </FormCard>
+          )}
 
           {/* RIGHT SECTION */}
           <FormCard title="CORE IDENTITY ATTRIBUTES" icon={faUserTag}>
             <div className={styles.row}>
               <Input
-                label="GROUP NAME"
-                placeholder="Enter Your Group Name...."
+                label={nameLabel}
+                placeholder={`Enter ${nameLabel}`}
                 icon={<FontAwesomeIcon icon={faTags} />}
-                error={errors.group_name?.message}
+                error={errors[nameField]?.message}
                 {...register("group_name", {
-                  required: "Group Name is required",
+                  required: `${nameLabel} is required`,
                 })}
               />
 
@@ -164,16 +146,15 @@ export const GroupsForm: React.FC<GroupsFormProps> = ({
               />
             </div>
 
-            <div className={styles.fieldGroup} style={{ marginTop: "20px" }}>
-              <label className={styles.label}>DESCRIPTION</label>
-              <textarea
-                className={styles.textarea}
-                placeholder="Enter Your Description...."
-                {...register("description")}
-              />
-            </div>
+            <Input
+              label="DESCRIPTION"
+              placeholder="Enter Description..."
+              error={errors.description?.message}
+              {...register("description", {
+                required: "Description is required",
+              })}
+            />
           </FormCard>
-
         </div>
       </form>
     </>

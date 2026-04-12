@@ -1,53 +1,146 @@
+/* PAGE WRAPPER */
 .page {
   display: flex;
   flex-direction: column;
   gap: var(--gap);
 }
 
+/* GRID: 2 columns */
 .grid {
   display: grid;
-  grid-template-columns: 1fr 1.5fr; /* ဘယ်ဘက် Card ကို ပိုကျဉ်းစေရန် */
+  grid-template-columns: 1.25fr 2fr;
   gap: var(--gap);
-  align-items: start;
 }
 
+/* Each card panel */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+/* SECTION HEADER (red bar + icon + title) */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sectionBar {
+  width: 3px;
+  height: 18px;
+  background: var(--color-primary);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.sectionIcon {
+  width: 28px;
+  height: 28px;
+  background: rgba(192, 57, 43, 0.12);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  font-size: var(--font-size-s);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-s);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-primary);
+}
+
+/* FIELD GROUP */
 .fieldGroup {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 6px;
 }
 
-.label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-muted);
+.textareaLabel {
+  font-size: var(--font-size-s);
+  font-weight: 500;
   text-transform: uppercase;
-  margin-bottom: 0.5rem;
+  letter-spacing: 0.6px;
+  color: var(--text-muted);
 }
 
+/* TWO COLUMN ROW inside a card */
 .row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--gap);
+   gap: var(--gap);
 }
 
+/* SELECT */
+.select {
+  width: 100%;
+  background: var(--bg-input, #2a2a2a);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px 36px 10px 14px;
+  font-size: var(--font-size-s);
+  color: var(--text-main);
+  appearance: none;
+
+  cursor: pointer;
+  transition: border-color 0.2s;
+  margin-top: 1.5rem;
+  height: 52.8px;
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+/* TEXTAREA */
 .textarea {
   width: 100%;
   background: var(--bg-input);
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  padding: 12px;
+  padding: 12px 14px;
+  font-size: var(--font-size-s);
   color: var(--text-main);
-  min-height: 100px;
-  resize: none;
+  resize: vertical;
+  min-height: 90px;
   font-family: inherit;
+  transition: border-color 0.2s;
+  margin-top: 1rem;
 }
 
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+/* MAP PLACEHOLDER */
+.mapPlaceholder {
+  flex: 1;
+  height: 100%;
+  min-height: 250px;
+  background: #1a1a1a;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #444;
+  font-size: 28px;
+  overflow: hidden;
+}
 .headerActionArea {
   display: flex;
-  gap: 12px;
-}
-
-.dropdownWrapper {
-  margin-top: 10px;
+  gap: 10px;
 }
