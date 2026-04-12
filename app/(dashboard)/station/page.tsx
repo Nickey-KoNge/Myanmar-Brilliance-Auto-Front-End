@@ -15,7 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react"; 
+import { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
 import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
@@ -38,6 +38,9 @@ export default function StationPage() {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
 
+  const [activeRecords, setActiveRecords] = useState(0);
+  const [inactiveRecords, setInactiveRecords] = useState(0);
+  const [lastEditedBy, setLastEditedBy] = useState("Unknown");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
@@ -109,9 +112,19 @@ export default function StationPage() {
         const res = response as unknown as {
           data?:
             | Station[]
-            | { data?: Station[]; total?: number; totalPages?: number };
+            | {
+                data?: Station[];
+                total?: number;
+                totalPages?: number;
+                activeCount?: number;
+                inactiveCount?: number;
+                lastEditedBy: string;
+              };
           total?: number;
           totalPages?: number;
+          activeCount?: number;
+          inactiveCount?: number;
+          lastEditedBy?: string;
         };
 
         let stationList: Station[] = [];
@@ -123,6 +136,9 @@ export default function StationPage() {
             stationList = res.data;
             total = res.total || 0;
             totalPagesCount = res.totalPages || 1;
+            setActiveRecords(res.activeCount || 0);
+            setInactiveRecords(res.inactiveCount || 0);
+            setLastEditedBy(res.lastEditedBy || "Unknown");
           } else if (
             res.data &&
             typeof res.data === "object" &&
@@ -150,8 +166,6 @@ export default function StationPage() {
   };
   return (
     <>
- 
-
       <PageGridLayout
         sidebar={
           <div className={styles.sidebarWrapper}>
@@ -211,11 +225,11 @@ export default function StationPage() {
                   </div>
                   <div>
                     <p className={styles.statLable}>Active Stations :</p>
-                    <p className={styles.textSuccess}>36</p>
+                    <p className={styles.textSuccess}>{activeRecords}</p>
                   </div>
                   <div>
                     <p className={styles.statLable}>Inactive Stations :</p>
-                    <p className={styles.textDanger}>4</p>
+                    <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>
               </div>
@@ -223,7 +237,7 @@ export default function StationPage() {
               <hr className={styles.cuttingLine} />
               <p className={styles.lastEdited}>
                 Last Edited :{" "}
-                <span className={styles.spanText}>Nickey (Admin)</span>
+                <span className={styles.spanText}>{lastEditedBy}</span>
               </p>
             </div>
           </div>
@@ -257,7 +271,6 @@ export default function StationPage() {
             }
           />
         </div>
-
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
