@@ -142,7 +142,7 @@ export default function AuditDashboardPage() {
         search: exportOptions.action,
       });
 
-      const apiUrl = "http://localhost:3001";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
       const token = Cookies.get("access_token");
 
@@ -344,7 +344,7 @@ export default function AuditDashboardPage() {
                 <option value="stations">Stations</option>
                 <option value="groups">Groups</option>
                 <option value="staff">Staff</option>
-                
+                <option value="vehicle">Vehicles</option>
               </select>
 
               <label>Filter by Action:</label>
