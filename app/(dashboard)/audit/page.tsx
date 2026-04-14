@@ -137,6 +137,12 @@ export default function AuditLogPage() {
         url = `/master-company/stations/restore/${auditId}`;
       } else if (entityName === "groups") {
         url = `/master-company/groups/restore/${auditId}`;
+      } else if (entityName === "vehicle") {
+        url = `/master-vehicle/vehicles/restore/${auditId}`;
+      } else if (entityName === "vehicle_models") {
+        url = `/master-vehicle/vehicle-models/restore/${auditId}`;
+      } else if (entityName === "vehicle_brands") {
+        url = `/master-vehicle/vehicle-brands/restore/${auditId}`;
       } else {
         toast.error("Restore not supported for this module yet.");
         return;

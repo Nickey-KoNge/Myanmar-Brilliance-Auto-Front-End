@@ -11,7 +11,6 @@ import {
   faBuilding,
   faWrench,
   faCar,
-  faShoppingCart,
   // faFileInvoice,
   faRoute,
   faKey,
@@ -19,7 +18,6 @@ import {
   faChevronRight,
   faChevronDown,
   faUser,
-  // faUserTie,
   faTruckMoving,
   faIdCardClip,
   faBuildingFlag,
@@ -30,7 +28,9 @@ import {
   faClipboardList,
   faGauge,
   faTableList,
-  faPersonCirclePlus,
+  faLayerGroup,
+  faCarSide,
+  faAward,
 } from "@fortawesome/free-solid-svg-icons";
 
 const NavItem = ({
@@ -43,8 +43,8 @@ const NavItem = ({
   href: string;
 }) => {
   const pathname = usePathname();
-  const isActive = pathname.startsWith(href);
-
+  // const isActive = pathname.startsWith(href);
+  const isActive = pathname === href || pathname.startsWith(`${href}/`);
   return (
     <Link href={href} style={{ textDecoration: "none" }}>
       <div className={`${styles.menuItem} ${isActive ? styles.active : ""}`}>
@@ -98,7 +98,8 @@ const NavDropdown: React.FC<NavDropdownProps> = ({
       {shouldShowSubMenu && (
         <div className={styles.subMenu}>
           {subItems.map((item, index) => {
-            const isActive = pathname.startsWith(item.href);
+            const isActive =
+              pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (
               <Link
                 key={index}
@@ -132,7 +133,7 @@ export const SideNav = () => {
     if (path.match(/^\/(company|branch|station|groups)/)) return "Entity";
     if (path.match(/^\/(vehicle-brands|vehicle-models|vehicle)/))
       return "Fleet";
-    return null;
+    if (path.match(/^\/audit/)) return "Audit";
   };
 
   const [clickedDropdown, setClickedDropdown] = useState<string | null>(null);
@@ -212,17 +213,22 @@ export const SideNav = () => {
           label="Fleet"
           subItems={[
             {
-              icon: faBuildingFlag,
+              icon: faAward,
               label: "Vehicle Brands",
               href: "/vehicle-brands",
             },
             {
-              icon: faBuildingFlag,
+              icon: faLayerGroup,
+              label: "Vehicle Models",
+              href: "/vehicle-model",
+            },
+            {
+              icon: faCarSide,
               label: "Vehicle",
               href: "/vehicle",
             },
             {
-              icon: faPersonCirclePlus,
+              icon: faIdCardClip,
               label: "Assignments",
               href: "/vehicle-driver-assign",
             },

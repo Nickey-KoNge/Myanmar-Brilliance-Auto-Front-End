@@ -1,175 +1,139 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter, useParams } from "next/navigation";
 import { apiClient } from "@/app/features/lib/api-client";
-import { use, useEffect, useState } from "react";
-import { VehicleForm } from "@/app/(dashboard)/vehicle/components/VehicleForm";
-import { useParams, useRouter } from "next/navigation";
-import { FieldValue } from "react-hook-form";
+import { VehicleForm, VehicleFormData } from "../../components/VehicleForm";
 
-interface Vehicle {
+interface VehicleApiResponse {
   id: string;
-  vehicle_name: string;
-  station_id: string;
-  group_id: string;
-  vehicle_model_id: string;
-  supplier_id: string | null;
-  city_taxi_no: string;
-  serial_no: string;
-  vin_no: string;
-  engine_no: string;
-  license_plate: string;
-  color: string;
-  license_type: string;
-  current_odometer: string;
-  vehicle_license_exp: string;
-  service_intervals: string;
-  purchase_date: string;
-  image: string;
+  vehicle_name?: string;
+  city_taxi_no?: string;
+  serial_no?: string;
+  vin_no?: string;
+  engine_no?: string;
+  license_plate?: string;
+  color?: string;
+  license_type?: string;
+  current_odometer?: string;
+  vehicle_license_exp?: string;
+  service_intervals?: string;
+  purchase_date?: string;
+  image?: string;
+  station_id?: string;
+  group_id?: string;
+  vehicle_model_id?: string;
+  supplier_id?: string;
+  station?: { id: string; station_name: string };
+  group?: { id: string; group_name: string };
+  vehicle_model?: { id: string; vehicle_model_name: string };
 }
 
-interface Station {
-  id: string;
-  station_name: string;
-}
-
-interface Group {
-  id: string;
-  group_name: string;
-}
-
-interface VehicleModel {
-  id: string;
-  vehicle_model_name: string;
-}
-
-export default function UpdateVehicle() {
-  const params = useParams();
-  const vehicleId = params.id;
+export default function UpdateVehiclePage() {
+  const { id } = useParams();
   const router = useRouter();
-  console.log("Current ID from URL:", vehicleId);
 
-  const [vehicleData, setVehicleData] = useState<Vehicle | undefined>(
-    undefined,
-  );
-  const [stations, setStations] = useState<Station[]>([]);
-  const [groups, setGroups] = useState<Group[]>([]);
-  const [vehicleModels, setVehicleModels] = useState<VehicleModel[]>([]);
+  const [initialData, setInitialData] =
+    useState<Partial<VehicleFormData> | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
     const fetchVehicleData = async () => {
       try {
-        const response = await apiClient.get(
-          `/master-vehicle/vehicles/${vehicleId}`,
-        );
+        const res = await apiClient.get(`/master-vehicle/vehicles/${id}`);
+        const v = res as unknown as VehicleApiResponse;
 
-        const rawData = (response as { data?: unknown }).data || response;
-        const typedData = rawData as Vehicle;
+        if (v && v.id) {
+          setInitialData({
+            vehicle_name: v.vehicle_name || "",
+            station_id: v.station_id || "",
+            group_id: v.group_id || "",
+            vehicle_model_id: v.vehicle_model_id || "",
+            supplier_id: v.supplier_id || "",
+            city_taxi_no: v.city_taxi_no || "",
+            serial_no: v.serial_no || "",
+            vin_no: v.vin_no || "",
+            engine_no: v.engine_no || "",
+            license_plate: v.license_plate || "",
+            color: v.color || "",
+            license_type: v.license_type || "",
+            current_odometer: v.current_odometer || "",
 
-        if (typedData && typeof typedData === "object") {
-          setVehicleData({
-            ...typedData,
-            station_id: typedData.station_id || "",
-            group_id: typedData.group_id || "",
-            vehicle_model_id: typedData.vehicle_model_id || "",
+            vehicle_license_exp: v.vehicle_license_exp
+              ? v.vehicle_license_exp.split("T")[0]
+              : "",
+            service_intervals: v.service_intervals
+              ? v.service_intervals.split("T")[0]
+              : "",
+            purchase_date: v.purchase_date ? v.purchase_date.split("T")[0] : "",
+            image: v.image || "",
           });
         }
-      } catch (error) {
-        console.error("Error fetching vehicle data:", error);
-      }
-    };
-    fetchVehicleData();
-  }, [vehicleId]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [stationsRes, groupsRes, vehicleModelsRes] = await Promise.all([
-          apiClient.get("/master-company/stations"),
-          apiClient.get("/group/list"),
-          apiClient.get("/vehicle-model/list"),
-        ]);
-        setStations(stationsRes.data);
-        setGroups(groupsRes?.data || groupsRes.items);
-        setVehicleModels(vehicleModelsRes?.data || vehicleModelsRes.items);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+      } catch (err) {
+        console.error("Fetch error:", err);
+      } finally {
+        setFetching(false);
       }
     };
 
-    fetchData();
-  }, []);
+    if (id) fetchVehicleData();
+  }, [id]);
 
-  // const {
-  //     image,
-  //     supplier_id,
-  //     station_id,
-  //     station_name,
-  //     group_id,
-  //     group_name,
-  //     vehicle_model_id,
-  //     vehicle_model_name,
-
-  //     ...cleanPayload
-  // } = data;
-  const handleUpdate = async (data: any) => {
+  const handleSubmit = async (data: VehicleFormData) => {
+    setLoading(true);
     try {
-        const formData = new FormData();
+      const formData = new FormData();
 
+      Object.entries(data).forEach(([key, value]) => {
+        if (key === "id" || (key === "image" && typeof value === "string"))
+          return;
 
-        const cleanFields = [
-            'station_name', 
-            'group_name', 
-            'vehicle_model_name', 
-            'id'
-        ];
+        if (key === "image") {
+          const isFileList =
+            typeof window !== "undefined" && value instanceof FileList;
+          if (isFileList && (value as FileList).length > 0) {
+            formData.append("image", (value as FileList)[0] as Blob);
+          }
+        } else if (
+          (key === "vehicle_license_exp" ||
+            key === "purchase_date" ||
+            key === "service_intervals") &&
+          value
+        ) {
+          formData.append(key, new Date(value as string).toISOString());
+        } else if (value !== "" && value !== null && value !== undefined) {
+          formData.append(key, String(value));
+        }
+      });
 
-     
-        Object.keys(data).forEach((key) => {
-            if (cleanFields.includes(key)) return;
+      await apiClient.patch(`/master-vehicle/vehicles/${id}`, formData);
 
-            const value = data[key];
-
-                if (key === 'image') {
-                    if (value && typeof value !== "string" && value.length > 0) {
-                    formData.append('image', value[0]);
-                }
-            }
-         
-            else if (value !== null && value !== undefined && value !== "") {
-                formData.append(key, value);
-            }
-        });
-
-        console.log("Sending FormData update...");
-
-        await apiClient.patch(`/master-vehicle/vehicles/${vehicleId}`, formData);
-        
-        router.push("/vehicle");
-    } catch (error: any) {
-  
-        console.error("Error updating vehicle:", error.response?.data || error.message);
+      router.push("/vehicle");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert(
+          "An unexpected error occurred while updating the vehicle record.",
+        );
+        console.error(error);
+      }
+    } finally {
+      setLoading(false);
     }
-};
+  };
 
-
-
-  console.log("Vehicle Update Data:", vehicleData);
-  console.log("Stations Update Data:", stations);
-  console.log("Groups Update Data:", groups);
-  console.log("Vehicle Models Update Data:", vehicleModels);
-
-  if (!vehicleData) {
-    return <div>Loading...</div>;
-  }
+  if (fetching) return <div style={{ padding: "2rem" }}>Loading record...</div>;
+  if (!initialData)
+    return <div style={{ padding: "2rem" }}>Error loading data.</div>;
 
   return (
     <VehicleForm
       mode="update"
-      initialData={vehicleData}
-      stations={stations}
-      groups={groups}
-      vehicleModels={vehicleModels}
-      onSubmit={handleUpdate}
+      initialData={initialData}
+      onSubmit={handleSubmit}
+      loading={loading}
     />
   );
 }
