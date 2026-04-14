@@ -1,4 +1,3 @@
-
 "use client";
 
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
@@ -23,6 +22,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import styles from "./VehicleForm.module.css";
 import { Input } from "@/app/components/ui/Input/Input";
 import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
+import { apiClient } from "@/app/features/lib/api-client";
 
 export interface VehicleFormData {
   vehicle_name: string;
@@ -44,16 +44,6 @@ export interface VehicleFormData {
   image?: FileList | string;
 }
 
-interface VehicleFormProps {
-  mode: "create" | "update";
-  initialData?: Partial<VehicleFormData>;
-  onSubmit: SubmitHandler<VehicleFormData>;
-  loading?: boolean;
-  stations: StationOption[];
-  groups: GroupOption[];
-  vehicleModels: VehicleModelOption[];
-}
-
 interface StationOption {
   id: string;
   station_name: string;
@@ -69,24 +59,34 @@ interface VehicleModelOption {
   vehicle_model_name: string;
 }
 
+interface VehicleFormProps {
+  mode: "create" | "update";
+  initialData?: Partial<VehicleFormData>;
+  onSubmit: SubmitHandler<VehicleFormData>;
+  loading?: boolean;
+}
+
 export const VehicleForm: React.FC<VehicleFormProps> = ({
   mode,
   initialData,
   onSubmit,
   loading = false,
-  stations = [],
-  groups = [],
-  vehicleModels = [],
 }) => {
-
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  const preview = selectedImage || (typeof initialData?.image === "string" ? initialData.image : null);
+  const [stations, setStations] = useState<StationOption[]>([]);
+  const [groups, setGroups] = useState<GroupOption[]>([]);
+  const [vehicleModels, setVehicleModels] = useState<VehicleModelOption[]>([]);
+
+  const preview =
+    selectedImage ||
+    (typeof initialData?.image === "string" ? initialData.image : null);
 
   const {
     register,
     handleSubmit,
     reset,
+
     formState: { errors },
   } = useForm<VehicleFormData>({
     mode: "onTouched",
@@ -99,9 +99,83 @@ export const VehicleForm: React.FC<VehicleFormProps> = ({
     }
   }, [initialData, reset]);
 
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        const [stationsRes, groupsRes, vehicleModelsRes] = await Promise.all([
+          apiClient.get("/master-company/stations?limit=1000"),
+          apiClient.get("/master-company/groups?limit=1000"),
+          apiClient.get("/master-vehicle/vehicle-models?limit=1000"),
+        ]);
+
+        const extractData = <T,>(res: unknown): T[] => {
+          if (!res) return [];
+          if (Array.isArray(res)) return res as T[];
+
+          const resObj = res as Record<string, unknown>;
+          if (Array.isArray(resObj.items)) return resObj.items as T[];
+          if (Array.isArray(resObj.data)) return resObj.data as T[];
+
+          if (resObj.data && typeof resObj.data === "object") {
+            const nested = resObj.data as Record<string, unknown>;
+            if (Array.isArray(nested.items)) return nested.items as T[];
+            if (Array.isArray(nested.data)) return nested.data as T[];
+          }
+          return [];
+        };
+
+        const formatStations = (
+          dataList: Record<string, unknown>[],
+        ): StationOption[] => {
+          return dataList.map((item, index) => ({
+            id: String(item.id || `station-${index}`),
+            station_name: String(
+              item.station_name || item.name || "Unknown Station",
+            ),
+          }));
+        };
+
+        const formatGroups = (
+          dataList: Record<string, unknown>[],
+        ): GroupOption[] => {
+          return dataList.map((item, index) => ({
+            id: String(item.id || `group-${index}`),
+            group_name: String(item.group_name || item.name || "Unknown Group"),
+          }));
+        };
+
+        const formatVehicleModels = (
+          dataList: Record<string, unknown>[],
+        ): VehicleModelOption[] => {
+          return dataList.map((item, index) => ({
+            id: String(item.id || `model-${index}`),
+            vehicle_model_name: String(
+              item.vehicle_model_name || item.name || "Unknown Model",
+            ),
+          }));
+        };
+
+        setStations(
+          formatStations(extractData<Record<string, unknown>>(stationsRes)),
+        );
+        setGroups(
+          formatGroups(extractData<Record<string, unknown>>(groupsRes)),
+        );
+        setVehicleModels(
+          formatVehicleModels(
+            extractData<Record<string, unknown>>(vehicleModelsRes),
+          ),
+        );
+      } catch (err) {
+        console.error("Error fetching form options:", err);
+      }
+    };
+    fetchOptions();
+  }, []);
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) setSelectedImage(URL.createObjectURL(file)); 
+    if (file) setSelectedImage(URL.createObjectURL(file));
   };
 
   return (
@@ -141,13 +215,12 @@ export const VehicleForm: React.FC<VehicleFormProps> = ({
             <DropdownInput
               label="Station"
               placeholder="Select Station"
-              options={stations.map((station) => ({
-                id: station.id,
+              options={stations.map((station, idx) => ({
+                id: station.id || `station-opt-${idx}`,
                 name: station.station_name,
               }))}
               valueKey="id"
               nameKey="name"
-              defaultValue={initialData?.station_id || ""}
               {...register("station_id", {
                 required: mode === "create" ? "Station is required" : false,
               })}
@@ -157,13 +230,12 @@ export const VehicleForm: React.FC<VehicleFormProps> = ({
             <DropdownInput
               label="Group"
               placeholder="Select Group"
-              options={groups.map((group) => ({
-                id: group.id,
+              options={groups.map((group, idx) => ({
+                id: group.id || `group-opt-${idx}`,
                 name: group.group_name,
               }))}
               valueKey="id"
               nameKey="name"
-              defaultValue={initialData?.group_id || ""}
               {...register("group_id", {
                 required: mode === "create" ? "Group is required" : false,
               })}
@@ -173,13 +245,12 @@ export const VehicleForm: React.FC<VehicleFormProps> = ({
             <DropdownInput
               label="Vehicle Model"
               placeholder="Select Vehicle Model"
-              options={vehicleModels.map((model) => ({
-                id: model.id,
+              options={vehicleModels.map((model, idx) => ({
+                id: model.id || `model-opt-${idx}`,
                 name: model.vehicle_model_name,
               }))}
               valueKey="id"
               nameKey="name"
-              defaultValue={initialData?.vehicle_model_id || ""}
               {...register("vehicle_model_id", {
                 required:
                   mode === "create" ? "Vehicle model is required" : false,

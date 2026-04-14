@@ -5,7 +5,6 @@ import { useRouter, useParams } from "next/navigation";
 import { apiClient } from "@/app/features/lib/api-client";
 import { VehicleForm, VehicleFormData } from "../../components/VehicleForm";
 
-// API မှ ပြန်လာမည့် Vehicle Data ပုံစံကို အတိအကျ သတ်မှတ်ခြင်း (any မသုံးရန်)
 interface VehicleApiResponse {
   id: string;
   vehicle_name?: string;
@@ -30,21 +29,6 @@ interface VehicleApiResponse {
   vehicle_model?: { id: string; vehicle_model_name: string };
 }
 
-interface StationOption {
-  id: string;
-  station_name: string;
-}
-
-interface GroupOption {
-  id: string;
-  group_name: string;
-}
-
-interface VehicleModelOption {
-  id: string;
-  vehicle_model_name: string;
-}
-
 export default function UpdateVehiclePage() {
   const { id } = useParams();
   const router = useRouter();
@@ -53,44 +37,6 @@ export default function UpdateVehiclePage() {
     useState<Partial<VehicleFormData> | null>(null);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
-
-  const [stations, setStations] = useState<StationOption[]>([]);
-  const [groups, setGroups] = useState<GroupOption[]>([]);
-  const [vehicleModels, setVehicleModels] = useState<VehicleModelOption[]>([]);
-
-  useEffect(() => {
-    const fetchFilters = async () => {
-      try {
-        const [stationsRes, groupsRes, vehicleModelsRes] = await Promise.all([
-          apiClient.get("/master-company/stations"),
-          apiClient.get("/master-company/groups"),
-          apiClient.get("/master-vehicle/vehicle-models"),
-        ]);
-
-        const extractData = <T,>(res: unknown): T[] => {
-          if (!res) return [];
-          if (Array.isArray(res)) return res as T[];
-
-          const resObj = res as Record<string, unknown>;
-          if (Array.isArray(resObj.data)) return resObj.data as T[];
-          if (Array.isArray(resObj.items)) return resObj.items as T[];
-
-          if (resObj.data && typeof resObj.data === "object") {
-            const nested = resObj.data as Record<string, unknown>;
-            if (Array.isArray(nested.data)) return nested.data as T[];
-          }
-          return [];
-        };
-
-        setStations(extractData<StationOption>(stationsRes));
-        setGroups(extractData<GroupOption>(groupsRes));
-        setVehicleModels(extractData<VehicleModelOption>(vehicleModelsRes));
-      } catch (error) {
-        console.error("Error fetching filters:", error);
-      }
-    };
-    fetchFilters();
-  }, []);
 
   useEffect(() => {
     const fetchVehicleData = async () => {
@@ -101,9 +47,9 @@ export default function UpdateVehiclePage() {
         if (v && v.id) {
           setInitialData({
             vehicle_name: v.vehicle_name || "",
-            station_id: v.station_id ?? v.station?.id ?? "",
-            group_id: v.group_id ?? v.group?.id ?? "",
-            vehicle_model_id: v.vehicle_model_id ?? v.vehicle_model?.id ?? "",
+            station_id: v.station_id || "",
+            group_id: v.group_id || "",
+            vehicle_model_id: v.vehicle_model_id || "",
             supplier_id: v.supplier_id || "",
             city_taxi_no: v.city_taxi_no || "",
             serial_no: v.serial_no || "",
@@ -188,9 +134,6 @@ export default function UpdateVehiclePage() {
       initialData={initialData}
       onSubmit={handleSubmit}
       loading={loading}
-      stations={stations}
-      groups={groups}
-      vehicleModels={vehicleModels}
     />
   );
 }

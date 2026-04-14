@@ -60,6 +60,9 @@ export default function VehicleBrandsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
+  const [activeRecords, setActiveRecords] = useState(0);
+  const [inactiveRecords, setInactiveRecords] = useState(0);
+  const [lastEditedBy, setLastEditedBy] = useState("Unknown");
   const PAGE_SIZE = 10;
 
   //Active Filters State
@@ -115,9 +118,19 @@ export default function VehicleBrandsPage() {
         const res = response as unknown as {
           data?:
             | VehicleBrand[]
-            | { data?: VehicleBrand[]; total?: number; totalPages?: number };
+            | {
+                data?: VehicleBrand[];
+                total?: number;
+                totalPages?: number;
+                activeCount?: number;
+                inactiveCount?: number;
+                lastEditedBy: string;
+              };
           total?: number;
           totalPages?: number;
+          activeCount?: number;
+          inactiveCount?: number;
+          lastEditedBy?: string;
         };
 
         let vehicleBrandList: VehicleBrand[] = [];
@@ -130,6 +143,9 @@ export default function VehicleBrandsPage() {
             vehicleBrandList = res.data;
             total = res.total || 0;
             totalPages = res.totalPages || 1;
+            setActiveRecords(res.activeCount || 0);
+            setInactiveRecords(res.inactiveCount || 0);
+            setLastEditedBy(res.lastEditedBy || "Unknown");
           } else if (
             res.data &&
             typeof res.data === "object" &&
@@ -262,11 +278,11 @@ export default function VehicleBrandsPage() {
                   </div>
                   <div>
                     <p className={styles.statLable}>Active Brands :</p>
-                    <p className={styles.textSuccess}>36</p>
+                    <p className={styles.textSuccess}>{activeRecords}</p>
                   </div>
                   <div>
                     <p className={styles.statLable}>Inactive Brands :</p>
-                    <p className={styles.textDanger}>4</p>
+                    <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>
               </div>
@@ -274,7 +290,7 @@ export default function VehicleBrandsPage() {
               <hr className={styles.cuttingLine} />
               <p className={styles.lastEdited}>
                 Last Edited :{" "}
-                <span className={styles.spanText}>Nickey (Admin)</span>
+                <span className={styles.spanText}>{lastEditedBy}</span>
               </p>
             </div>
           </div>

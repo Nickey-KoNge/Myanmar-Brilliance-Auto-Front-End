@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -49,17 +50,20 @@ interface Vehicle {
 
 interface StationOption {
   id: string;
-  station_name: string;
+  station_name?: string;
+  name?: string;
 }
 
 interface GroupOption {
   id: string;
-  group_name: string;
+  group_name?: string;
+  name?: string;
 }
 
 interface VehicleModelOption {
   id: string;
-  vehicle_model_name: string;
+  name?: string;
+  vehicle_model_name?: string;
 }
 
 interface PaginatedVehicleResponse {
@@ -67,12 +71,14 @@ interface PaginatedVehicleResponse {
     | Vehicle[]
     | {
         data?: Vehicle[];
+        items?: Vehicle[];
         total?: number;
         totalPages?: number;
         activeCount?: number;
         inactiveCount?: number;
         lastEditedBy?: string;
       };
+  items?: Vehicle[];
   total?: number;
   totalPages?: number;
   activeCount?: number;
@@ -175,31 +181,33 @@ export default function VehicleListPage() {
         );
         const res = response as unknown as PaginatedVehicleResponse;
 
-        let vehicleList: Vehicle[] = [];
-        let total = 0;
-        let totalPagesCount = 1;
+        let dataList: Vehicle[] = [];
+        let metaInfo: Partial<PaginatedVehicleResponse> = res;
 
-        if (res && typeof res === "object") {
-          if (Array.isArray(res.data)) {
-            vehicleList = res.data;
-            total = res.total || 0;
-            totalPagesCount = res.totalPages || 1;
-            setActiveRecords(res.activeCount || 0);
-            setInactiveRecords(res.inactiveCount || 0);
-            setLastEditedBy(res.lastEditedBy || "Unknown");
-          } else if (
-            res.data &&
-            typeof res.data === "object" &&
-            Array.isArray(res.data.data)
-          ) {
-            vehicleList = res.data.data;
-            total = res.data.total || 0;
-            totalPagesCount = res.data.totalPages || 1;
-          }
+        if (Array.isArray(res.data)) {
+          // res.data က Array တန်းဖြစ်နေလျှင်
+          dataList = res.data;
+        } else if (res.data && typeof res.data === "object") {
+          dataList = res.data.items || res.data.data || [];
+          metaInfo = res.data;
+        } else if (Array.isArray(res.items)) {
+          dataList = res.items;
+        } else {
+          dataList = Array.isArray(res) ? res : [];
         }
-        setVehicles(vehicleList);
-        setTotalRecords(total);
-        setTotalPages(totalPagesCount);
+
+        if (dataList.length > 0 || Array.isArray(dataList)) {
+          setVehicles(dataList);
+
+          setTotalRecords(metaInfo?.total || 0);
+          setTotalPages(metaInfo?.totalPages || 1);
+          setActiveRecords(metaInfo?.activeCount || 0);
+          setInactiveRecords(metaInfo?.inactiveCount || 0);
+          setLastEditedBy(metaInfo?.lastEditedBy || "Unknown");
+        } else {
+          setVehicles([]);
+          setTotalRecords(0);
+        }
       } catch (error) {
         console.error("Failed to fetch vehicles:", error);
         setVehicles([]);
@@ -215,22 +223,21 @@ export default function VehicleListPage() {
           await Promise.all([
             apiClient.get("/master-company/stations"),
             apiClient.get("/master-company/groups"),
-
             apiClient.get("/master-vehicle/vehicle-models"),
           ]);
 
         const extractData = <T,>(res: unknown): T[] => {
           if (!res) return [];
-
           if (Array.isArray(res)) return res as T[];
 
           const resObj = res as Record<string, unknown>;
 
-          if (Array.isArray(resObj.data)) return resObj.data as T[];
           if (Array.isArray(resObj.items)) return resObj.items as T[];
+          if (Array.isArray(resObj.data)) return resObj.data as T[];
 
           if (resObj.data && typeof resObj.data === "object") {
             const nestedData = resObj.data as Record<string, unknown>;
+            if (Array.isArray(nestedData.items)) return nestedData.items as T[];
             if (Array.isArray(nestedData.data)) return nestedData.data as T[];
           }
 
@@ -248,6 +255,7 @@ export default function VehicleListPage() {
     };
     fetchFilters();
   }, []);
+
   const openDeleteModal = (id: string, name: string) => {
     setDeleteModal({
       isOpen: true,
@@ -268,7 +276,7 @@ export default function VehicleListPage() {
         <div className={styles.vehicleInfo}>
           {vehicle.image ? (
             <Image
-              src={vehicle.image}
+              src={vehicle.image || "/default-user.png"}
               alt={vehicle.vehicle_name}
               width={40}
               height={40}
@@ -461,11 +469,12 @@ export default function VehicleListPage() {
                 </div>
 
                 <div className={styles.filterRow}>
+                  {/* 🛑 Data အလွတ်ပေါ်ခြင်း နှင့် Duplicate Key ပြဿနာ ဖြေရှင်းချက် */}
                   <DropdownInput
                     label="Vehicle Model"
-                    options={vehicleModels.map((v) => ({
-                      id: v.id,
-                      name: v.vehicle_model_name,
+                    options={vehicleModels.map((v, idx) => ({
+                      id: v.id || `model-${idx}`,
+                      name: v.vehicle_model_name || v.name || "Unknown Model",
                     }))}
                     valueKey="id"
                     nameKey="name"
@@ -478,9 +487,9 @@ export default function VehicleListPage() {
 
                   <DropdownInput
                     label="Station"
-                    options={stations.map((s) => ({
-                      id: s.id,
-                      name: s.station_name,
+                    options={stations.map((s, idx) => ({
+                      id: s.id || `station-${idx}`,
+                      name: s.station_name || s.name || "Unknown Station",
                     }))}
                     valueKey="id"
                     nameKey="name"
@@ -491,9 +500,9 @@ export default function VehicleListPage() {
 
                   <DropdownInput
                     label="Group"
-                    options={groups.map((g) => ({
-                      id: g.id,
-                      name: g.group_name,
+                    options={groups.map((g, idx) => ({
+                      id: g.id || `group-${idx}`,
+                      name: g.group_name || g.name || "Unknown Group",
                     }))}
                     valueKey="id"
                     nameKey="name"

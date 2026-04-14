@@ -344,6 +344,8 @@ export default function AuditDashboardPage() {
                 <option value="stations">Stations</option>
                 <option value="groups">Groups</option>
                 <option value="staff">Staff</option>
+                <option value="vehicle_models">Vehicle Model</option>
+                <option value="vehicle_brands">Vehicle Brands</option>
                 <option value="vehicle">Vehicles</option>
               </select>
 

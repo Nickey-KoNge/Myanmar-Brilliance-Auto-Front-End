@@ -1,61 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { apiClient } from "@/app/features/lib/api-client";
 import { VehicleForm, VehicleFormData } from "../components/VehicleForm";
 
-interface Station {
-  id: string;
-  station_name: string;
-}
-
-interface Group {
-  id: string;
-  group_name: string;
-}
-
-interface VehicleModel {
-  id: string;
-  vehicle_model_name: string;
-}
-
 export default function CreateVehiclePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-
-  const [stations, setStations] = useState<Station[]>([]);
-  const [groups, setGroups] = useState<Group[]>([]);
-  const [vehicleModels, setVehicleModels] = useState<VehicleModel[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [stationsRes, groupsRes, vehicleModelsRes] = await Promise.all([
-          apiClient.get("/master-company/stations"),
-          apiClient.get("/master-company/groups"),
-          apiClient.get("/master-vehicle/vehicle-models"),
-        ]);
-
-        const stRes = stationsRes as unknown as { data?: Station[] };
-        const gpRes = groupsRes as unknown as {
-          data?: Group[];
-          items?: Group[];
-        };
-        const vmRes = vehicleModelsRes as unknown as {
-          data?: VehicleModel[];
-          items?: VehicleModel[];
-        };
-
-        setStations(stRes.data || []);
-        setGroups(gpRes.data || gpRes.items || []);
-        setVehicleModels(vmRes.data || vmRes.items || []);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
 
   const handleSubmit = async (data: VehicleFormData) => {
     setLoading(true);
@@ -63,7 +15,7 @@ export default function CreateVehiclePage() {
       const formData = new FormData();
 
       Object.entries(data).forEach(([key, value]) => {
-        if (key === "id") return; // Create လုပ်ချိန်တွင် id မလိုပါ
+        if (key === "id") return;
 
         if (key === "image" && value) {
           const isFileList =
@@ -102,9 +54,6 @@ export default function CreateVehiclePage() {
       onSubmit={handleSubmit}
       initialData={{}}
       loading={loading}
-      stations={stations}
-      groups={groups}
-      vehicleModels={vehicleModels}
     />
   );
 }
