@@ -175,6 +175,8 @@
   display: block;
   font-size: 0.75rem;
   color: var(--text-muted);
+  padding-top: .3rem;
+
 }
 
 .btnViewAll {

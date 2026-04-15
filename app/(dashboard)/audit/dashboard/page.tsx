@@ -304,6 +304,7 @@ export default function AuditDashboardPage() {
                   <span className={styles.logUser}>{log.performed_by}</span>{" "}
                   {log.action.toLowerCase()} record in{" "}
                   <strong>{log.entity_name}</strong>
+                  
                   <span className={styles.logTime}>
                     {timeAgo(log.created_at)}
                   </span>
