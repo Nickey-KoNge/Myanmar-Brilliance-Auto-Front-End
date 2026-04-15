@@ -249,3 +249,187 @@
   border-radius: 6px;
   cursor: pointer;
 }
+
+/* ===============================
+   Export Modal Styles 
+   (Light/Dark Mode Supported)
+=============================== */
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px); /* နောက်ခံကို ဝါးပေးခြင်း */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.exportModal {
+  background-color: var(--bg-card); /* Card Background ယူမည် */
+  color: var(--text-main);
+  padding: 1.5rem 2rem;
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  animation: slideIn 0.3s ease-out;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.modalTitle {
+  font-size: var(--font-size-l);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-main);
+  margin: 0;
+}
+
+.btnCloseIcon {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.btnCloseIcon:hover {
+  color: var(--danger);
+}
+
+.modalSubtitle {
+  font-size: var(--font-size-s);
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.modalSubtitle strong {
+  color: var(--color-primary);
+}
+
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.inputGroup label {
+  font-size: var(--font-size-s);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-main);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.customSelect {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: var(--bg-input); /* Input background ယူမည် */
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  font-size: var(--font-size-m);
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23888888%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem top 50%;
+  background-size: 0.65rem auto;
+}
+
+.customSelect:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(163, 59, 59, 0.2);
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+/* Cancel Button */
+.btnCancel {
+  background-color: var(--btn-cancel);
+  color: var(--text-cancel, #fff); /* Light mode မှာစာသားအဖြူရောင်ဖြစ်ရန် */
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-m);
+  transition:
+    background-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.btnCancel:hover {
+  opacity: 0.8;
+}
+
+/* Download Button */
+.btnDownload {
+  background-color: var(--accent);
+  color: #ffffff;
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-m);
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
+  display: flex;
+  align-items: center;
+}
+
+.btnDownload:hover {
+  background-color: var(--accent-hover);
+}
+
+.btnDownload:active {
+  transform: scale(0.97);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

@@ -5,12 +5,13 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCalendarDays,
+  faClockRotateLeft,
   faPlus,
   faTrashCan,
-  faClockRotateLeft,
-  faIdCard,
 } from "@fortawesome/free-solid-svg-icons";
 
+// Components
 import { DataTable } from "@/app/components/ui/DataTable/DataTable";
 import { Pagination } from "@/app/components/ui/Pagination/Pagination";
 import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
@@ -18,65 +19,204 @@ import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
 import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
+import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
 import DeleteModal from "@/app/components/ui/Delete/DeleteModal";
 
+// Styles
 import styles from "./page.module.css";
 import { apiClient } from "@/app/features/lib/api-client";
+
+// Hook
+import { useFilters, FilterState } from "@/app/hooks/userFilters";
+
+interface Driver {
+  id: string;
+  driver_name: string;
+  nrc: string;
+  phone: string;
+  station_id: string | null;
+  station_name: string | null;
+  credential_email: string | null;
+  fullAddress: string | null;
+  dob: string | null;
+  gender: string;
+  join_date: string | null;
+  license_no: string;
+  license_type: string;
+  deposits: string;
+  license_expiry: string | null;
+  driving_exp: string;
+  image: string | null;
+  status: string;
+}
+
+interface StationOption {
+  id: string;
+  name: string;
+}
+
+interface PaginatedDriverResponse {
+  data?:
+    | Driver[]
+    | {
+        data?: Driver[];
+        items?: Driver[];
+      };
+  items?: Driver[];
+  stations?: StationOption[];
+  meta?: {
+    totalItems?: number;
+    totalPages?: number;
+    activeItems?: number;
+    inactiveItems?: number;
+    lastEditedBy?: string;
+    total?: number;
+    activeCount?: number;
+    inactiveCount?: number;
+  };
+  total?: number;
+  totalPages?: number;
+  activeCount?: number;
+  inactiveCount?: number;
+  lastEditedBy?: string;
+}
 
 const PAGE_SIZE = 10;
 
 export default function DriverListPage() {
   const router = useRouter();
-  const [drivers, setDrivers] = useState([]);
+  const [drivers, setDrivers] = useState<Driver[]>([]);
+  const [stations, setStations] = useState<StationOption[]>([]);
+
+  // Pagination & Stats States
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
-  const [search, setSearch] = useState("");
   const [activeRecords, setActiveRecords] = useState(0);
   const [inactiveRecords, setInactiveRecords] = useState(0);
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
-  const [deleteModal, setDeleteModal] = useState({
+  const [lastEditedBy, setLastEditedBy] = useState("Unknown");
+
+  const [deleteModal, setDeleteModal] = useState<{
+    isOpen: boolean;
+    id: string | null;
+    name: string;
+  }>({
     isOpen: false,
     id: null,
     name: "",
   });
 
+  // Active Filters State (Station filter ထပ်တိုးပါသည်)
+  const [activeFilters, setActiveFilters] = useState<FilterState>({
+    search: "",
+    startDate: "",
+    endDate: "",
+    stationId: "",
+  });
+
+  // Custom Hook for Filters
+  const { filters, updateFilter, resetFilters } = useFilters(
+    { search: "", startDate: "", endDate: "", stationId: "" },
+    (debouncedFilters: FilterState) => {
+      const isFilterChanged =
+        activeFilters.search !== debouncedFilters.search ||
+        activeFilters.startDate !== debouncedFilters.startDate ||
+        activeFilters.endDate !== debouncedFilters.endDate ||
+        activeFilters.stationId !== debouncedFilters.stationId;
+
+      setActiveFilters(debouncedFilters);
+
+      if (isFilterChanged) {
+        setCurrentPage(1);
+      }
+    },
+  );
+
   const fetchDrivers = async () => {
     try {
-      const response = await apiClient.get(`/driver/list`, {
-        params: {
-          page: currentPage,
-          limit: PAGE_SIZE,
-          search: search,
-          fromDate: fromDate,
-          toDate: toDate,
-        },
-      });
+      const params: Record<string, string> = {
+        page: currentPage.toString(),
+        limit: PAGE_SIZE.toString(),
+      };
 
-      const resData = response?.data || response;
+      if (activeFilters.search) params.search = String(activeFilters.search);
+      if (activeFilters.startDate)
+        params.fromDate = String(activeFilters.startDate);
+      if (activeFilters.endDate) params.toDate = String(activeFilters.endDate);
+      if (activeFilters.stationId && activeFilters.stationId !== "all") {
+        params.station_id = String(activeFilters.stationId);
+      }
 
-      if (resData && resData.items) {
-        setDrivers(resData.items);
-        setTotalPages(resData.meta?.totalPages || 1);
-        setTotalRecords(resData.meta?.totalItems || 0);
-        setActiveRecords(resData.meta.activeItems || 0);
-        setInactiveRecords(resData.meta.inactiveItems || 0);
+      const queryString = new URLSearchParams(params).toString();
+      const response = await apiClient.get(
+        `master-company/driver?${queryString}`,
+      );
+
+      const res = response as unknown as PaginatedDriverResponse;
+
+      let driverList: Driver[] = [];
+      let total = 0;
+      let pages = 1;
+
+      // Parse Data
+      if (Array.isArray(res.items)) {
+        driverList = res.items;
+      } else if (Array.isArray(res.data)) {
+        driverList = res.data;
+      } else if (
+        res.data &&
+        typeof res.data === "object" &&
+        Array.isArray(res.data.items)
+      ) {
+        driverList = res.data.items;
+      } else if (
+        res.data &&
+        typeof res.data === "object" &&
+        Array.isArray(res.data.data)
+      ) {
+        driverList = res.data.data;
+      }
+
+      // Parse Meta
+      const meta = res.meta || (res as Record<string, unknown>);
+      total = Number(meta.totalItems || meta.total || 0);
+      pages = Number(meta.totalPages || 1);
+
+      setDrivers(driverList);
+      setTotalRecords(total);
+      setTotalPages(pages);
+      setActiveRecords(Number(meta.activeItems || meta.activeCount || 0));
+      setInactiveRecords(Number(meta.inactiveItems || meta.inactiveCount || 0));
+      setLastEditedBy(String(meta.lastEditedBy || "Unknown"));
+
+      // Stations များကိုပါ တစ်ခါတည်းယူထားပါသည်
+      if (res.stations && Array.isArray(res.stations)) {
+        setStations(res.stations);
       }
     } catch (error) {
       console.error("Error fetching drivers:", error);
+      setDrivers([]);
     }
   };
 
   useEffect(() => {
     fetchDrivers();
-  }, [currentPage, search, fromDate, toDate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, activeFilters]);
+
+  const openDeleteModal = (id: string, name: string) => {
+    setDeleteModal({ isOpen: true, id, name });
+  };
+
+  const handleDeleteSuccess = (id: string) => {
+    setDrivers((prev) => prev.filter((d) => d.id !== id));
+  };
 
   const columns = [
     {
       header: "Driver Info",
-      key: "driver_name",
-      render: (driver: any) => {
+      key: "driverInfo",
+      render: (driver: Driver) => {
         const defaultImage = "/default-user.png";
         const src = driver.image
           ? driver.image.startsWith("http")
@@ -85,40 +225,155 @@ export default function DriverListPage() {
           : defaultImage;
 
         return (
-          <div className={styles.staffInfo}>
-            <div className={styles.imageContainer}>
-              <Image
-                src={src}
-                alt={driver.driver_name}
-                width={40}
-                height={40}
-                className={styles.staffImg}
-                unoptimized
-              />
+          <div className={styles.vehicleInfo}>
+            <Image
+              src={src}
+              alt={driver.driver_name}
+              width={40}
+              height={40}
+              unoptimized
+              className={styles.vehicleImg}
+              style={{ objectFit: "cover", borderRadius: "50%" }}
+            />
+            <div>
+              <div style={{ fontWeight: "600" }}>{driver.driver_name}</div>
+              <div style={{ fontSize: "11px", color: "#666" }}>
+                <b>Phone : </b>
+                {driver.phone || "-"}
+              </div>
+              <div
+                style={{
+                  fontSize: "11px",
+                  fontWeight: "bold",
+                  color:
+                    driver.status === "Active"
+                      ? "var(--success)"
+                      : "var(--danger)",
+                  marginTop: "2px",
+                }}
+              >
+                {driver.status || "Unknown"}
+              </div>
             </div>
-            <span className={styles.mainName}>{driver.driver_name}</span>
           </div>
         );
       },
     },
-    { header: "License No", key: "license_no" },
-    { header: "Address", key: "address", className: styles.addressCell },
-    { header: "DOB", key: "dob", render: (d: any) => d.dob?.split("T")[0] },
-    { header: "NRC", key: "nrc" },
-    { header: "Phone", key: "phone" },
+    {
+      header: "Identity",
+      key: "identity",
+      render: (driver: Driver) => (
+        <div>
+          <div style={{ fontWeight: "500" }}>
+            <b>NRC : </b>
+            {driver.nrc || "-"}
+          </div>
+          <div style={{ fontSize: "12px", color: "#007bff" }}>
+            <b>Email : </b>
+            {driver.credential_email || "-"}
+          </div>
+          <div style={{ fontSize: "12px", color: "gray" }}>
+            <b>Gender : </b>
+            {driver.gender || "-"}
+          </div>
+        </div>
+      ),
+    },
+    {
+      header: "License Info",
+      key: "licenseInfo",
+      render: (driver: Driver) => (
+        <div>
+          <div style={{ fontSize: "12px" }}>
+            <b>No : </b>
+            {driver.license_no || "-"}
+          </div>
+          <div style={{ fontSize: "12px" }}>
+            <b>Type : </b>
+            {driver.license_type || "-"}
+          </div>
+          <div style={{ fontSize: "12px" }}>
+            <b>Join Date : </b>
+            {driver.join_date || "-"}
+          </div>
+        </div>
+      ),
+    },
+    {
+      header: "Start & Deposit",
+      key: "licenseInfo",
+      render: (driver: Driver) => (
+        <div>
+          <div style={{ fontSize: "12px" }}>
+            <b>Join Date : </b>
+            {driver.join_date || "-"}
+          </div>
+          <div style={{ fontSize: "12px" }}>
+            <b>Deposit : </b>
+            {driver.deposits || "-"} MMK
+          </div>
+        </div>
+      ),
+    },
+    {
+      header: "Experience & Base",
+      key: "assignment",
+      render: (driver: Driver) => (
+        <div>
+          <div style={{ fontWeight: "500" }}>
+            {driver.station_name || "Unassigned"}
+          </div>
+          <div style={{ fontSize: "12px", color: "gray" }}>
+            <b>Exp : </b>
+            {driver.driving_exp || "-"}
+          </div>
+        </div>
+      ),
+    },
+    {
+      header: "Contact Location",
+      key: "address",
+      render: (driver: Driver) => (
+        <div>
+          <div
+            style={{
+              fontSize: "12px",
+              maxWidth: "200px",
+              whiteSpace: "normal",
+            }}
+          >
+            {driver.fullAddress || "-"}
+          </div>
+        </div>
+      ),
+    },
+    {
+      header: "Timeline",
+      key: "timeline",
+      render: (driver: Driver) => (
+        <div>
+          <div className={styles.timelineText}>
+            <b>DOB : </b>
+            {driver.dob ? String(driver.dob).split("T")[0] : "-"}
+          </div>
+          <div className={styles.expireText}>
+            <b>Exp : </b>
+            {driver.license_expiry
+              ? String(driver.license_expiry).split("T")[0]
+              : "-"}
+          </div>
+        </div>
+      ),
+    },
     {
       header: "Actions",
       key: "actions",
-      render: (driver: any) => (
+      render: (driver: Driver) => (
         <button
-          className={styles.actionIconBtn}
+          className={styles.deleteBtn}
           onClick={(e) => {
             e.stopPropagation();
-            setDeleteModal({
-              isOpen: true,
-              id: driver.id,
-              name: driver.driver_name,
-            });
+            openDeleteModal(driver.id, driver.driver_name);
           }}
         >
           <FontAwesomeIcon icon={faTrashCan} />
@@ -129,115 +384,138 @@ export default function DriverListPage() {
 
   return (
     <>
-      {/* Header Card Section */}
-      <div className={styles.headerCard}>
-        <div className={styles.headerTitleGroup}>
-          <div className={styles.headerIconBox}>
-            <FontAwesomeIcon icon={faIdCard} className={styles.headerIcon} />
-          </div>
-          <h2 className={styles.headerTitle}>Driver Management</h2>
-        </div>
-        <NavigationBtn href="/driver/Adddriver" leftIcon={faPlus}>
-          ADD DRIVER
-        </NavigationBtn>
-      </div>
-
       <PageGridLayout
         sidebar={
           <div className={styles.sidebarWrapper}>
-            <div className={styles.searchCard}>
-              <p className={styles.sidebarTitle}>Driver Search</p>
-              <div className={styles.searchContent}>
-                <p className={styles.searchLabel}>Searching</p>
+            <div className={styles.topSection}>
+              <p className={styles.gridBoxTitle}>Driver Search</p>
+              <hr className={styles.cuttingLine} />
+
+              <div className={styles.searchContainer}>
                 <TextInput
-                  placeholder="Searching Name , Email, Address etc ..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  label="Searching"
+                  placeholder="Search by name, NRC, phone..."
+                  value={String(filters.search || "")}
+                  onChange={(e) => updateFilter("search", e.target.value)}
                 />
+
                 <div className={styles.filterRow}>
                   <DateInput
                     label="From"
-                    value={fromDate}
-                    onChange={(e: any) => setFromDate(e.target.value)}
+                    value={String(filters.startDate || "")}
+                    onChange={(e) => updateFilter("startDate", e.target.value)}
+                    rightIcon={faCalendarDays}
                   />
                   <DateInput
                     label="To"
-                    value={toDate}
-                    onChange={(e: any) => setToDate(e.target.value)}
+                    value={String(filters.endDate || "")}
+                    onChange={(e) => updateFilter("endDate", e.target.value)}
+                    rightIcon={faCalendarDays}
                   />
                 </div>
-                <ActionBtn
-                  variant="action"
-                  className={styles.resetBtn}
-                  onClick={() => {
-                    setSearch("");
-                    setFromDate("");
-                    setToDate("");
-                    setCurrentPage(1);
-                  }}
-                >
-                  Reset Filters
-                </ActionBtn>
+
+                <div className={styles.filterRow}>
+                  <DropdownInput
+                    label="Station"
+                    options={stations.map((s, idx) => ({
+                      id: s.id || `station-${idx}`,
+                      name: s.name || "Unknown Station",
+                    }))}
+                    valueKey="id"
+                    nameKey="name"
+                    value={String(filters.stationId || "")}
+                    onChange={(e) => updateFilter("stationId", e.target.value)}
+                    placeholder="All Stations"
+                  />
+                </div>
+
+                <div style={{ alignSelf: "flex-start" }}>
+                  <ActionBtn
+                    type="reset"
+                    variant="action"
+                    fullWidth={false}
+                    onClick={resetFilters}
+                  >
+                    reset
+                  </ActionBtn>
+                </div>
               </div>
             </div>
 
-            <div className={styles.statsCard}>
-              <p className={styles.sidebarTitle}>
-                <FontAwesomeIcon icon={faClockRotateLeft} /> RECENT RECORD
-              </p>
-              <div className={styles.statList}>
-                <div className={styles.statItem}>
-                  <span>Total Driver :</span>{" "}
-                  <strong className={styles.textDanger}>{totalRecords}</strong>
-                </div>
-                <div className={styles.statItem}>
-                  <span>Active Driver :</span>{" "}
-                  <strong className={styles.textSuccess}>
-                    {activeRecords}
-                  </strong>
-                </div>
-                <div className={styles.statItem}>
-                  <span>Inactive Driver :</span>{" "}
-                  <strong className={styles.textDanger}>
-                    {inactiveRecords}
-                  </strong>
+            <div className={styles.bottomSection}>
+              <hr className={styles.cuttingLine} />
+
+              <div className={styles.recentRecord}>
+                <span>
+                  <FontAwesomeIcon icon={faClockRotateLeft} />
+                </span>
+                <p className={styles.recentTitle}>RECENT RECORD</p>
+                <span />
+
+                <div className={styles.stat}>
+                  <div>
+                    <p className={styles.statLable}>Total Driver :</p>
+                    <p className={styles.textDanger}>{totalRecords}</p>
+                  </div>
+                  <div>
+                    <p className={styles.statLable}>Active Driver :</p>
+                    <p className={styles.textSuccess}>{activeRecords}</p>
+                  </div>
+                  <div>
+                    <p className={styles.statLable}>Inactive Driver :</p>
+                    <p className={styles.textDanger}>{inactiveRecords}</p>
+                  </div>
                 </div>
               </div>
+
+              <hr className={styles.cuttingLine} />
               <p className={styles.lastEdited}>
                 Last Edited :{" "}
-                <span className={styles.textDanger}>Nickey (Admin)</span>
+                <span className={styles.spanText}>{lastEditedBy}</span>
               </p>
             </div>
           </div>
         }
       >
-        <div className={styles.tablePageWrapper}>
-          <div className={styles.tableMainContent}>
-            <div className={styles.tableHeaderArea}>
-              <p className={styles.tableTitle}>DRIVER MASTER RECORDS</p>
-            </div>
-
-            <div className={styles.dataTable}>
-              <DataTable
-                columns={columns}
-                data={drivers}
-                onRowClick={(d) => router.push(`/driver/Updatedriver/${d.id}`)}
-              />
-            </div>
-          </div>
-
-          <div className={styles.stickyFooterPagination}>
-            <div className={styles.paginationWrapper}>
+        <div>
+          <div className={styles.tableHeaderArea}>
+            <div className={styles.paginationInfoWrapper}>
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
                 totalRecords={totalRecords}
                 pageSize={PAGE_SIZE}
                 onPageChange={setCurrentPage}
+                showOnlyInfo={true}
               />
             </div>
+            <p className={styles.tableTitle}>DRIVER MASTER RECORDS</p>
+
+            <div className={styles.headerActionArea}>
+              <NavigationBtn href="/driver/Adddriver" leftIcon={faPlus}>
+                Add Driver
+              </NavigationBtn>
+            </div>
           </div>
+
+          <DataTable
+            columns={columns}
+            data={drivers}
+            onRowClick={(driver) =>
+              router.push(`/driver/Updatedriver/${driver.id}`)
+            }
+            emptyMessage="No driver records found."
+          />
         </div>
+
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalRecords={totalRecords}
+          pageSize={PAGE_SIZE}
+          onPageChange={setCurrentPage}
+          showOnlyActions={true}
+        />
       </PageGridLayout>
 
       {deleteModal.isOpen && deleteModal.id && (
@@ -245,10 +523,10 @@ export default function DriverListPage() {
           isOpen={deleteModal.isOpen}
           onClose={() => setDeleteModal({ isOpen: false, id: null, name: "" })}
           itemName={deleteModal.name}
-          name="driver"
+          name="Driver"
           id={deleteModal.id}
-          apiRoute="/driver"
-          onDeleteSuccess={fetchDrivers}
+          apiRoute="master-company/driver"
+          onDeleteSuccess={handleDeleteSuccess}
         />
       )}
     </>

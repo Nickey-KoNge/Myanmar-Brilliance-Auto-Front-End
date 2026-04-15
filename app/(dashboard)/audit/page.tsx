@@ -131,6 +131,8 @@ export default function AuditLogPage() {
         url = `/master-company/branches/restore/${auditId}`;
       } else if (entityName === "company") {
         url = `/master-company/company/restore/${auditId}`;
+      } else if (entityName === "driver") {
+        url = `/master-company/driver/restore/${auditId}`;
       } else if (entityName === "staff") {
         url = `/master-company/staff/restore/${auditId}`;
       } else if (entityName === "stations") {
@@ -147,6 +149,7 @@ export default function AuditLogPage() {
         toast.error("Restore not supported for this module yet.");
         return;
       }
+      
 
       await apiClient.post(url);
       toast.success("Data restored successfully!");

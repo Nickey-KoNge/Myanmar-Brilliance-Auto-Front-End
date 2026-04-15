@@ -17,6 +17,8 @@ import {
   faCity,
   faMapMarkerAlt,
   faBriefcase,
+  faEnvelope,
+  faLock,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
@@ -29,10 +31,13 @@ import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 import styles from "./DriverForm.module.css";
 import { apiClient } from "@/app/features/lib/api-client";
 
+// 🛑 email နှင့် password အား ဖြည့်စွက်ထားပါသည်
 export interface DriverFormData {
   driver_name: string;
   nrc: string;
   phone: string;
+  email: string;
+  password?: string;
   license_no: string;
   license_type: string;
   license_expiry: string;
@@ -61,14 +66,23 @@ interface StationOption {
   name: string;
 }
 
+interface DriverApiResponse {
+  stations?: StationOption[];
+}
+
 export const DriverForm: React.FC<DriverFormProps> = ({
   mode,
   initialData,
   onSubmit,
   loading = false,
 }) => {
-  const [preview, setPreview] = useState<string | null>(null);
-  const [stations, setStations] = useState<StationOption[]>([]); // Dynamic Station State
+ 
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [stations, setStations] = useState<StationOption[]>([]);
+
+  const preview =
+    selectedImage ||
+    (typeof initialData?.image === "string" ? initialData.image : null);
 
   const {
     register,
@@ -83,8 +97,11 @@ export const DriverForm: React.FC<DriverFormProps> = ({
   useEffect(() => {
     const fetchStations = async () => {
       try {
-        const response = await apiClient.get("/driver/list");
-        const res = response?.data || response;
+        const response = await apiClient.get("master-company/driver");
+
+        const res =
+          (response as { data?: DriverApiResponse })?.data ||
+          (response as DriverApiResponse);
 
         if (res && res.stations) {
           setStations(res.stations);
@@ -98,15 +115,14 @@ export const DriverForm: React.FC<DriverFormProps> = ({
   }, []);
 
   useEffect(() => {
-    if (initialData) {
+    if (initialData && Object.keys(initialData).length > 0) {
       reset(initialData);
-      if (initialData.image) setPreview(initialData.image);
     }
   }, [initialData, reset]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) setPreview(URL.createObjectURL(file));
+    if (file) setSelectedImage(URL.createObjectURL(file));
   };
 
   return (
@@ -134,10 +150,6 @@ export const DriverForm: React.FC<DriverFormProps> = ({
             >
               {mode === "create" ? "SAVE RECORD" : "UPDATE RECORD"}
             </ActionBtn>
-
-            {/* <ActionBtn type="submit" variant="action" loading={loading}>
-              {mode === "create" ? "SAVE RECORD" : "UPDATE RECORD"}
-            </ActionBtn> */}
           </div>
         }
       />
@@ -147,7 +159,6 @@ export const DriverForm: React.FC<DriverFormProps> = ({
         onSubmit={handleSubmit(onSubmit)}
         className={styles.formGridContainer}
       >
-        {/* Section: Professional Assignment */}
         <section className={styles.formGridBox}>
           <header className={styles.gridBoxTitle}>
             <span className={styles.pill} />
@@ -159,7 +170,6 @@ export const DriverForm: React.FC<DriverFormProps> = ({
           </header>
           <hr className={styles.cuttingLine} />
           <div className={styles.filterContainer}>
-            {/* ၂။ Dynamic Dropdown ချိတ်ဆက်မှု */}
             <DropdownInput
               label="Station ID"
               placeholder="Select Station"
@@ -192,7 +202,6 @@ export const DriverForm: React.FC<DriverFormProps> = ({
           </div>
         </section>
 
-        {/* Section: Core Identity Attributes */}
         <section className={styles.formGridBox}>
           <header className={styles.gridBoxTitle}>
             <span className={styles.pill} />
@@ -215,6 +224,16 @@ export const DriverForm: React.FC<DriverFormProps> = ({
               rightIcon={faIdCard}
               {...register("nrc", { required: "NRC is required" })}
             />
+            <TextInput
+              label="Email Address"
+              placeholder="example@mail.com"
+              rightIcon={faEnvelope}
+              error={errors.email?.message}
+              {...register("email", {
+                required: "Email is required",
+                pattern: { value: /^\S+@\S+$/i, message: "Invalid email" },
+              })}
+            />
             <DateInput label="Date of Birth" {...register("dob")} />
             <DropdownInput
               label="Gender"
@@ -228,7 +247,6 @@ export const DriverForm: React.FC<DriverFormProps> = ({
           </div>
         </section>
 
-        {/* Section: Security & Photo */}
         <section className={styles.formGridBox}>
           <header className={styles.gridBoxTitle}>
             <span className={styles.pill} />
@@ -250,11 +268,14 @@ export const DriverForm: React.FC<DriverFormProps> = ({
               />
               <label htmlFor="photo" className={styles.imageUploadBox}>
                 {preview ? (
-                  <img
-                    src={preview}
-                    alt="Preview"
-                    className={styles.previewImage}
-                  />
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={preview}
+                      alt="Preview"
+                      className={styles.previewImage}
+                    />
+                  </>
                 ) : (
                   <FontAwesomeIcon
                     icon={faUser}
@@ -267,9 +288,23 @@ export const DriverForm: React.FC<DriverFormProps> = ({
               </label>
             </div>
           </div>
+          <TextInput
+            label={mode === "create" ? "Secure Password" : "New Password"}
+            type="password"
+            placeholder={
+              mode === "create"
+                ? "••••••••"
+                : "Leave blank to keep old password"
+            }
+            rightIcon={faLock}
+            error={errors.password?.message}
+            {...register("password", {
+              required: mode === "create" ? "Password is required" : false,
+              minLength: { value: 6, message: "Min 6 characters" },
+            })}
+          />
         </section>
 
-        {/* Section: Contact & Address Details */}
         <section className={styles.formGridBox}>
           <header className={styles.gridBoxTitle}>
             <span className={styles.pill} />

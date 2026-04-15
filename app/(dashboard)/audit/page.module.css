@@ -250,8 +250,9 @@
 }
 
 .dataColumn {
-  min-width: 200px;
-  max-width: auto;
+  width: 400px;
+  min-width: 400px;
+  max-width: 400px;
 }
 
 /* Custom Scrollbar for changes */

@@ -8,6 +8,14 @@ import {
 } from "../components/DriverForm/DriverForm";
 import { apiClient } from "@/app/features/lib/api-client";
 
+interface ApiErrorResponse {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
+
 export default function AddDriverPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -30,11 +38,12 @@ export default function AddDriverPage() {
         }
       });
 
-      await apiClient.post("/driver/register", formData);
+      await apiClient.post("master-company/driver", formData);
       router.push("/driver");
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as ApiErrorResponse;
       const errorMsg =
-        error?.response?.data?.message || "An error occurred while saving.";
+        err?.response?.data?.message || "An error occurred while saving.";
       alert(errorMsg);
     } finally {
       setLoading(false);
