@@ -9,16 +9,12 @@ import {
   faLaptop,
   faUsers,
   faBuilding,
-  faWrench,
   faCar,
-  // faFileInvoice,
   faRoute,
   faKey,
-  // faDollarSign,
   faChevronRight,
   faChevronDown,
   faUser,
-  faTruckMoving,
   faIdCardClip,
   faBuildingFlag,
   faCodeBranch,
@@ -31,6 +27,7 @@ import {
   faLayerGroup,
   faCarSide,
   faAward,
+  faTaxi,
 } from "@fortawesome/free-solid-svg-icons";
 
 const NavItem = ({
@@ -137,6 +134,7 @@ export const SideNav = () => {
     if (path.match(/^\/(company|branch|station|groups)/)) return "Entity";
     if (path.match(/^\/(vehicle-brands|vehicle-models|vehicle)/))
       return "Fleet";
+    if (path.match(/^\/(rental-operations)/)) return "Rental";
     if (path.match(/^\/audit/)) return "Audit";
   };
 
@@ -191,7 +189,7 @@ export const SideNav = () => {
           subItems={[
             { icon: faUser, label: "Staff", href: "/staff" },
             // { icon: faUserTie, label: "Customer", href: "/customer" },
-            { icon: faTruckMoving, label: "Supplier", href: "/supplier" },
+            // { icon: faTruckMoving, label: "Supplier", href: "/supplier" },
             { icon: faIdCardClip, label: "Driver", href: "/driver" },
           ]}
           isOpen={openDropdown === "Personnel"}
@@ -241,7 +239,7 @@ export const SideNav = () => {
           onToggle={() => handleToggle("Fleet")}
           isHovered={isHovered}
         />
-        <NavItem icon={faWrench} label="Spare-part" href="/spare-part" />
+        {/* <NavItem icon={faWrench} label="Spare-part" href="/spare-part" /> */}
 
         {/* <div className={styles.sectionTitle}>
           <span className={styles.menuText}>Sale</span>
@@ -261,7 +259,21 @@ export const SideNav = () => {
         <div className={styles.sectionTitle}>
           <span className={styles.menuText}>Rental & Trip</span>
         </div>
-        <NavItem icon={faKey} label="Rental" href="/rental" />
+
+        <NavDropdown
+          icon={faKey}
+          label="Rental"
+          subItems={[
+            {
+              icon: faTaxi,
+              label: "Rental Op",
+              href: "/rental-op",
+            },
+          ]}
+          isOpen={openDropdown === "Rental"}
+          onToggle={() => handleToggle("Rental")}
+          isHovered={isHovered}
+        />
 
         <div className={styles.sectionTitle}>
           <span className={styles.menuText}>Audit</span>
