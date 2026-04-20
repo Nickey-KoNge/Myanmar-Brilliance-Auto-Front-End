@@ -100,15 +100,31 @@ export const StaffForm: React.FC<StaffFormProps> = ({
   });
 
   // Handle Initial Data Binding (For Update)
+  // useEffect(() => {
+  //   if (initialData) {
+  //     reset(initialData);
+  //     if (initialData.image) {
+  //       // eslint-disable-next-line react-hooks/set-state-in-effect
+  //       setPreview(initialData.image);
+  //     }
+  //   }
+  // }, [initialData, reset]);
+
   useEffect(() => {
-    if (initialData) {
-      reset(initialData);
-      if (initialData.image) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setPreview(initialData.image);
-      }
+    if (
+      initialData &&
+      roles.length > 0 &&
+      branches.length > 0 &&
+      companies.length > 0
+    ) {
+      reset({
+        ...initialData,
+        role: String(initialData.role),
+        branch: String(initialData.branch),
+        company: String(initialData.company),
+      });
     }
-  }, [initialData, reset]);
+  }, [initialData, roles, branches, companies, reset]);
 
   // Fetch Dropdown Options
   useEffect(() => {

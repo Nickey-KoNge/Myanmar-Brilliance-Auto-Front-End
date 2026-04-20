@@ -114,11 +114,23 @@ export const DriverForm: React.FC<DriverFormProps> = ({
     fetchStations();
   }, []);
 
+  // useEffect(() => {
+  //   if (initialData && Object.keys(initialData).length > 0) {
+  //     reset(initialData);
+  //   }
+  // }, [initialData, reset]);
+
   useEffect(() => {
-    if (initialData && Object.keys(initialData).length > 0) {
-      reset(initialData);
+    if (
+      initialData &&
+      stations.length > 0
+    ) {
+      reset({
+        ...initialData,
+        station_id: String(initialData.station_id),
+      });
     }
-  }, [initialData, reset]);
+  }, [initialData, stations, reset]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

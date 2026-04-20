@@ -93,11 +93,27 @@ export const VehicleForm: React.FC<VehicleFormProps> = ({
     defaultValues: initialData || {},
   });
 
+  // useEffect(() => {
+  //   if (initialData && Object.keys(initialData).length > 0) {
+  //     reset(initialData);
+  //   }
+  // }, [initialData, reset]);
+
   useEffect(() => {
-    if (initialData && Object.keys(initialData).length > 0) {
-      reset(initialData);
+    if (
+      initialData &&
+      stations.length > 0 &&
+      groups.length > 0 &&
+      vehicleModels.length > 0
+    ) {
+      reset({
+        ...initialData,
+        station_id: String(initialData.station_id),
+        group_id: String(initialData.group_id),
+        vehicle_model_id: String(initialData.vehicle_model_id),
+      });
     }
-  }, [initialData, reset]);
+  }, [initialData, stations, groups, vehicleModels, reset]);
 
   useEffect(() => {
     const fetchOptions = async () => {

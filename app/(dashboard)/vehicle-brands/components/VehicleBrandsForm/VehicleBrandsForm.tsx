@@ -56,13 +56,26 @@ export const VehicleBrandsForm: React.FC<VehicleBrandsFormProps> = ({
   });
 
   // Handle Initial Data Binding (For Update)
+  // useEffect(() => {
+  //   if (initialData) {
+  //     reset(initialData);
+  //     if (initialData.image) {
+  //       // eslint-disable-next-line react-hooks/set-state-in-effect
+  //       setPreview(initialData.image);
+  //     }
+  //   }
+  // }, [initialData, reset]);
+
   useEffect(() => {
-    if (initialData) {
-      reset(initialData);
-      if (initialData.image) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setPreview(initialData.image);
-      }
+    if (
+      initialData &&
+      initialData.vehicle_brand_name &&
+      initialData.vehicle_brand_name.length > 0
+    ) {
+      reset({
+        ...initialData,
+        vehicle_brand_name: String(initialData.vehicle_brand_name),
+      });
     }
   }, [initialData, reset]);
 
@@ -183,46 +196,46 @@ export const VehicleBrandsForm: React.FC<VehicleBrandsFormProps> = ({
           <hr className={styles.cuttingLine} />
 
           {/* <div className={styles.filterContainer}> */}
-            <TextInput
-              label="Vehicle Brand Name"
-              placeholder="TOYOTA"
-              rightIcon={faGlobe}
-              error={errors.vehicle_brand_name?.message}
-              {...register("vehicle_brand_name", {
-                required: "Vehicle brand name is required",
-              })}
-            />
+          <TextInput
+            label="Vehicle Brand Name"
+            placeholder="TOYOTA"
+            rightIcon={faGlobe}
+            error={errors.vehicle_brand_name?.message}
+            {...register("vehicle_brand_name", {
+              required: "Vehicle brand name is required",
+            })}
+          />
 
-            <TextInput
-              label="Country of Origin"
-              placeholder="JAPAN"
-              rightIcon={faGlobe}
-              error={errors.country_of_origin?.message}
-              {...register("country_of_origin", {
-                required: "Country of origin is required",
-              })}
-            />
+          <TextInput
+            label="Country of Origin"
+            placeholder="JAPAN"
+            rightIcon={faGlobe}
+            error={errors.country_of_origin?.message}
+            {...register("country_of_origin", {
+              required: "Country of origin is required",
+            })}
+          />
 
-            <TextInput
-              label="Manufacturer"
-              placeholder="TOYOTA INC"
-              rightIcon={faCity}
-              error={errors.manufacturer?.message}
-              {...register("manufacturer", {
-                required: "Manufacturer is required",
-              })}
-            />
+          <TextInput
+            label="Manufacturer"
+            placeholder="TOYOTA INC"
+            rightIcon={faCity}
+            error={errors.manufacturer?.message}
+            {...register("manufacturer", {
+              required: "Manufacturer is required",
+            })}
+          />
 
-            <TextInput
-              label="Description"
-              placeholder="Enter description..."
-              as="textarea"
-              rows={3}
-              error={errors.description?.message}
-              {...register("description", {
-                required: "Description is required",
-              })}
-            />
+          <TextInput
+            label="Description"
+            placeholder="Enter description..."
+            as="textarea"
+            rows={3}
+            error={errors.description?.message}
+            {...register("description", {
+              required: "Description is required",
+            })}
+          />
           {/* </div> */}
         </section>
       </form>

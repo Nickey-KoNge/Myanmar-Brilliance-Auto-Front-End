@@ -76,7 +76,11 @@ const DropdownInput = forwardRef<HTMLSelectElement, DropdownProps>(
 
             {!isLoading &&
               options.map((opt) => (
-                <option key={opt[valueKey]} value={opt[valueKey]}>
+                // <option key={opt[valueKey]} value={opt[valueKey]}>
+                //   {opt[nameKey]}
+                // </option>
+
+                <option key={opt[valueKey]} value={String(opt[valueKey])}>
                   {opt[nameKey]}
                 </option>
               ))}
