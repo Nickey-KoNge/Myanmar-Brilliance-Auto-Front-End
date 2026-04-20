@@ -145,11 +145,12 @@ export default function AuditLogPage() {
         url = `/master-vehicle/vehicle-models/restore/${auditId}`;
       } else if (entityName === "vehicle_brands") {
         url = `/master-vehicle/vehicle-brands/restore/${auditId}`;
+      } else if (entityName === "rental_operation") {
+        url = `/master-rental/rental-operation/restore/${auditId}`;
       } else {
         toast.error("Restore not supported for this module yet.");
         return;
       }
-      
 
       await apiClient.post(url);
       toast.success("Data restored successfully!");
