@@ -251,10 +251,22 @@ export const SideNav = () => {
         </div>
         <NavItem icon={faFileInvoice} label="Purchase" href="/purchase" /> */}
 
-        <div className={styles.sectionTitle}>
+        {/* <div className={styles.sectionTitle}>
           <span className={styles.menuText}>Trip</span>
-        </div>
-        <NavItem icon={faRoute} label="Trip" href="/trip" />
+        </div> */}
+
+        <NavDropdown  
+        icon={faRoute}
+        label="Trip"
+        subItems={[
+          { icon: faRoute, label: "Trip Routes", href: "/trip-routes" },
+          { icon: faCar, label: "Trip Assignment", href: "/trip-assignment" },
+        ]}
+        isOpen={openDropdown === "Trip"}
+        onToggle={() => handleToggle("Trip")}
+        isHovered={isHovered}
+      />
+        {/* <NavItem icon={faRoute} label="Trip" href="/trip" /> */}
 
         <div className={styles.sectionTitle}>
           <span className={styles.menuText}>Rental & Trip</span>
