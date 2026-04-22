@@ -28,6 +28,7 @@ import {
   faCarSide,
   faAward,
   faTaxi,
+  faMapLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 
 const NavItem = ({
@@ -260,7 +261,8 @@ export const SideNav = () => {
         label="Trip"
         subItems={[
           { icon: faRoute, label: "Trip Routes", href: "/trip-routes" },
-          { icon: faCar, label: "Trip Assignment", href: "/trip-assignment" },
+          { icon: faCar, label: "Trip Assignment", href: "/vehicle-driver-assign/vehicle-driver-list" },
+         
         ]}
         isOpen={openDropdown === "Trip"}
         onToggle={() => handleToggle("Trip")}

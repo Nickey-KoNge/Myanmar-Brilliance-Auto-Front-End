@@ -52,6 +52,9 @@ export default function TripRoutesPage() {
 const [modalOpen, setModalOpen] = useState(false);
 const [modalMode, setModalMode] = useState<"create" | "update">("create");
 const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
+  const [activeRecords, setActiveRecords] = useState(0);
+const [inactiveRecords, setInactiveRecords] = useState(0);
+const [lastEditedBy, setLastEditedBy] = useState("");
   const [deleteModal, setDeleteModal] = useState<{
     isOpen:boolean;
     id:string | null;
@@ -149,12 +152,16 @@ const fetchRoutes = async () => {
     const res = response as any;
 
     const routeList = res?.data || [];
-    const total = res?.data?.total ?? 0;
-    const totalPagesCount = res?.data?.totalPages ?? 1;
+    const total = res?.total ?? 0;
+    const totalPagesCount = res?.totalPages ?? 1;
 
     setRouteData(routeList);
     setTotalRecords(total);
     setTotalPages(totalPagesCount);
+    setActiveRecords(routeList.filter(r => r.status === "Active").length);
+    setInactiveRecords(routeList.filter(r => r.status === "Inactive").length);
+    setLastEditedBy("Unknown");
+
   } catch (err) {
     console.error("Failed to fetch routes:", err);
     setRouteData([]);
@@ -262,7 +269,7 @@ if (modalMode === "update" && selectedRoute) {
               </div>
             </div>
 
-            <div className={styles.bottomSection}>
+             <div className={styles.bottomSection}>
               <hr className={styles.cuttingLine} />
 
               <div className={styles.recentRecord}>
@@ -274,13 +281,25 @@ if (modalMode === "update" && selectedRoute) {
 
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLable}>Total Routes :</p>
+                    <p className={styles.statLable}>Total Trips :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
+                  </div>
+                  <div>
+                    <p className={styles.statLable}>Active Routes :</p>
+                    <p className={styles.textSuccess}>{activeRecords}</p>
+                  </div>
+                  <div>
+                    <p className={styles.statLable}>Inactive Routes :</p>
+                    <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>
               </div>
 
               <hr className={styles.cuttingLine} />
+              <p className={styles.lastEdited}>
+                Last Edited :{" "}
+                <span className={styles.spanText}>{lastEditedBy}</span>
+              </p>
             </div>
           </div>
         }
