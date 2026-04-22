@@ -28,30 +28,7 @@ import {
   faCarSide,
   faAward,
   faTaxi,
-  faMapLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
-
-const NavItem = ({
-  icon,
-  label,
-  href,
-}: {
-  icon: IconDefinition;
-  label: string;
-  href: string;
-}) => {
-  const pathname = usePathname();
-  // const isActive = pathname.startsWith(href);
-  const isActive = pathname === href || pathname.startsWith(`${href}/`);
-  return (
-    <Link href={href} style={{ textDecoration: "none" }}>
-      <div className={`${styles.menuItem} ${isActive ? styles.active : ""}`}>
-        <FontAwesomeIcon icon={icon} className={styles.icon} />
-        <span className={styles.menuText}>{label}</span>
-      </div>
-    </Link>
-  );
-};
 
 interface SubItem {
   icon: IconDefinition;
@@ -230,11 +207,6 @@ export const SideNav = () => {
               label: "Vehicle",
               href: "/vehicle",
             },
-            {
-              icon: faIdCardClip,
-              label: "Assignments",
-              href: "/vehicle-driver-assign",
-            },
           ]}
           isOpen={openDropdown === "Fleet"}
           onToggle={() => handleToggle("Fleet")}
@@ -256,25 +228,28 @@ export const SideNav = () => {
           <span className={styles.menuText}>Trip</span>
         </div> */}
 
-        <NavDropdown  
-        icon={faRoute}
-        label="Trip"
-        subItems={[
-          { icon: faRoute, label: "Trip Routes", href: "/trip-routes" },
-          { icon: faCar, label: "Trip Assignment", href: "/vehicle-driver-assign/vehicle-driver-list" },
-         
-        ]}
-        isOpen={openDropdown === "Trip"}
-        onToggle={() => handleToggle("Trip")}
-        isHovered={isHovered}
-      />
+        <NavDropdown
+          icon={faRoute}
+          label="Trip"
+          subItems={[
+            { icon: faRoute, label: "Trip Routes", href: "/trip-routes" },
+            {
+              icon: faCar,
+              label: "Trip Assignment",
+              href: "/vehicle-driver-assign/vehicle-driver-list",
+            },
+          ]}
+          isOpen={openDropdown === "Trip"}
+          onToggle={() => handleToggle("Trip")}
+          isHovered={isHovered}
+        />
         {/* <NavItem icon={faRoute} label="Trip" href="/trip" /> */}
 
         <div className={styles.sectionTitle}>
           <span className={styles.menuText}>Rental & Trip</span>
         </div>
-
-        <NavDropdown
+          {/* Rental OP list ထုပ်ရန်  */}
+        {/* <NavDropdown
           icon={faKey}
           label="Rental"
           subItems={[
@@ -287,7 +262,7 @@ export const SideNav = () => {
           isOpen={openDropdown === "Rental"}
           onToggle={() => handleToggle("Rental")}
           isHovered={isHovered}
-        />
+        /> */}
 
         <div className={styles.sectionTitle}>
           <span className={styles.menuText}>Audit</span>
