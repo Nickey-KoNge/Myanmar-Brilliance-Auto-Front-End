@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faSearch,
   faUser,
   faCar,
   faBolt,
@@ -17,6 +16,12 @@ import {
   faLink,
   faKey,
   faRoute,
+  faIdCard,
+  faTachometerAlt,
+  faBarcode,
+  faPalette,
+  faCheckCircle,
+  faSliders,
 } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import { apiClient } from "@/app/features/lib/api-client";
@@ -32,6 +37,7 @@ type Driver = {
   image: string;
   status: string;
   station_id?: string;
+  license_type?: string;
 };
 
 type Vehicle = {
@@ -68,8 +74,14 @@ type Assigned = {
   vehicle_name: string;
   vehicle_image: string;
   vehicle_license: string;
+  current_odometer: string;
   createdAt: string;
   status: string;
+  vehicle?: Vehicle | null;
+  driver?: Driver | null;
+  taxi_number: string;
+  city_taxi_no?: string;
+  color: string;
 };
 
 type PendingPair = {
@@ -82,7 +94,13 @@ type DragItem = { type: "driver" | "vehicle"; item: Driver | Vehicle };
 type StationApiResponse = { data?: Station[]; items?: Station[] };
 type DriverApiResponse = { items?: Driver[] };
 type VehicleApiResponse = { data?: Vehicle[] };
-type AssignedApiResponse = { data?: Assigned[] };
+
+type AssignedApiResponse = {
+  data?: Assigned[];
+  totalPages?: number;
+  currentPage?: number;
+  total?: number;
+};
 
 export default function VehicleDriverAssignPage() {
   const [stations, setStations] = useState<Station[]>([]);
@@ -96,8 +114,34 @@ export default function VehicleDriverAssignPage() {
   const [selectedVehicles, setSelectedVehicles] = useState<Vehicle[]>([]);
   const [draggedItem, setDraggedItem] = useState<DragItem | null>(null);
   const [isDragOverCenter, setIsDragOverCenter] = useState<boolean>(false);
-  const [hoveredAssign, setHoveredAssign] = useState<Assigned | null>(null);
+  const [hoveredAssign, setHoveredAssign] = useState<{
+    assign: Assigned;
+    type: "driver" | "vehicle";
+  } | null>(null);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [modalPos, setModalPos] = useState({ x: 0, y: 0 });
+  const hoverTimeout = useRef<NodeJS.Timeout | null>(null); // <-- Hover delay အတွက်
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+
+  const [assignFilters, setAssignFilters] = useState({
+    station_id: "",
+    status: "Ongoing",
+    startDate: "",
+    endDate: "",
+    driverKey: "",
+    vehicleKey: "",
+    licenseType: "",
+  });
+
+  const clearPendingPairs = () => {
+    if (confirm("ရွေးချယ်ထားသော တွဲဖက်မှုများကို ဖျက်ရန် သေချာပါသလား?")) {
+      setPendingPairs([]);
+      setSelectedDrivers([]);
+      setSelectedVehicles([]);
+    }
+  };
 
   useEffect(() => {
     const fetchStations = async () => {
@@ -113,31 +157,49 @@ export default function VehicleDriverAssignPage() {
     fetchStations();
   }, []);
 
-  const fetchMainData = useCallback(async () => {
-    try {
-      const [driversRes, vehiclesRes, assignedRes] = await Promise.all([
-        apiClient.get(
-          `http://localhost:3001/master-company/driver`,
-        ) as Promise<unknown>,
-        apiClient.get(
-          `http://localhost:3001/master-vehicle/vehicles`,
-        ) as Promise<unknown>,
-        apiClient.get(
-          `http://localhost:3001/master-vehicle/vehicle-driver-assign`,
-        ) as Promise<unknown>,
-      ]);
+  const fetchMainData = useCallback(
+    async (page: number = 1) => {
+      try {
+        const params = new URLSearchParams();
+        if (assignFilters.station_id)
+          params.append("station_id", assignFilters.station_id);
+        if (assignFilters.status) params.append("status", assignFilters.status);
+        if (assignFilters.startDate)
+          params.append("startDate", assignFilters.startDate);
+        if (assignFilters.endDate)
+          params.append("endDate", assignFilters.endDate);
+        if (inputValue.trim()) params.append("search", inputValue.trim());
 
-      setDrivers((driversRes as DriverApiResponse).items || []);
-      setVehicles((vehiclesRes as VehicleApiResponse).data || []);
-      setAssigned((assignedRes as AssignedApiResponse).data || []);
-    } catch (error: unknown) {
-      console.error(error);
-    }
-  }, []);
+        params.append("page", page.toString());
+        params.append("limit", "5");
+
+        const [driversRes, vehiclesRes, assignedRes] = await Promise.all([
+          apiClient.get(
+            `http://localhost:3001/master-company/driver`,
+          ) as Promise<DriverApiResponse>,
+          apiClient.get(
+            `http://localhost:3001/master-vehicle/vehicles`,
+          ) as Promise<VehicleApiResponse>,
+          apiClient.get(
+            `http://localhost:3001/master-vehicle/vehicle-driver-assign?${params.toString()}`,
+          ) as Promise<AssignedApiResponse>,
+        ]);
+
+        setDrivers(driversRes.items || []);
+        setVehicles(vehiclesRes.data || []);
+        setAssigned(assignedRes.data || []);
+        setCurrentPage(assignedRes.currentPage || page);
+        setTotalPages(assignedRes.totalPages || 1);
+      } catch (error: unknown) {
+        console.error(error);
+      }
+    },
+    [assignFilters, inputValue],
+  );
 
   useEffect(() => {
     const loadData = async () => {
-      await fetchMainData();
+      await fetchMainData(1);
       setSelectedDrivers([]);
       setSelectedVehicles([]);
       setPendingPairs([]);
@@ -171,10 +233,29 @@ export default function VehicleDriverAssignPage() {
   }, [searchTags, inputValue]);
 
   const availableDrivers = useMemo(() => {
-    let filtered = drivers
-      .filter((d) => d.status === "Active")
-      .filter((d) => !pendingPairs.some((p) => p.driver?.id === d.id));
+    let filtered = drivers.filter(
+      (d) =>
+        d.status === "Active" &&
+        !pendingPairs.some((p) => p.driver?.id === d.id),
+    );
 
+    // Sidebar Driver Filter အလုပ်လုပ်ရန်
+    if (assignFilters.driverKey) {
+      const key = assignFilters.driverKey.toLowerCase();
+      filtered = filtered.filter(
+        (d) =>
+          (d.driver_name || "").toLowerCase().includes(key) ||
+          (d.nrc || "").toLowerCase().includes(key) ||
+          (d.phone || "").toLowerCase().includes(key),
+      );
+    }
+    if (assignFilters.licenseType) {
+      filtered = filtered.filter(
+        (d) => d.license_type === assignFilters.licenseType,
+      );
+    }
+
+    // အရင်ကရှိပြီးသား Global Search Tags တွေ အလုပ်လုပ်ရန်
     if (activeFilters.length > 0) {
       const stationTags = activeFilters.filter((tag) =>
         stations.some((s) =>
@@ -200,7 +281,6 @@ export default function VehicleDriverAssignPage() {
             stationName.includes(tag.toLowerCase()),
           );
         }
-
         let passOther = true;
         if (otherTags.length > 0) {
           passOther = otherTags.some((tag) => {
@@ -211,18 +291,38 @@ export default function VehicleDriverAssignPage() {
             );
           });
         }
-
         return passStation && passOther;
       });
     }
     return filtered;
-  }, [drivers, pendingPairs, activeFilters, stations]);
+  }, [
+    drivers,
+    pendingPairs,
+    activeFilters,
+    stations,
+    assignFilters.driverKey,
+    assignFilters.licenseType,
+  ]);
 
   const availableVehicles = useMemo(() => {
-    let filtered = vehicles
-      .filter((v) => v.status === "Active")
-      .filter((v) => !pendingPairs.some((p) => p.vehicle?.id === v.id));
+    let filtered = vehicles.filter(
+      (v) =>
+        v.status === "Active" &&
+        !pendingPairs.some((p) => p.vehicle?.id === v.id),
+    );
 
+    // Sidebar Vehicle Filter အလုပ်လုပ်ရန်
+    if (assignFilters.vehicleKey) {
+      const key = assignFilters.vehicleKey.toLowerCase();
+      filtered = filtered.filter(
+        (v) =>
+          (v.vehicle_name || "").toLowerCase().includes(key) ||
+          (v.license_plate || "").toLowerCase().includes(key) ||
+          (v.taxi_number || "").toLowerCase().includes(key),
+      );
+    }
+
+    // အရင်ကရှိပြီးသား Global Search Tags တွေ အလုပ်လုပ်ရန်
     if (activeFilters.length > 0) {
       const stationTags = activeFilters.filter((tag) =>
         stations.some((s) =>
@@ -248,7 +348,6 @@ export default function VehicleDriverAssignPage() {
             stationName.includes(tag.toLowerCase()),
           );
         }
-
         let passOther = true;
         if (otherTags.length > 0) {
           passOther = otherTags.some((tag) => {
@@ -259,17 +358,52 @@ export default function VehicleDriverAssignPage() {
             );
           });
         }
-
         return passStation && passOther;
       });
     }
     return filtered;
-  }, [vehicles, pendingPairs, activeFilters, stations]);
+  }, [
+    vehicles,
+    pendingPairs,
+    activeFilters,
+    stations,
+    assignFilters.vehicleKey,
+  ]);
 
-  const ongoingTrips = useMemo(
-    () => assigned.filter((a) => a.status === "Ongoing"),
-    [assigned],
-  );
+  // အလယ်က Live Board Data များကိုပါ Filter လုပ်ပေးရန်
+  const displayTrips = useMemo(() => {
+    let filtered = assigned;
+    if (assignFilters.driverKey) {
+      const key = assignFilters.driverKey.toLowerCase();
+      filtered = filtered.filter(
+        (a) =>
+          (a.driver_name || "").toLowerCase().includes(key) ||
+          (a.driver_nrc || "").toLowerCase().includes(key) ||
+          (a.phone || "").toLowerCase().includes(key),
+      );
+    }
+    if (assignFilters.vehicleKey) {
+      const key = assignFilters.vehicleKey.toLowerCase();
+      filtered = filtered.filter(
+        (a) =>
+          (a.vehicle_name || "").toLowerCase().includes(key) ||
+          (a.vehicle_license || "").toLowerCase().includes(key) ||
+          (a.taxi_number || "").toLowerCase().includes(key) ||
+          (a.city_taxi_no || "").toLowerCase().includes(key),
+      );
+    }
+    if (assignFilters.licenseType) {
+      filtered = filtered.filter(
+        (a) => a.driver_license_type === assignFilters.licenseType,
+      );
+    }
+    return filtered;
+  }, [
+    assigned,
+    assignFilters.driverKey,
+    assignFilters.vehicleKey,
+    assignFilters.licenseType,
+  ]);
 
   const toggleSelection = (
     type: "driver" | "vehicle",
@@ -277,6 +411,7 @@ export default function VehicleDriverAssignPage() {
   ) => {
     let nextDrivers = [...selectedDrivers];
     let nextVehicles = [...selectedVehicles];
+
     if (type === "driver") {
       if (nextDrivers.some((d) => d.id === item.id))
         nextDrivers = nextDrivers.filter((d) => d.id !== item.id);
@@ -286,6 +421,7 @@ export default function VehicleDriverAssignPage() {
         nextVehicles = nextVehicles.filter((v) => v.id !== item.id);
       else nextVehicles.push(item as Vehicle);
     }
+
     if (
       nextDrivers.length > 0 &&
       nextVehicles.length > 0 &&
@@ -360,11 +496,13 @@ export default function VehicleDriverAssignPage() {
     setDraggedItem({ type, item });
     e.dataTransfer.effectAllowed = "move";
   };
+
   const handleCenterDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOverCenter(true);
     e.dataTransfer.dropEffect = "move";
   };
+
   const handleCenterDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOverCenter(false);
@@ -381,8 +519,8 @@ export default function VehicleDriverAssignPage() {
         { driver_id: pair.driver.id, vehicle_id: pair.vehicle.id },
       );
       setPendingPairs((prev) => prev.filter((p) => p.id !== pair.id));
-      await fetchMainData();
-    } catch (error) {
+      await fetchMainData(currentPage);
+    } catch (error: unknown) {
       console.error(error);
       alert("Assignment failed!");
     }
@@ -402,8 +540,8 @@ export default function VehicleDriverAssignPage() {
       );
       const validIds = validPairs.map((p) => p.id);
       setPendingPairs((prev) => prev.filter((p) => !validIds.includes(p.id)));
-      await fetchMainData();
-    } catch (error) {
+      await fetchMainData(currentPage);
+    } catch (error: unknown) {
       console.error(error);
       alert("Some assignments failed!");
     }
@@ -414,8 +552,8 @@ export default function VehicleDriverAssignPage() {
       await apiClient.patch(
         `http://localhost:3001/master-vehicle/vehicle-driver-assign/${assignId}/complete`,
       );
-      await fetchMainData();
-    } catch (error) {
+      await fetchMainData(currentPage);
+    } catch (error: unknown) {
       console.error(error);
     }
   };
@@ -427,6 +565,26 @@ export default function VehicleDriverAssignPage() {
     return date.toDateString() === now.toDateString()
       ? date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })
       : date.toLocaleDateString("en-CA");
+  };
+
+  const handleMouseEnter = (
+    e: React.MouseEvent,
+    assign: Assigned,
+    type: "driver" | "vehicle",
+  ) => {
+    const clientX = e.clientX;
+    const clientY = e.clientY;
+    if (hoverTimeout.current) clearTimeout(hoverTimeout.current);
+
+    hoverTimeout.current = setTimeout(() => {
+      setHoveredAssign({ assign, type });
+      setModalPos({ x: clientX, y: clientY });
+    }, 300); // 300ms ကြာမှ ပေါ်မည်
+  };
+
+  const handleMouseLeave = () => {
+    if (hoverTimeout.current) clearTimeout(hoverTimeout.current);
+    setHoveredAssign(null);
   };
 
   return (
@@ -450,16 +608,6 @@ export default function VehicleDriverAssignPage() {
 
         <div className={styles.headerRight}>
           <div className={styles.filterSection}>
-            <div className={styles.filterHeader}>
-              <FontAwesomeIcon icon={faFilter} className={styles.iconColor} />
-              <span className={styles.filterTitle}>Filters</span>
-              {searchTags.length > 0 && (
-                <button onClick={clearAllTags} className={styles.clearAllBtn}>
-                  <b>Clear all</b>
-                </button>
-              )}
-            </div>
-
             <div className={styles.tagsAndSearchContainer}>
               {searchTags.map((tag) => (
                 <span key={tag} className={styles.searchTag}>
@@ -474,7 +622,7 @@ export default function VehicleDriverAssignPage() {
 
               <div className={styles.searchWrapper}>
                 <FontAwesomeIcon
-                  icon={faSearch}
+                  icon={faFilter}
                   className={styles.searchIcon}
                 />
                 <input
@@ -486,12 +634,31 @@ export default function VehicleDriverAssignPage() {
                   className={styles.searchInput}
                 />
               </div>
+              {searchTags.length > 0 && (
+                <button onClick={clearAllTags} className={styles.clearAllBtn}>
+                  <b>Clear all</b>
+                </button>
+              )}
+              <div className={styles.filterbox}>
+                <div
+                  className={styles.filterHeader}
+                  onClick={() => setIsFilterOpen(!isFilterOpen)}
+                  style={{ cursor: "pointer", userSelect: "none" }}
+                >
+                  <FontAwesomeIcon
+                    icon={faSliders}
+                    className={styles.iconColor}
+                  />
+                  <span className={styles.filterTitle}> Filters</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </header>
 
       <main className={styles.mainBoard}>
+        {/* Drivers Column */}
         <section className={styles.column}>
           <div className={styles.colHeader}>
             <h2 className={styles.colTitle}>
@@ -549,6 +716,7 @@ export default function VehicleDriverAssignPage() {
           </div>
         </section>
 
+        {/* Center Live Board */}
         <section
           onDragOver={handleCenterDragOver}
           onDragLeave={() => setIsDragOverCenter(false)}
@@ -567,21 +735,24 @@ export default function VehicleDriverAssignPage() {
                 <div className={styles.sectionTitle}>
                   ပြင်ဆင်ဆဲ - {pendingPairs.length} တွဲ
                 </div>
-                {pendingPairs.some((p) => p.driver && p.vehicle) && (
+                <div className={styles.actionButtons}>
+                  <button
+                    onClick={clearPendingPairs}
+                    className={styles.clearPendingBtn}
+                  >
+                    <FontAwesomeIcon icon={faUndo} /> ဖျက်မည်
+                  </button>
                   <button
                     onClick={confirmAllAssignments}
                     className={styles.assignAllBtn}
                   >
-                    <FontAwesomeIcon
-                      icon={faCheckDouble}
-                      className={styles.btnjoin}
-                    />{" "}
-                    အားလုံးချိတ်မည်
+                    <FontAwesomeIcon icon={faCheckDouble} /> အားလုံးချိတ်မည်
                   </button>
-                )}
+                </div>
               </div>
             )}
 
+            {/* Pending Pairs Render */}
             {pendingPairs.map((pair) => {
               const isComplete = pair.driver && pair.vehicle;
               return (
@@ -687,30 +858,32 @@ export default function VehicleDriverAssignPage() {
               );
             })}
 
-            {ongoingTrips.map((assign) => (
+            {/* Display Assigned Trips */}
+            {displayTrips.map((assign) => (
               <div key={assign.id} className={styles.ongoingCard}>
                 <div className={styles.ongoingTop}>
                   <span className={styles.ongoingTime}>
                     {formatSmartDate(assign.createdAt)}
                   </span>
-                  <button
-                    onClick={() => completeTrip(assign.id)}
-                    className={styles.completeBtn}
-                  >
-                    <FontAwesomeIcon icon={faUndo} /> ပြီးဆုံး
-                  </button>
+                  {assign.status === "Ongoing" && (
+                    <button
+                      onClick={() => completeTrip(assign.id)}
+                      className={styles.completeBtn}
+                    >
+                      <FontAwesomeIcon icon={faUndo} /> ပြီးဆုံး
+                    </button>
+                  )}
                 </div>
+
                 <div className={styles.ongoingContent}>
+                  {/* Driver ကို ထောက်လျှင် */}
                   <div
                     className={styles.ongoingItem}
-                    onMouseEnter={(e) => {
-                      setHoveredAssign(assign);
-                      setModalPos({ x: e.clientX, y: e.clientY });
-                    }}
-                    onMouseLeave={() => setHoveredAssign(null)}
+                    onMouseEnter={(e) => handleMouseEnter(e, assign, "driver")}
+                    onMouseLeave={handleMouseLeave}
                   >
                     <Image
-                      src={assign.driver_image}
+                      src={assign.driver_image || "/fallback-driver.png"}
                       alt="D"
                       width={32}
                       height={32}
@@ -719,13 +892,20 @@ export default function VehicleDriverAssignPage() {
                     />
                     <span>{assign.driver_name}</span>
                   </div>
+
                   <FontAwesomeIcon
                     icon={faLink}
                     className={styles.ongoingLink}
                   />
-                  <div className={styles.ongoingItem}>
+
+                  {/* Vehicle ကို ထောက်လျှင် */}
+                  <div
+                    className={styles.ongoingItem}
+                    onMouseEnter={(e) => handleMouseEnter(e, assign, "vehicle")}
+                    onMouseLeave={handleMouseLeave}
+                  >
                     <Image
-                      src={assign.vehicle_image}
+                      src={assign.vehicle_image || "/fallback-vehicle.png"}
                       alt="V"
                       width={32}
                       height={32}
@@ -737,13 +917,39 @@ export default function VehicleDriverAssignPage() {
                 </div>
               </div>
             ))}
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className={styles.paginationWrapper}>
+                <button
+                  className={styles.pageBtn}
+                  disabled={currentPage === 1}
+                  onClick={() => fetchMainData(currentPage - 1)}
+                >
+                  &laquo; ယခင်
+                </button>
+
+                <span className={styles.pageInfo}>
+                  စာမျက်နှာ {currentPage} / {totalPages}
+                </span>
+
+                <button
+                  className={styles.pageBtn}
+                  disabled={currentPage === totalPages}
+                  onClick={() => fetchMainData(currentPage + 1)}
+                >
+                  နောက်သို့ &raquo;
+                </button>
+              </div>
+            )}
           </div>
         </section>
 
+        {/* Vehicles Column */}
         <section className={styles.column}>
           <div className={styles.colHeader}>
             <h2 className={styles.colTitle}>
-              <FontAwesomeIcon icon={faCar} className={styles.iconColor} />
+              <FontAwesomeIcon icon={faCar} className={styles.iconColor} />{" "}
               ကားများ
               <span className={styles.badgeCount}>
                 {availableVehicles.length}
@@ -798,35 +1004,322 @@ export default function VehicleDriverAssignPage() {
             })}
           </div>
         </section>
+
+        {/* Sidebar Filters */}
+        {isFilterOpen && (
+          <aside className={styles.sideFilterCard}>
+            <div className={styles.filterCardHeader}>
+              <span>
+                <FontAwesomeIcon icon={faFilter} /> စစ်ထုတ်မှုများ
+              </span>
+              <button
+                onClick={() => {
+                  setAssignFilters({
+                    station_id: "",
+                    status: "Ongoing",
+                    startDate: "",
+                    endDate: "",
+                    driverKey: "",
+                    vehicleKey: "",
+                    licenseType: "",
+                  });
+                  setTimeout(() => fetchMainData(1), 100);
+                }}
+                className={styles.resetText}
+              >
+                ရှင်းလင်းမည်
+              </button>
+            </div>
+
+            {/* <div className={styles.filterGroup}>
+              <p className={styles.groupLabel}>ယာဉ်မောင်းရှာရန်</p>
+              <input
+                type="text"
+                className={styles.filterSelect}
+                placeholder="အမည်, ဖုန်း, မှတ်ပုံတင်..."
+                value={assignFilters.driverKey}
+                onChange={(e) =>
+                  setAssignFilters({
+                    ...assignFilters,
+                    driverKey: e.target.value,
+                  })
+                }
+              />
+            </div>
+
+            <div className={styles.filterGroup}>
+              <p className={styles.groupLabel}>ကားရှာရန်</p>
+              <input
+                type="text"
+                className={styles.filterSelect}
+                placeholder="ကားနံပါတ်, Taxi No..."
+                value={assignFilters.vehicleKey}
+                onChange={(e) =>
+                  setAssignFilters({
+                    ...assignFilters,
+                    vehicleKey: e.target.value,
+                  })
+                }
+              />
+            </div> */}
+            <div className={styles.filterGroup}>
+              <p className={styles.groupLabel}>စတေရှင် (Station)</p>
+              <select
+                className={styles.filterSelect}
+                value={assignFilters.station_id}
+                onChange={(e) =>
+                  setAssignFilters({
+                    ...assignFilters,
+                    station_id: e.target.value,
+                  })
+                }
+              >
+                <option value="">အားလုံး (All)</option>
+                {stations.map((st) => (
+                  <option key={st.id} value={st.id}>
+                    {st.name || st.station_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className={styles.filterGroup}>
+              <p className={styles.groupLabel}>ရက်စွဲ (Date Range)</p>
+              <span className={styles.dateTo}>From (အစ ရက်) -</span>
+              <div className={styles.dateInputs}>
+                <input
+                  type="date"
+                  className={styles.filterInput}
+                  value={assignFilters.startDate}
+                  onChange={(e) =>
+                    setAssignFilters({
+                      ...assignFilters,
+                      startDate: e.target.value,
+                    })
+                  }
+                />
+                <span className={styles.dateTo}>To (အဆုံး ရက်) -</span>
+                <input
+                  type="date"
+                  className={styles.filterInput}
+                  value={assignFilters.endDate}
+                  onChange={(e) =>
+                    setAssignFilters({
+                      ...assignFilters,
+                      endDate: e.target.value,
+                    })
+                  }
+                />
+              </div>
+            </div>
+
+            {/* လိုင်စင်အမျိုးအစားကို Radio Button အဖြစ်ပြောင်းထားသည် */}
+            <div className={styles.filterGroup}>
+              <p className={styles.groupLabel}>လိုင်စင်အမျိုးအစား</p>
+              <div className={styles.radioGroupGrid}>
+                <label className={styles.radioLabel}>
+                  <input
+                    type="radio"
+                    name="licenseType"
+                    value=""
+                    checked={assignFilters.licenseType === ""}
+                    onChange={(e) =>
+                      setAssignFilters({
+                        ...assignFilters,
+                        licenseType: e.target.value,
+                      })
+                    }
+                  />
+                  အားလုံး
+                </label>
+                {Array.from(
+                  new Set(drivers.map((d) => d.license_type).filter(Boolean)),
+                ).map((type) => (
+                  <label key={type} className={styles.radioLabel}>
+                    <input
+                      type="radio"
+                      name="licenseType"
+                      value={type}
+                      checked={assignFilters.licenseType === type}
+                      onChange={(e) =>
+                        setAssignFilters({
+                          ...assignFilters,
+                          licenseType: e.target.value,
+                        })
+                      }
+                    />
+                    {type}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <hr
+              style={{
+                borderColor: "var(--border-color)",
+                margin: "10px 0",
+                opacity: 0.5,
+              }}
+            />
+
+            {/* အခြေအနေ (Status) ကို Radio Button အဖြစ်ပြောင်းထားသည် */}
+            <div className={styles.filterGroup}>
+              <p className={styles.groupLabel}>အခြေအနေ (Status)</p>
+              <div className={styles.radioGroup}>
+                {[
+                  { label: "အားလုံး (All)", value: "" },
+                  { label: "Ongoing (ချိတ်ဆက်ဆဲ)", value: "Ongoing" },
+                  { label: "Completed (ပြီးဆုံး)", value: "Completed" },
+                ].map((st) => (
+                  <label key={st.value} className={styles.radioLabel}>
+                    <input
+                      type="radio"
+                      name="status"
+                      value={st.value}
+                      checked={assignFilters.status === st.value}
+                      onChange={(e) =>
+                        setAssignFilters({
+                          ...assignFilters,
+                          status: e.target.value,
+                        })
+                      }
+                    />
+                    {st.label}
+                  </label>
+                ))}
+              </div>
+            </div>
+            {/* 
+            
+
+            <button
+              className={styles.applyFilterBtn}
+              onClick={() => fetchMainData(1)}
+            >
+              <FontAwesomeIcon icon={faSearch} /> ရှာမည်
+            </button> */}
+          </aside>
+        )}
       </main>
 
+      {/* Driver & Vehicle Info Modal On Hover */}
       {hoveredAssign && (
         <div
           className={styles.floatingModal}
-          style={{ top: modalPos.y - 140, left: modalPos.x + 15 }}
+          style={{ top: modalPos.y - 140, left: modalPos.x + 20 }}
         >
-          <div className={styles.modalTitle}>
-            <Image
-              src={hoveredAssign.driver_image}
-              alt="Driver"
-              width={36}
-              height={36}
-              className={styles.modalImg}
-              unoptimized
-            />{" "}
-            {hoveredAssign.driver_name}
-          </div>
-          <div className={styles.modalRow}>
-            <FontAwesomeIcon
-              icon={faAddressCard}
-              className={styles.modalIcon}
-            />{" "}
-            <strong>{hoveredAssign.driver_nrc}</strong>
-          </div>
-          <div className={styles.modalRow}>
-            <FontAwesomeIcon icon={faPhone} className={styles.modalIcon} />{" "}
-            <span>{hoveredAssign.phone}</span>
-          </div>
+          {hoveredAssign.type === "driver" && (
+            <div className={styles.modalSection}>
+              <div className={styles.modalSectionTitle}>
+                <FontAwesomeIcon
+                  icon={faCheckCircle}
+                  className={styles.checkIcon}
+                />{" "}
+                ယာဉ်မောင်း အချက်အလက်
+              </div>
+              <div className={styles.modalHeader}>
+                <Image
+                  src={
+                    hoveredAssign.assign.driver_image || "/fallback-driver.png"
+                  }
+                  alt="Driver"
+                  width={40}
+                  height={40}
+                  className={styles.modalImg}
+                  unoptimized
+                />
+                <span className={styles.modalName}>
+                  {hoveredAssign.assign.driver_name}
+                </span>
+              </div>
+              <div className={styles.modalRow}>
+                <FontAwesomeIcon
+                  icon={faAddressCard}
+                  className={styles.modalIcon}
+                />
+                <strong>{hoveredAssign.assign.driver_nrc}</strong>
+              </div>
+              <div className={styles.modalRow}>
+                <FontAwesomeIcon icon={faPhone} className={styles.modalIcon} />
+                <span>{hoveredAssign.assign.phone}</span>
+              </div>
+              <div className={styles.modalRow}>
+                <FontAwesomeIcon icon={faIdCard} className={styles.modalIcon} />
+                <span>
+                  လိုင်စင်:{" "}
+                  <span className={styles.modalHighlight}>
+                    {hoveredAssign.assign.driver_license} (
+                    {hoveredAssign.assign.driver_license_type || "-"})
+                  </span>
+                </span>
+              </div>
+            </div>
+          )}
+
+          {hoveredAssign.type === "vehicle" && (
+            <div className={styles.modalSection}>
+              <div className={styles.modalSectionTitle}>
+                <FontAwesomeIcon
+                  icon={faCheckCircle}
+                  className={styles.checkIcon}
+                />{" "}
+                ကား အချက်အလက်
+              </div>
+              <div className={styles.modalHeader}>
+                <Image
+                  src={
+                    hoveredAssign.assign.vehicle_image ||
+                    "/fallback-vehicle.png"
+                  }
+                  alt="Vehicle"
+                  width={40}
+                  height={40}
+                  className={`${styles.modalImg} ${styles.modalImgV}`}
+                  unoptimized
+                />
+                <span className={styles.modalName}>
+                  {hoveredAssign.assign.vehicle_name}
+                </span>
+              </div>
+              <div className={styles.modalRow}>
+                <FontAwesomeIcon icon={faCar} className={styles.modalIcon} />
+                <strong>{hoveredAssign.assign.vehicle_license}</strong>
+              </div>
+              <div className={styles.modalRow}>
+                <FontAwesomeIcon
+                  icon={faTachometerAlt}
+                  className={styles.modalIcon}
+                />
+                <span>
+                  Odo:{" "}
+                  <span className={styles.modalHighlight}>
+                    {hoveredAssign.assign.current_odometer || "-"} km
+                  </span>
+                </span>
+              </div>
+              <div className={styles.modalRow}>
+                <FontAwesomeIcon
+                  icon={faBarcode}
+                  className={styles.modalIcon}
+                />
+                <span>
+                  Taxi No:{" "}
+                  <span className={styles.modalHighlight}>
+                    {hoveredAssign.assign.taxi_number ||
+                      hoveredAssign.assign.city_taxi_no ||
+                      "-"}
+                  </span>
+                </span>
+              </div>
+              <div className={styles.modalRow}>
+                <FontAwesomeIcon
+                  icon={faPalette}
+                  className={styles.modalIcon}
+                />
+                <span>အရောင်: {hoveredAssign.assign.color || "-"}</span>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
