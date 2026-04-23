@@ -115,6 +115,7 @@ export const VehicleForm: React.FC<VehicleFormProps> = ({
     }
   }, [initialData, stations, groups, vehicleModels, reset]);
 
+
   useEffect(() => {
     const fetchOptions = async () => {
       try {
@@ -250,13 +251,24 @@ export const VehicleForm: React.FC<VehicleFormProps> = ({
                 id: group.id || `group-opt-${idx}`,
                 name: group.group_name,
               }))}
-              valueKey="id"
-              nameKey="name"
+              // valueKey="id"
+              // nameKey="name"
               {...register("group_id", {
                 required: mode === "create" ? "Group is required" : false,
               })}
               error={errors.group_id?.message as string}
             />
+
+            {/* <DropdownInput
+              label="Group"
+              placeholder="Select Group"
+              options={groups.map((g) => ({
+                id: g.id,
+                name: g.group_name,
+              }))}
+              error={errors.group_id?.message}
+              {...register("group_id", { required: "Group is required" })}
+            /> */}
 
             <DropdownInput
               label="Vehicle Model"

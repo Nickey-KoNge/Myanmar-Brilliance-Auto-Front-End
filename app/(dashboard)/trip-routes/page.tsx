@@ -160,7 +160,7 @@ const fetchRoutes = async () => {
     setTotalPages(totalPagesCount);
     setActiveRecords(routeList.filter(r => r.status === "Active").length);
     setInactiveRecords(routeList.filter(r => r.status === "Inactive").length);
-    setLastEditedBy("Unknown");
+    setLastEditedBy(res?.lastEditedBy || "N/A");
 
   } catch (err) {
     console.error("Failed to fetch routes:", err);
