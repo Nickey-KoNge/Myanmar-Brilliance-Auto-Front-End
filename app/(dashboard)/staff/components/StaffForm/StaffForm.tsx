@@ -304,7 +304,6 @@ export const StaffForm: React.FC<StaffFormProps> = ({
               <label htmlFor="photo" className={styles.imageUploadBox}>
                 {preview ? (
                   <>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={preview}
                       alt="Preview"
@@ -384,7 +383,7 @@ export const StaffForm: React.FC<StaffFormProps> = ({
               {...register("city")}
             />
             <TextInput
-              label="Street Address"
+              label="Address"
               placeholder="No. (123), Street Name..."
               as="textarea"
               rows={3}

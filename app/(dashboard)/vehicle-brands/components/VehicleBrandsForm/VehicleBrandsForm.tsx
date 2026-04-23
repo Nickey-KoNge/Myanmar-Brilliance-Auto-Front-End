@@ -55,17 +55,6 @@ export const VehicleBrandsForm: React.FC<VehicleBrandsFormProps> = ({
     defaultValues: initialData || {},
   });
 
-  // Handle Initial Data Binding (For Update)
-  // useEffect(() => {
-  //   if (initialData) {
-  //     reset(initialData);
-  //     if (initialData.image) {
-  //       // eslint-disable-next-line react-hooks/set-state-in-effect
-  //       setPreview(initialData.image);
-  //     }
-  //   }
-  // }, [initialData, reset]);
-
   useEffect(() => {
     if (
       initialData &&
@@ -79,7 +68,6 @@ export const VehicleBrandsForm: React.FC<VehicleBrandsFormProps> = ({
     }
   }, [initialData, reset]);
 
-  // Cleanup preview URL (avoid memory leaks)
   useEffect(() => {
     return () => {
       if (preview && preview.startsWith("blob:")) {

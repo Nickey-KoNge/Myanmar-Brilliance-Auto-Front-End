@@ -20,7 +20,6 @@
   align-items: center;
   gap: calc(var(--gap) / 2);
   text-transform: uppercase;
-  /* margin-bottom: 0.5rem; */
   color: var(--text-main, #fff);
 }
 
@@ -74,8 +73,8 @@
 
 .imageUploadWrapper {
   position: relative;
-  width: 234px;
-  height: 234px;
+  width: 230px;
+  height: 230px;
   margin: 0 auto;
 }
 
@@ -112,11 +111,3 @@
   padding: 8px;
   border-radius: 4px;
 }
-/* 
-.error {
-  color: #ff4d4f;
-  font-size: 11px;
-  font-weight: 500;
-  margin-top: 5px;
-  text-align: center;
-} */
