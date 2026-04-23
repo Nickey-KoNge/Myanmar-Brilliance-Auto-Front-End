@@ -1,0 +1,110 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4); /* Delete backdrop color */
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: var(--bg-delete-card); /* Delete modal background */
+  width: 90%;
+  max-width: 462px; /* standard width as your delete modal */
+  border-radius: 8px;
+  padding: 30px;
+  position: relative;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  animation: slideUp 0.3s ease;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.closeBtn:hover {
+  transform: scale(1.1);
+  color: #ff4d4f; /* close button hover color */
+}
+
+.iconWrapper {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-delete); /* Circle background color */
+  border-radius: 50%;
+}
+
+.warningIcon {
+  font-size: 24px;
+  color: #f59e0b; /* Icon itself can stay amber/orange for warning */
+}
+
+.title {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--text-main); /* Your main text variable */
+  font-weight: 700;
+}
+
+.message {
+  color: var(--text-main); /* Using your text variable */
+  opacity: 0.8;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  white-space: pre-line;
+}
+
+.confirmBtn {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--color-primary); 
+  color: var(--btn-text);
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.confirmBtn:hover {
+  opacity: 0.9;
+}
+
+/* Animations matching your delete modal style */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

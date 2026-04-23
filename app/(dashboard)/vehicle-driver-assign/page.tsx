@@ -1031,37 +1031,6 @@ export default function VehicleDriverAssignPage() {
               </button>
             </div>
 
-            {/* <div className={styles.filterGroup}>
-              <p className={styles.groupLabel}>ယာဉ်မောင်းရှာရန်</p>
-              <input
-                type="text"
-                className={styles.filterSelect}
-                placeholder="အမည်, ဖုန်း, မှတ်ပုံတင်..."
-                value={assignFilters.driverKey}
-                onChange={(e) =>
-                  setAssignFilters({
-                    ...assignFilters,
-                    driverKey: e.target.value,
-                  })
-                }
-              />
-            </div>
-
-            <div className={styles.filterGroup}>
-              <p className={styles.groupLabel}>ကားရှာရန်</p>
-              <input
-                type="text"
-                className={styles.filterSelect}
-                placeholder="ကားနံပါတ်, Taxi No..."
-                value={assignFilters.vehicleKey}
-                onChange={(e) =>
-                  setAssignFilters({
-                    ...assignFilters,
-                    vehicleKey: e.target.value,
-                  })
-                }
-              />
-            </div> */}
             <div className={styles.filterGroup}>
               <p className={styles.groupLabel}>စတေရှင် (Station)</p>
               <select
@@ -1189,15 +1158,6 @@ export default function VehicleDriverAssignPage() {
                 ))}
               </div>
             </div>
-            {/* 
-            
-
-            <button
-              className={styles.applyFilterBtn}
-              onClick={() => fetchMainData(1)}
-            >
-              <FontAwesomeIcon icon={faSearch} /> ရှာမည်
-            </button> */}
           </aside>
         )}
       </main>
