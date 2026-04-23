@@ -65,7 +65,7 @@ button {
   --active-link-color: #6f2f2f;
   --active-right-link-color: #b25151;
   --radius: 8px;
-  --gap: 1.5rem;
+  --gap: 1rem;
   --img-border-radius: 50%;
 
   /* table css */
@@ -83,7 +83,7 @@ button {
   --danger: #ff4d4f;
   --success: #2b7a2c;
   --success-hover: #338f35;
-  --infor: rgb(77, 82, 216);
+  --info: rgb(77, 82, 216);
   --selected: rgb(216, 202, 77);
   --padding: 1rem;
   --padding-inside: 0.75rem;

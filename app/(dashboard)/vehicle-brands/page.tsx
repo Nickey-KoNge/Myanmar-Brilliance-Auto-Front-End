@@ -183,14 +183,14 @@ export default function VehicleBrandsPage() {
       header: "Vehicle Brand Info",
       key: "vehicle_brand_name",
       render: (vehicleBrand: VehicleBrand) => (
-        <div className={styles.vehiclebrandnfo}>
+        <div className={styles.info}>
           <Image
             src={vehicleBrand.image || "/default-user.png"}
             alt={vehicleBrand.vehicle_brand_name}
             width={40}
             height={40}
             unoptimized
-            className={styles.vehiclebrandImg}
+            className={styles.image}
           />
           {vehicleBrand.vehicle_brand_name}
         </div>
@@ -273,15 +273,15 @@ export default function VehicleBrandsPage() {
 
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLable}>Total Brands :</p>
+                    <p className={styles.statLabel}>Total Brands :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Active Brands :</p>
+                    <p className={styles.statLabel}>Active Brands :</p>
                     <p className={styles.textSuccess}>{activeRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Inactive Brands :</p>
+                    <p className={styles.statLabel}>Inactive Brands :</p>
                     <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>

@@ -99,17 +99,6 @@ export const StaffForm: React.FC<StaffFormProps> = ({
     defaultValues: initialData || {},
   });
 
-  // Handle Initial Data Binding (For Update)
-  // useEffect(() => {
-  //   if (initialData) {
-  //     reset(initialData);
-  //     if (initialData.image) {
-  //       // eslint-disable-next-line react-hooks/set-state-in-effect
-  //       setPreview(initialData.image);
-  //     }
-  //   }
-  // }, [initialData, reset]);
-
   useEffect(() => {
     if (
       initialData &&

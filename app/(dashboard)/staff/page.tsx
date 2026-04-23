@@ -11,13 +11,12 @@ import {
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 
-// Components
-// import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
+// components
 import { DataTable } from "@/app/components/ui/DataTable/DataTable";
-//pagination components
+// pagination components
 import { Pagination } from "@/app/components/ui/Pagination/Pagination";
 import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
-// Styles
+// styles
 import styles from "./page.module.css";
 
 import { apiClient } from "@/app/features/lib/api-client";
@@ -30,7 +29,7 @@ import { useFilters, FilterState } from "@/app/hooks/userFilters";
 import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 import DeleteModal from "@/app/components/ui/Delete/DeleteModal";
-// import { getStaffImageUrl } from "@/app/features/lib/image-utils";
+
 interface Staff {
   id: string;
   staffName: string;
@@ -146,7 +145,7 @@ export default function StaffPage() {
         const response: unknown = await apiClient.get(
           `/master-company/staff?${queryString}`,
         );
-        console.log("api staff return data :" , response);
+        console.log("api staff return data :", response);
 
         const res = response as unknown as {
           data?:
@@ -165,7 +164,7 @@ export default function StaffPage() {
           inactiveCount?: number;
           lastEditedBy?: string;
         };
-console.log("res return data :" , response);
+        console.log("res return data :", response);
         let staffList: Staff[] = [];
         let total = 0;
         let totalPages = 1;
@@ -233,14 +232,14 @@ console.log("res return data :" , response);
       header: "Staff Info",
       key: "staffName",
       render: (staff: Staff) => (
-        <div className={styles.staffInfo}>
+        <div className={styles.info}>
           <Image
             src={staff.image || "/default-user.png"}
             alt={staff.staffName}
             width={40}
             height={40}
             unoptimized
-            className={styles.staffImg}
+            className={styles.image}
           />
           {staff.staffName}
         </div>
@@ -359,15 +358,15 @@ console.log("res return data :" , response);
 
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLable}>Total Staff :</p>
+                    <p className={styles.statLabel}>Total Staff :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Active Staff :</p>
+                    <p className={styles.statLabel}>Active Staff :</p>
                     <p className={styles.textSuccess}>{activeRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Inactive Staff :</p>
+                    <p className={styles.statLabel}>Inactive Staff :</p>
                     <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>
@@ -375,8 +374,7 @@ console.log("res return data :" , response);
 
               <hr className={styles.cuttingLine} />
               <p className={styles.lastEdited}>
-                Last Edited :{" "}
-                <span className={styles.spanText}>{lastEditedBy}</span>
+                Last Edited : <span>{lastEditedBy}</span>
               </p>
             </div>
           </div>
