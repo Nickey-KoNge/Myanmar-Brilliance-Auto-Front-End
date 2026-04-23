@@ -629,11 +629,11 @@
 
 .assignAllBtn {
   background-color: var(--selected);
-  color: var(--bg-btn);
+  color: var(--color-primary);
   border: none;
   padding: 0.4rem 0.75rem;
   border-radius: var(--radius);
-  font-size: 0.75rem;
+  font-size: var(--font-size-s);
   font-weight: bold;
   cursor: pointer;
   display: flex;
@@ -760,7 +760,10 @@
   align-items: center;
   gap: 0.4rem;
 }
-
+.actionButtons {
+  display: flex;
+  gap: 5px;
+}
 .checkIcon {
   color: #10b981; /* အမှန်ခြစ်အစိမ်းရောင် */
   font-size: 0.85rem;
@@ -913,10 +916,11 @@
   background-color: #ff4d4f;
   color: white;
   border: none;
-  padding: 8px 15px;
+  padding: 4px 8px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
+  font-size: var(--font-size-s);
   margin-right: 10px;
   transition: 0.3s;
 }
