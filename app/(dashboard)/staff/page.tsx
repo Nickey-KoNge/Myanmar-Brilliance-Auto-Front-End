@@ -20,9 +20,9 @@ import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridL
 import styles from "./page.module.css";
 
 import { apiClient } from "@/app/features/lib/api-client";
-import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
-import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
-import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
+import DateInput from "@/app/components/ui/Inputs/DateInput";
+import DropdownInput from "@/app/components/ui/Inputs/DropdownInput";
 
 // Hook
 import { useFilters, FilterState } from "@/app/hooks/userFilters";

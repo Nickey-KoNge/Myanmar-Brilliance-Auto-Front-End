@@ -20,7 +20,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
 import styles from "./page.module.css";
 import dynamic from "next/dynamic";
-import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
+import DropdownInput from "@/app/components/ui/Inputs/DropdownInput";
 import { FormCard } from "@/app/components/ui/FormCard/FormCard";
 import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";

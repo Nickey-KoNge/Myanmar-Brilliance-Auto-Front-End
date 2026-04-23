@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -17,9 +16,9 @@ import { FilterState, useFilters } from "@/app/hooks/userFilters";
 import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
 
 import styles from "./page.module.css";
-import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
-import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
-import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
+import DateInput from "@/app/components/ui/Inputs/DateInput";
+import DropdownInput from "@/app/components/ui/Inputs/DropdownInput";
 
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 import { Pagination } from "@/app/components/ui/Pagination/Pagination";

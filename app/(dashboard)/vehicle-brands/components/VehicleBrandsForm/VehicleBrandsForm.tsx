@@ -15,7 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
-import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
 import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 
@@ -43,7 +43,16 @@ export const VehicleBrandsForm: React.FC<VehicleBrandsFormProps> = ({
   onSubmit,
   loading = false,
 }) => {
-  const [preview, setPreview] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  const preview =
+    selectedImage ||
+    (typeof initialData?.image === "string" ? initialData.image : null);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) setSelectedImage(URL.createObjectURL(file));
+  };
 
   const {
     register,
@@ -67,22 +76,6 @@ export const VehicleBrandsForm: React.FC<VehicleBrandsFormProps> = ({
       });
     }
   }, [initialData, reset]);
-
-  useEffect(() => {
-    return () => {
-      if (preview && preview.startsWith("blob:")) {
-        URL.revokeObjectURL(preview);
-      }
-    };
-  }, [preview]);
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const objectUrl = URL.createObjectURL(file);
-      setPreview(objectUrl);
-    }
-  };
 
   return (
     <>
@@ -149,7 +142,6 @@ export const VehicleBrandsForm: React.FC<VehicleBrandsFormProps> = ({
 
               <label htmlFor="photo" className={styles.imageUploadBox}>
                 {preview ? (
-                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={preview}
                     alt="Preview"
@@ -224,7 +216,6 @@ export const VehicleBrandsForm: React.FC<VehicleBrandsFormProps> = ({
               required: "Description is required",
             })}
           />
-          {/* </div> */}
         </section>
       </form>
     </>

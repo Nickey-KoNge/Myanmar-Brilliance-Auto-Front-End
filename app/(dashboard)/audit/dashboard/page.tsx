@@ -18,7 +18,7 @@ import {
   faCalendarDays,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
-import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
+import DateInput from "@/app/components/ui/Inputs/DateInput";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
@@ -304,7 +304,6 @@ export default function AuditDashboardPage() {
                   <span className={styles.logUser}>{log.performed_by}</span>{" "}
                   {log.action.toLowerCase()} record in{" "}
                   <strong>{log.entity_name}</strong>
-                  
                   <span className={styles.logTime}>
                     {timeAgo(log.created_at)}
                   </span>

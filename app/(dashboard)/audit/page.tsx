@@ -14,8 +14,8 @@ import { apiClient } from "@/app/features/lib/api-client";
 import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
 import { DataTable } from "@/app/components/ui/DataTable/DataTable";
 import { Pagination } from "@/app/components/ui/Pagination/Pagination";
-import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
-import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
+import DateInput from "@/app/components/ui/Inputs/DateInput";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 import { FilterState, useFilters } from "@/app/hooks/userFilters";
 

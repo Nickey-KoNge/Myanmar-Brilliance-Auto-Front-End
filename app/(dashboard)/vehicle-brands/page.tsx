@@ -14,8 +14,8 @@ import {
 // Components
 import { DataTable } from "@/app/components/ui/DataTable/DataTable";
 import { apiClient } from "@/app/features/lib/api-client";
-import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
-import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
+import DateInput from "@/app/components/ui/Inputs/DateInput";
 
 // Pagination
 import { Pagination } from "@/app/components/ui/Pagination/Pagination";
