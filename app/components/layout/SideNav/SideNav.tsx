@@ -232,12 +232,14 @@ export const SideNav = () => {
           icon={faRoute}
           label="Trip"
           subItems={[
-            { icon: faRoute, label: "Trip Routes", href: "/trip-routes" },
+            { icon: faRoute, label: "Routes List", href: "/trip-routes" },
+            {icon: faTableList, label: "Trip List", href: "/trip-prices" },
             {
               icon: faCar,
-              label: "Trip Assignment",
+              label: "Drivers Assignment",
               href: "/vehicle-driver-assign/vehicle-driver-list",
             },
+            { icon: faKey, label: "Rental Operations", href: "/rental-op/rental-op-list" },
           ]}
           isOpen={openDropdown === "Trip"}
           onToggle={() => handleToggle("Trip")}

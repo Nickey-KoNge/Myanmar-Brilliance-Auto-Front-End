@@ -51,16 +51,17 @@ interface AssignmentRecord {
 }
 
 interface PaginatedResponse {
-  success: boolean;
-  data: {
+     success: boolean;
+ 
     items: AssignmentRecord[];
-    meta: {
+      meta: {
       totalItems: number;
       totalPages: number;
       currentPage: number;
       itemsPerPage: number;
-    };
-  };
+      };
+  
+
 }
 
 export default function AssignmentListPage() {
@@ -375,11 +376,11 @@ export default function AssignmentListPage() {
                 showOnlyInfo={true}
               />
             </div>
-            <p className={styles.tableTitle}>ASSIGNMENT RECORDS</p>
+            <p className={styles.tableTitle}> RENTAL OPERATION RECORDS</p>
             <div className={styles.headerActionArea}>
-              <NavigationBtn href="/vehicle-driver-assign" leftIcon={faPlus}>
+              {/* <NavigationBtn href="/vehicle-driver-assign" leftIcon={faPlus}>
                 Add Assignment
-              </NavigationBtn>
+              </NavigationBtn> */}
             </div>
           </div>
 

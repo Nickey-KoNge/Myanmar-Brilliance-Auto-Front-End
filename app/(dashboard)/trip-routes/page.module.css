@@ -168,7 +168,7 @@
 .modalContent {
   background: rgb(27, 27, 28);
   padding: 2rem;
-  border-radius: var(--radius);
+  border-radius:0.75rem;
   min-width: 350px;
   position: relative;
 }

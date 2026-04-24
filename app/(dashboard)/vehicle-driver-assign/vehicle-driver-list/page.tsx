@@ -344,9 +344,9 @@ export default function AssignmentListPage() {
             </div>
             <p className={styles.tableTitle}>ASSIGNMENT RECORDS</p>
             <div className={styles.headerActionArea}>
-              <NavigationBtn href="/vehicle-driver-assign" leftIcon={faPlus}>
+              {/* <NavigationBtn href="/vehicle-driver-assign" leftIcon={faPlus}>
                 Add Assignment
-              </NavigationBtn>
+              </NavigationBtn> */}
             </div>
           </div>
 

@@ -62,13 +62,13 @@ export const RouteForm:React.FC<RouteFormProps>=({
 
     return(
         <>
-        <div className={styles.RouteFormHeader}>
+        {/* <div className={styles.RouteFormHeader}>
              <button className={styles.modalClose} onClick={onClose}  style={{fontSize:"1.5rem",color:"white"}}>
          <FontAwesomeIcon icon={faCircleXmark}  />
         </button>
-        </div>
+        </div> */}
 
-            <PageHeader
+            {/* <PageHeader
         titleData={{
           icon: <FontAwesomeIcon icon={faCar} />,
           text: mode === "create" ? "Route Operation" : "Update Route",
@@ -76,12 +76,12 @@ export const RouteForm:React.FC<RouteFormProps>=({
             mode === "create" ? "CREATE NEW ROUTE" : "UPDATE ROUTE",
         }}
         
-      />
+      /> */}
       
 
         <form id="routeForm" onSubmit={handleSubmit(onSubmit)}>
             <FormCard title="ROUTE ASSIGNMENT" icon={faMapLocationDot}>
-                <div className={styles.formBody}>
+                <div>
                     <Input 
                      label="Route Name"
                      type="text"

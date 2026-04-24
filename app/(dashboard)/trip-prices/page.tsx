@@ -16,9 +16,9 @@ import { FilterState, useFilters } from "@/app/hooks/userFilters";
 import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
 
 import styles from "./page.module.css";
-import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
-import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
-import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
+import DateInput from "@/app/components/ui/Inputs/DateInput";
+import DropdownInput from "@/app/components/ui/Inputs/DropdownInput";
 
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 import { Pagination } from "@/app/components/ui/Pagination/Pagination";
@@ -119,6 +119,8 @@ export default function TripPricePage() {
     setVehicles((prev) => prev.filter((v) => v.id !== id));
   };
 
+
+
  
   const columns = [
     {
@@ -176,18 +178,16 @@ export default function TripPricePage() {
       header: "Vehicle Model",
       key: "model",
       render: (item: TripPrice) => (
-        <div>
+     
 
     
         <div>
-          <b>Model : </b> {item.vehicle_model_name || "-"}
+          {item.vehicle_model_name || "-"}
         </div>
 
-          <div>
-            <b>Phone : </b> {item.station_phone || "-"}
-          </div>
+        
 
-          </div>
+          
         
       ),
     },
@@ -197,8 +197,13 @@ export default function TripPricePage() {
       key: "Station",
       render: (item: TripPrice) => (
         <div>
+        <div>
           {item.station_name || "Unassigned"}
         </div>
+          <div>
+            <b>Phone : </b> {item.station_phone || "-"}
+          </div>
+          </div>
       ),
     },
 
@@ -228,6 +233,9 @@ export default function TripPricePage() {
       ),
     },
   ];
+
+
+  
 
   return (
     <>
@@ -266,10 +274,17 @@ export default function TripPricePage() {
                     rightIcon={faCalendarDays}
                   />
                 </div>
+                  <div style={{ alignSelf: "flex-start" }}>
 
-                <ActionBtn onClick={resetFilters}>
+                <ActionBtn 
+                 type="reset"
+                 variant="action"
+                 fullWidth={false}
+                 onClick={resetFilters}>
                   reset
                 </ActionBtn>
+                </div>
+                
               </div>
             </div>
 

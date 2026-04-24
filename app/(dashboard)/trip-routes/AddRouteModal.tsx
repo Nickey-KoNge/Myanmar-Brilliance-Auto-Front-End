@@ -24,7 +24,7 @@ export default function AddRouteModal({
 
   return (
     <div className={styles.modalOverlay}>
-      <div className={styles.modalContent}>
+      
         {/* <button className={styles.modalClose} onClick={onClose}>
          <FontAwesomeIcon icon={faCircleXmark} style={{fontSize:"1.5rem",color:"white"}} />
         </button> */}
@@ -33,7 +33,7 @@ export default function AddRouteModal({
         
         <RouteForm mode={mode} initialData={initialData} onSubmit={onSubmit} onClose={onClose} />
         </div>
-      </div>
+      
     
   );
 }

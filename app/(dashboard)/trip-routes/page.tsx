@@ -172,11 +172,12 @@ useEffect(() => {
   };
 
   console.log("Selected Route for Edit:", selectedRoute);
-  const handleEditRoute = (route: Route) => {
-    setModalMode("update");
-    setSelectedRoute(route);
-    setModalOpen(true);
-  };
+
+  // const handleEditRoute = (route: Route) => {
+  //   setModalMode("update");
+  //   setSelectedRoute(route);
+  //   setModalOpen(true);
+  // };
 
   const handleCloseModal = () => setModalOpen(false);
 
@@ -296,7 +297,7 @@ useEffect(() => {
               />
             </div>
 
-            <p className={styles.tableTitle}>TRIP ROUTES MASTER RECORDS</p>
+            <p className={styles.tableTitle}>ROUTES MASTER RECORDS</p>
 
             <div className={styles.headerActionArea}>
               <NavigationBtn
