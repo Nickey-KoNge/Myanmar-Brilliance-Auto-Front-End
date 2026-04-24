@@ -9,22 +9,20 @@ import {
   faClockRotateLeft,
   faPlus,
   faTrashCan,
-  // faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
 // Components
-// import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
 import { DataTable } from "@/app/components/ui/DataTable/DataTable";
-//pagination components
+import { apiClient } from "@/app/features/lib/api-client";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
+import DateInput from "@/app/components/ui/Inputs/DateInput";
+
+// Pagination
 import { Pagination } from "@/app/components/ui/Pagination/Pagination";
 import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
+
 // Styles
 import styles from "./page.module.css";
-
-import { apiClient } from "@/app/features/lib/api-client";
-import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
-import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
-// import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
 
 // Hook
 import { useFilters, FilterState } from "@/app/hooks/userFilters";

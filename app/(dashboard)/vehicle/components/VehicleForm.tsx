@@ -5,7 +5,7 @@ import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 
 import { FormCard } from "@/app/components/ui/FormCard/FormCard";
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
-import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
+import DropdownInput from "@/app/components/ui/Inputs/DropdownInput";
 import {
   faArrowsRotate,
   faCamera,
@@ -21,7 +21,7 @@ import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import styles from "./VehicleForm.module.css";
 import { Input } from "@/app/components/ui/Input/Input";
-import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
+import DateInput from "@/app/components/ui/Inputs/DateInput";
 import { apiClient } from "@/app/features/lib/api-client";
 
 export interface VehicleFormData {
@@ -114,7 +114,6 @@ export const VehicleForm: React.FC<VehicleFormProps> = ({
       });
     }
   }, [initialData, stations, groups, vehicleModels, reset]);
-
 
   useEffect(() => {
     const fetchOptions = async () => {

@@ -102,7 +102,6 @@ export default function EditDriverPage() {
         if (key === "photo") {
           if (value?.[0]) formData.append("image", value[0] as Blob);
         } else if (key === "password") {
-         
           if (value) formData.append("password", value as string);
         } else if (
           ["dob", "license_expiry", "join_date"].includes(key) &&
@@ -110,7 +109,6 @@ export default function EditDriverPage() {
         ) {
           formData.append(key, new Date(value as string).toISOString());
         } else if (value !== "" && value !== null && value !== undefined) {
-         
           formData.append(key, String(value));
         }
       });

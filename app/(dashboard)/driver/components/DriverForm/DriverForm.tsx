@@ -22,9 +22,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
-import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
-import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
-import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
+import DropdownInput from "@/app/components/ui/Inputs/DropdownInput";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
+import DateInput from "@/app/components/ui/Inputs/DateInput";
 import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 
@@ -76,7 +76,6 @@ export const DriverForm: React.FC<DriverFormProps> = ({
   onSubmit,
   loading = false,
 }) => {
- 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [stations, setStations] = useState<StationOption[]>([]);
 
@@ -114,17 +113,8 @@ export const DriverForm: React.FC<DriverFormProps> = ({
     fetchStations();
   }, []);
 
-  // useEffect(() => {
-  //   if (initialData && Object.keys(initialData).length > 0) {
-  //     reset(initialData);
-  //   }
-  // }, [initialData, reset]);
-
   useEffect(() => {
-    if (
-      initialData &&
-      stations.length > 0
-    ) {
+    if (initialData && stations.length > 0) {
       reset({
         ...initialData,
         station_id: String(initialData.station_id),

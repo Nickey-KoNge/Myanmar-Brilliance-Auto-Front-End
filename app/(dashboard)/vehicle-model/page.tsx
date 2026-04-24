@@ -14,8 +14,8 @@ import {
 import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
 import { DataTable } from "@/app/components/ui/DataTable/DataTable";
 import { Pagination } from "@/app/components/ui/Pagination/Pagination";
-import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
-import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
+import DateInput from "@/app/components/ui/Inputs/DateInput";
 import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 import DeleteModal from "@/app/components/ui/Delete/DeleteModal";
@@ -286,15 +286,15 @@ export default function VehicleModelListPage() {
                 <span />
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLable}>Total Models :</p>
+                    <p className={styles.statLabel}>Total Models :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Active Models :</p>
+                    <p className={styles.statLabel}>Active Models :</p>
                     <p className={styles.textSuccess}>{activeRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Inactive Models :</p>
+                    <p className={styles.statLabel}>Inactive Models :</p>
                     <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>

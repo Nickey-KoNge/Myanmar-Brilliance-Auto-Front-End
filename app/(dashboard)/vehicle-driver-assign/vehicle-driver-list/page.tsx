@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import { apiClient } from "@/app/features/lib/api-client";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,9 +16,9 @@ import { FilterState, useFilters } from "@/app/hooks/userFilters";
 import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
 
 import styles from "./page.module.css";
-import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
-import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
-import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
+import DateInput from "@/app/components/ui/Inputs/DateInput";
+import DropdownInput from "@/app/components/ui/Inputs/DropdownInput";
 
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 import { Pagination } from "@/app/components/ui/Pagination/Pagination";
@@ -26,8 +26,6 @@ import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import { DataTable } from "@/app/components/ui/DataTable/DataTable";
 import DeleteModal from "@/app/components/ui/Delete/DeleteModal";
 import { set } from "react-hook-form";
-
-
 
 interface AssignmentRecord {
   id: string;
@@ -49,14 +47,11 @@ interface AssignmentRecord {
 }
 
 interface PaginatedResponse {
-    
-    data: AssignmentRecord[];
+  data: AssignmentRecord[];
 
-    total: number;
-    totalPages: number;
-    currentPage: number;
-  
-
+  total: number;
+  totalPages: number;
+  currentPage: number;
 }
 
 export default function AssignmentListPage() {
@@ -67,9 +62,9 @@ export default function AssignmentListPage() {
   const [totalRecords, setTotalRecords] = useState(0);
 
   const [activeRecords, setActiveRecords] = useState(0);
-const [inactiveRecords, setInactiveRecords] = useState(0);
-const [lastEditedBy, setLastEditedBy] = useState("");
-  
+  const [inactiveRecords, setInactiveRecords] = useState(0);
+  const [lastEditedBy, setLastEditedBy] = useState("");
+
   const PAGE_SIZE = 10;
 
   const [deleteModal, setDeleteModal] = useState<{
@@ -82,30 +77,26 @@ const [lastEditedBy, setLastEditedBy] = useState("");
     name: "",
   });
 
-   const [activeFilters, setActiveFilters] = useState<FilterState>({
-      search: "",
-      startDate: "",
-      endDate: "",
-    });
+  const [activeFilters, setActiveFilters] = useState<FilterState>({
+    search: "",
+    startDate: "",
+    endDate: "",
+  });
 
   const { filters, updateFilter, resetFilters } = useFilters(
     { search: "", startDate: "", endDate: "" },
-    (debouncedFilters:FilterState) => {
-      
-        const isFilterChanged =
-          debouncedFilters.search !== filters.search ||
-          debouncedFilters.startDate !== filters.startDate ||
-          debouncedFilters.endDate !== filters.endDate;
+    (debouncedFilters: FilterState) => {
+      const isFilterChanged =
+        debouncedFilters.search !== filters.search ||
+        debouncedFilters.startDate !== filters.startDate ||
+        debouncedFilters.endDate !== filters.endDate;
 
-          setActiveFilters(debouncedFilters);
-            if (isFilterChanged) {
-                setCurrentPage(1);
-            }
-      
-    }
+      setActiveFilters(debouncedFilters);
+      if (isFilterChanged) {
+        setCurrentPage(1);
+      }
+    },
   );
-
-  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -119,26 +110,25 @@ const [lastEditedBy, setLastEditedBy] = useState("");
         };
 
         const queryString = new URLSearchParams(params).toString();
-        
-        const response = await apiClient.get(`/master-vehicle/vehicle-driver-assign?${queryString}`);
+
+        const response = await apiClient.get(
+          `/master-vehicle/vehicle-driver-assign?${queryString}`,
+        );
         const res = response as unknown as PaginatedResponse;
 
-        const records =res?.data || [];
+        const records = res?.data || [];
         const total = res.total || 0;
         const totalPagesCount = res?.totalPages || 1;
-
 
         setRecords(records);
         setTotalRecords(total);
         setTotalPages(totalPagesCount);
 
-        setActiveRecords(records.filter(r => r.status === "Ongoing").length);
-    setInactiveRecords(records.filter(r => r.status === "Completed").length);
-    setLastEditedBy("Unknown"); 
-
-
-        
-   
+        setActiveRecords(records.filter((r) => r.status === "Ongoing").length);
+        setInactiveRecords(
+          records.filter((r) => r.status === "Completed").length,
+        );
+        setLastEditedBy("Unknown");
 
         // if (res.success && res.data) {
         //   setRecords(res.data.data || []);
@@ -186,7 +176,8 @@ const [lastEditedBy, setLastEditedBy] = useState("");
               style={{
                 fontSize: "11px",
                 fontWeight: "bold",
-                color: row.status === "Ongoing" ? "var(--success)" : "var(--danger)",
+                color:
+                  row.status === "Ongoing" ? "var(--success)" : "var(--danger)",
                 marginTop: "2px",
               }}
             >
@@ -227,9 +218,7 @@ const [lastEditedBy, setLastEditedBy] = useState("");
       header: "Contact",
       key: "contact",
       render: (row: AssignmentRecord) => (
-        <div style={{ fontSize: "12px", fontWeight: "500" }}>
-            {row.phone}
-        </div>
+        <div style={{ fontSize: "12px", fontWeight: "500" }}>{row.phone}</div>
       ),
     },
     {
@@ -295,14 +284,18 @@ const [lastEditedBy, setLastEditedBy] = useState("");
                   />
                 </div>
                 <div style={{ alignSelf: "flex-start" }}>
-                  <ActionBtn variant="action" fullWidth={false} onClick={resetFilters}>
+                  <ActionBtn
+                    variant="action"
+                    fullWidth={false}
+                    onClick={resetFilters}
+                  >
                     reset
                   </ActionBtn>
                 </div>
               </div>
             </div>
 
-           <div className={styles.bottomSection}>
+            <div className={styles.bottomSection}>
               <hr className={styles.cuttingLine} />
 
               <div className={styles.recentRecord}>
@@ -360,7 +353,9 @@ const [lastEditedBy, setLastEditedBy] = useState("");
           <DataTable
             columns={columns}
             data={records}
-            onRowClick={(row) => router.push(`/vehicle/Assignment/Update/${row.id}`)}
+            onRowClick={(row) =>
+              router.push(`/vehicle/Assignment/Update/${row.id}`)
+            }
             emptyMessage="No assignment records found."
           />
         </div>

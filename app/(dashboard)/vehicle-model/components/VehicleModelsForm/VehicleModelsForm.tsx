@@ -16,8 +16,8 @@ import {
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
 import { FormCard } from "@/app/components/ui/FormCard/FormCard";
 import { Input } from "@/app/components/ui/Input/Input";
-import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
-import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
+import DropdownInput from "@/app/components/ui/Inputs/DropdownInput";
+import DateInput from "@/app/components/ui/Inputs/DateInput";
 import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 

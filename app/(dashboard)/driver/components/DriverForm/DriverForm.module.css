@@ -6,57 +6,63 @@
 }
 
 .formGridBox {
-  padding: 1.5rem;
-  background: var(--bg-main, #1a1a1a);
-  border-radius: 8px;
+  padding: calc(var(--padding) * 1);
+  background: var(--bg-main);
+  border-radius: calc(var(--radius));
   display: flex;
   flex-direction: column;
+  gap: var(--gap);
 }
 
 .gridBoxTitle {
-  font-weight: 500;
+  font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: calc(var(--gap) / 2);
   text-transform: uppercase;
-  margin-bottom: 0.5rem;
-  color: var(--text-main, #fff);
+  color: var(--text-main);
 }
 
 .filterContainer {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--gap);
-  margin-bottom: 0;
+  row-gap: unset;
+  gap: 1rem;
 }
 
 .formGridBox:last-child .filterContainer > :last-child {
   grid-column: 1 / 3;
 }
 
-/* ====== UTILITIES ====== */
+/* Utilities */
 .cuttingLine {
   border: none;
   height: 0.5px;
-  background: var(--color-primary, #c0392b);
-  margin-bottom: 1.5rem;
+  background: var(--accent);
 }
 
 .pill {
   width: 2px;
   height: 12px;
   border-radius: 2px;
-  background: var(--color-primary, #c0392b);
+  background: var(--color-primary);
 }
 
 .textDanger {
-  color: var(--color-primary, #c0392b);
+  color: var(--danger);
+  font-weight: var(--font-weight-bold);
+}
+
+.textSuccess {
+  color: var(--success);
+  font-weight: var(--font-weight-bold);
 }
 
 /* ====== BUTTONS ====== */
 .headerActionArea {
   display: flex;
-  gap: 10px;
+  gap: calc(var(--gap) / 1.65);
 }
 
 /* ====== IMAGE UPLOAD ====== */
@@ -67,17 +73,17 @@
 
 .imageUploadWrapper {
   position: relative;
-  width: 234px;
-  height: 234px;
-  margin: 1rem auto;
+  width: 230px;
+  height: 230px;
+  margin: 0 auto;
 }
 
 .imageUploadBox {
   width: 100%;
   height: 100%;
-  border-radius: 8px;
-  border: 1px solid var(--color-primary, #c0392b);
-  background: var(--bg-input, #2a2a2a);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--color-primary);
+  background: var(--bg-input);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -93,23 +99,15 @@
 
 .defaultIcon {
   font-size: 3rem;
-  color: var(--text-muted, #888);
+  color: var(--text-muted);
 }
 
 .cameraButton {
   position: absolute;
   bottom: -5px;
   right: -5px;
-  background: var(--color-primary, #c0392b);
-  color: white;
-  padding: 8px;
-  border-radius: 4px;
-}
-
-.error {
-  color: #ff4d4f;
-  font-size: 11px;
-  font-weight: 500;
-  margin-top: 5px;
-  text-align: center;
+  background: var(--color-primary);
+  color: var(--text-main);
+  padding: calc(var(--padding) / 2);
+  border-radius: calc(var(--radius) / 2);
 }

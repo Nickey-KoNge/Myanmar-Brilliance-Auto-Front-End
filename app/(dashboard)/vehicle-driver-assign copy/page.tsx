@@ -14,13 +14,13 @@ import {
   faCheck,
   faTimes,
   faPhone,
-  faBuilding, 
+  faBuilding,
 } from "@fortawesome/free-solid-svg-icons";
 
 import GridColumnsLayout from "@/app/components/layout/GridColumns/Layout/GridColumnLayout";
 import Column from "@/app/components/layout/GridColumns/Column/Column";
 import ColumnCard from "@/app/components/layout/GridColumns/ColumnCard/ColumnCard";
-import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
 import Image from "next/image";
 import { apiClient } from "@/app/features/lib/api-client";
 import styles from "./page.module.css";
@@ -28,7 +28,7 @@ import styles from "./page.module.css";
 // --- Types ---
 type Station = {
   id: string;
-  name?: string; 
+  name?: string;
   station_name?: string;
 };
 
@@ -112,7 +112,6 @@ export default function VehicleDriverAssignPage() {
   useEffect(() => {
     const fetchStations = async () => {
       try {
-     
         const res = (await apiClient.get(
           "master-company/stations",
         )) as StationApiResponse;
@@ -120,7 +119,6 @@ export default function VehicleDriverAssignPage() {
         // Handle wrapper (data or items)
         const fetchedStations = res.data || res.items || [];
         setStations(fetchedStations);
-
       } catch (error) {
         console.error("Failed to fetch stations:", error);
       }
@@ -129,7 +127,6 @@ export default function VehicleDriverAssignPage() {
   }, []);
 
   const fetchMainData = useCallback(async (stationId: string) => {
-    
     const query = stationId ? `?station_id=${stationId}` : "";
 
     try {
@@ -289,7 +286,7 @@ export default function VehicleDriverAssignPage() {
           {
             driver_id: driverId,
             vehicle_id: selectedVehicleIds[index],
-            station_id: selectedStationId, 
+            station_id: selectedStationId,
           },
         ),
       );
@@ -308,7 +305,7 @@ export default function VehicleDriverAssignPage() {
       await apiClient.patch(
         `http://localhost:3001/master-vehicle/vehicle-driver-assign/${assignId}/complete`,
       );
-     
+
       await fetchMainData(selectedStationId);
     } catch (error: unknown) {
       console.error("Complete trip error:", error);

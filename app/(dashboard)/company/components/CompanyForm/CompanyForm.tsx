@@ -27,7 +27,7 @@ import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 
 import styles from "./page.module.css";
-import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
+import DateInput from "@/app/components/ui/Inputs/DateInput";
 
 export interface CompanyFormData {
   company_name: string;

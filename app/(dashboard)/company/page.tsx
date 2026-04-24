@@ -17,9 +17,9 @@ import {
 import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
 import { DataTable } from "@/app/components/ui/DataTable/DataTable";
 import { Pagination } from "@/app/components/ui/Pagination/Pagination";
-import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
-import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
-import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
+import DateInput from "@/app/components/ui/Inputs/DateInput";
+import DropdownInput from "@/app/components/ui/Inputs/DropdownInput";
 import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 import DeleteModal from "@/app/components/ui/Delete/DeleteModal";
@@ -177,14 +177,14 @@ export default function CompanyPage() {
       render: (company: Company) => {
         const compName = company.company_name || "Unknown";
         return (
-          <div className={styles.companyInfo}>
+          <div className={styles.info}>
             {company.image ? (
               <Image
                 src={company.image}
                 alt={compName}
                 width={40}
                 height={40}
-                className={styles.companyImg}
+                className={styles.image}
                 unoptimized
               />
             ) : (
@@ -344,15 +344,15 @@ export default function CompanyPage() {
 
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLable}>Total Company :</p>
+                    <p className={styles.statLabel}>Total Company :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Active Company :</p>
+                    <p className={styles.statLabel}>Active Company :</p>
                     <p className={styles.textSuccess}>{activeRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Inactive Company :</p>
+                    <p className={styles.statLabel}>Inactive Company :</p>
                     <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>

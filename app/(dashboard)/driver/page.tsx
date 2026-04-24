@@ -17,9 +17,9 @@ import { Pagination } from "@/app/components/ui/Pagination/Pagination";
 import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
 import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
-import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
-import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
-import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
+import DateInput from "@/app/components/ui/Inputs/DateInput";
+import DropdownInput from "@/app/components/ui/Inputs/DropdownInput";
 import DeleteModal from "@/app/components/ui/Delete/DeleteModal";
 
 // Styles
@@ -225,14 +225,14 @@ export default function DriverListPage() {
           : defaultImage;
 
         return (
-          <div className={styles.vehicleInfo}>
+          <div className={styles.info}>
             <Image
               src={src}
               alt={driver.driver_name}
               width={40}
               height={40}
               unoptimized
-              className={styles.vehicleImg}
+              className={styles.image}
               style={{ objectFit: "cover", borderRadius: "50%" }}
             />
             <div>
@@ -454,15 +454,15 @@ export default function DriverListPage() {
 
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLable}>Total Driver :</p>
+                    <p className={styles.statLabel}>Total Driver :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Active Driver :</p>
+                    <p className={styles.statLabel}>Active Driver :</p>
                     <p className={styles.textSuccess}>{activeRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Inactive Driver :</p>
+                    <p className={styles.statLabel}>Inactive Driver :</p>
                     <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>
