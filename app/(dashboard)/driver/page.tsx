@@ -454,15 +454,15 @@ export default function DriverListPage() {
 
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLable}>Total Driver :</p>
+                    <p className={styles.statLabel}>Total Driver :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Active Driver :</p>
+                    <p className={styles.statLabel}>Active Driver :</p>
                     <p className={styles.textSuccess}>{activeRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Inactive Driver :</p>
+                    <p className={styles.statLabel}>Inactive Driver :</p>
                     <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>
