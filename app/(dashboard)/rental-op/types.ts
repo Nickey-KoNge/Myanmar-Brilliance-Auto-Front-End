@@ -34,6 +34,7 @@ export interface VehicleAssign {
   branch_name?: string;
   vehicle_image?: string; 
   driver_image?: string;
+  city_taxi_no:string;
 }
 
 export interface ActiveOp {
@@ -63,4 +64,5 @@ export interface ActiveOp {
   description?: string;
   created_at?: string | Date | null;
   updated_at?: string | Date | null;
+  city_taxi_no?: string | null;
 }

@@ -26,7 +26,12 @@ import {
 import Image from "next/image";
 import { apiClient } from "@/app/features/lib/api-client";
 import styles from "./page.module.css";
+import CommonModal from "@/app/components/AssignAlert/CommonModel";
 
+const generatePairId = (index?: number) =>
+  `pair-${Date.now()}-${index ?? Math.floor(Math.random() * 1000)}`;
+const getCurrentTime = () =>
+  new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 type Station = { id: string; name?: string; station_name?: string };
 type Driver = {
   id: string;
@@ -120,7 +125,9 @@ export default function VehicleDriverAssignPage() {
   } | null>(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [modalPos, setModalPos] = useState({ x: 0, y: 0 });
-  const hoverTimeout = useRef<NodeJS.Timeout | null>(null); // <-- Hover delay အတွက်
+  const hoverTimeout = useRef<NodeJS.Timeout | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState({ title: "", message: "" });
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
@@ -238,6 +245,11 @@ export default function VehicleDriverAssignPage() {
         d.status === "Active" &&
         !pendingPairs.some((p) => p.driver?.id === d.id),
     );
+    if (assignFilters.station_id) {
+      filtered = filtered.filter(
+        (d) => d.station_id === assignFilters.station_id,
+      );
+    }
 
     // Sidebar Driver Filter အလုပ်လုပ်ရန်
     if (assignFilters.driverKey) {
@@ -302,6 +314,7 @@ export default function VehicleDriverAssignPage() {
     stations,
     assignFilters.driverKey,
     assignFilters.licenseType,
+    assignFilters.station_id,
   ]);
 
   const availableVehicles = useMemo(() => {
@@ -310,7 +323,11 @@ export default function VehicleDriverAssignPage() {
         v.status === "Active" &&
         !pendingPairs.some((p) => p.vehicle?.id === v.id),
     );
-
+    if (assignFilters.station_id) {
+      filtered = filtered.filter(
+        (v) => v.station_id === assignFilters.station_id,
+      );
+    }
     // Sidebar Vehicle Filter အလုပ်လုပ်ရန်
     if (assignFilters.vehicleKey) {
       const key = assignFilters.vehicleKey.toLowerCase();
@@ -368,11 +385,18 @@ export default function VehicleDriverAssignPage() {
     activeFilters,
     stations,
     assignFilters.vehicleKey,
+    assignFilters.station_id,
   ]);
-
+  const showWarningModal = (title: string, message: string) => {
+    setModalContent({ title, message });
+    setIsModalOpen(true);
+  };
   // အလယ်က Live Board Data များကိုပါ Filter လုပ်ပေးရန်
   const displayTrips = useMemo(() => {
     let filtered = assigned;
+    if (assignFilters.status) {
+      filtered = filtered.filter((a) => a.status === assignFilters.status);
+    }
     if (assignFilters.driverKey) {
       const key = assignFilters.driverKey.toLowerCase();
       filtered = filtered.filter(
@@ -403,6 +427,7 @@ export default function VehicleDriverAssignPage() {
     assignFilters.driverKey,
     assignFilters.vehicleKey,
     assignFilters.licenseType,
+    assignFilters.status,
   ]);
 
   const toggleSelection = (
@@ -422,23 +447,45 @@ export default function VehicleDriverAssignPage() {
       else nextVehicles.push(item as Vehicle);
     }
 
+    // Driver နဲ့ Vehicle အရေအတွက်တူညီပါက တွဲပေးမည့်အပိုင်း
     if (
       nextDrivers.length > 0 &&
       nextVehicles.length > 0 &&
       nextDrivers.length === nextVehicles.length
     ) {
-      const newPairs: PendingPair[] = nextDrivers.map((drv, idx) => ({
-        id: `pair-${Date.now()}-${idx}`,
-        driver: drv,
-        vehicle: nextVehicles[idx],
-        time: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      }));
-      setPendingPairs((prev) => [...newPairs, ...prev]);
-      setSelectedDrivers([]);
-      setSelectedVehicles([]);
+      let hasError = false;
+      const newPairs: PendingPair[] = [];
+
+      for (let i = 0; i < nextDrivers.length; i++) {
+        // Station တူ/မတူ စစ်ဆေးခြင်း
+        if (nextDrivers[i].station_id !== nextVehicles[i].station_id) {
+          showWarningModal(
+            "Station မတူညီပါ",
+            `အမှား: ယာဉ်မောင်း (${nextDrivers[i].driver_name}) နှင့် ကား (${nextVehicles[i].vehicle_name}) တို့သည် Station မတူညီပါ။ တွဲဖက်၍မရပါ။`,
+          );
+
+          hasError = true;
+          break;
+        } else {
+          newPairs.push({
+            id: generatePairId(i),
+            driver: nextDrivers[i],
+            vehicle: nextVehicles[i],
+            time: getCurrentTime(),
+          });
+        }
+      }
+
+      // Station မတူတာမရှိမှ (Error မရှိမှ) Board ပေါ်တင်ပါမည်
+      if (!hasError) {
+        setPendingPairs((prev) => [...newPairs, ...prev]);
+        setSelectedDrivers([]);
+        setSelectedVehicles([]);
+      } else {
+        // Station မတူတာပါလာရင် ရွေးချယ်ထားတာတွေကို ပြန်ဖျက်ပါမည်
+        setSelectedDrivers([]);
+        setSelectedVehicles([]);
+      }
     } else {
       setSelectedDrivers(nextDrivers);
       setSelectedVehicles(nextVehicles);
@@ -448,34 +495,41 @@ export default function VehicleDriverAssignPage() {
   const moveToCenter = (type: "driver" | "vehicle", item: Driver | Vehicle) => {
     setPendingPairs((prev) => {
       const existingIdx = prev.findIndex((p) => p[type] === null);
+
       if (existingIdx !== -1) {
+        const existingItem =
+          type === "driver"
+            ? prev[existingIdx].vehicle
+            : prev[existingIdx].driver;
+
+        if (existingItem && existingItem.station_id !== item.station_id) {
+          showWarningModal(
+            "Station မတူညီပါ",
+            "Station မတူညီသော ယာဉ်မောင်းနှင့် ကားကို တွဲဖက်၍ မရပါ။",
+          );
+          return prev;
+        }
+
         const updated = [...prev];
         updated[existingIdx] = {
           ...updated[existingIdx],
           [type]: item,
-          time: new Date().toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
+          time: getCurrentTime(),
         };
         return updated;
       } else {
         return [
           {
-            id: `pair-${Date.now()}`,
+            id: generatePairId(),
             driver: type === "driver" ? (item as Driver) : null,
             vehicle: type === "vehicle" ? (item as Vehicle) : null,
-            time: new Date().toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
+            time: getCurrentTime(),
           },
           ...prev,
         ];
       }
     });
   };
-
   const removeFromCenter = (pairId: string, type: "driver" | "vehicle") => {
     setPendingPairs((prev) => {
       const newPairs = [...prev];
@@ -1282,6 +1336,12 @@ export default function VehicleDriverAssignPage() {
           )}
         </div>
       )}
+      <CommonModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={modalContent.title}
+        message={modalContent.message}
+      />
     </div>
   );
 }

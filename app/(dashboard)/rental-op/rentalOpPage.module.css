@@ -1,10 +1,13 @@
+
 .container {
   display: flex;
   gap: 20px;
   padding: 20px;
-  background-color: #121212;
+  background-color: var(--bg-main);
   min-height: 100vh;
-  color: #fff;
+  color: var(--text-main);
+  transition: background-color 0.3s ease;
+  border-radius: var(--radius);
 }
 
 .mainContent {
@@ -13,13 +16,6 @@
   flex-direction: column;
 }
 
-.rightSidebar {
-  flex: 1;
-  background-color: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 20px;
-}
 
 .pageHeader {
   display: flex;
@@ -29,8 +25,9 @@
 }
 
 .title {
-  font-size: 18px;
-  font-weight: bold;
+  font-size: var(--font-size-m);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-main);
 }
 
 .actionButtons {
@@ -39,13 +36,18 @@
 }
 
 .btnPrimary {
-  background-color: #d32f2f;
-  color: #fff;
+  background-color: var(--accent);
+  color: var(--text-scuccess); /* နဂိုဖြူဖြူလေးဖြစ်အောင် */
   border: none;
   padding: 10px 16px;
   border-radius: 6px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: var(--font-weight-bold);
+  transition: background-color 0.2s;
+}
+
+.btnPrimary:hover {
+  background-color: var(--accent-hover);
 }
 
 .btnPrimary:disabled {
@@ -53,123 +55,11 @@
   cursor: not-allowed;
 }
 
-.btnSecondary {
-  background-color: transparent;
-  color: #d32f2f;
-  border: 1px solid #d32f2f;
-  padding: 10px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.filterGroup {
-  margin-bottom: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.filterLabel {
-  font-size: 13px;
-  color: #aaa;
-}
-
 .selectBox {
   width: 100%;
-  background-color: #222;
-  color: #fff;
-  border: 1px solid #444;
-  padding: 10px;
-  border-radius: 6px;
-}
-
-.emptyState {
-  text-align: center;
-  padding: 40px;
-  color: #666;
-}
-
-.container {
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-  background-color: #121212;
-  min-height: 100vh;
-  color: #fff;
-}
-
-.mainContent {
-  flex: 3;
-  display: flex;
-  flex-direction: column;
-}
-
-.rightSidebar {
-  flex: 1;
-  background-color: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 20px;
-}
-
-.pageHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.title {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.actionButtons {
-  display: flex;
-  gap: 10px;
-}
-
-.btnPrimary {
-  background-color: #d32f2f;
-  color: #fff;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.btnPrimary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.btnSecondary {
-  background-color: transparent;
-  color: #d32f2f;
-  border: 1px solid #d32f2f;
-  padding: 10px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.filterGroup {
-  margin-bottom: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.filterLabel {
-  font-size: 13px;
-  color: #aaa;
-}
-
-.selectBox {
-  width: 100%;
-  background-color: #222;
-  color: #fff;
-  border: 1px solid #444;
+  background-color: var(--bg-input);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
   padding: 10px;
   border-radius: 6px;
   outline: none;
@@ -178,67 +68,53 @@
 .emptyState {
   text-align: center;
   padding: 40px;
-  color: #666;
+  color: var(--text-muted);
 }
 
 /* ================= MODAL CSS ================= */
-.modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modalContent {
-  background-color: #1e1e1e;
-  padding: 25px;
-  border-radius: 8px;
-  width: 400px;
-  color: #fff;
-}
-
 .largeModalOverlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.7
+  ); /* Overlay ကတော့ dark ပဲထားတာ ပိုကောင်းပါတယ် */
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  backdrop-filter: blur(4px);
 }
 
 .largeModalContent {
-  background-color: #171717;
+  background-color: var(--bg-main);
   padding: 30px;
   border-radius: 12px;
   width: 1100px;
   max-width: 95vw;
   max-height: 95vh;
   overflow-y: auto;
-  color: #fff;
-  border: 1px solid #333;
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
 .panel {
-  background-color: #222;
+  background-color: var(--bg-card);
   padding: 20px;
   border-radius: 10px;
-  border: 1px solid #333;
+  border: 1px solid var(--border-color);
 }
 
 .panelHeader {
   font-size: 14px;
   font-weight: bold;
-  color: #ccc;
+  color: var(--text-muted);
   text-transform: uppercase;
   margin-bottom: 20px;
   margin-top: 0;
@@ -249,13 +125,13 @@
   display: block;
   margin-bottom: 8px;
   font-size: 13px;
-  color: #888;
+  color: var(--text-muted);
 }
 
 .btnCancel {
-  background-color: #111;
-  border: 1px solid #333;
-  color: #fff;
+  background-color: var(--btn-cancel);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
   padding: 10px 20px;
   border-radius: 8px;
   cursor: pointer;
@@ -263,7 +139,7 @@
 }
 
 .btnSaveOngoing {
-  background-color: #c9302c;
+  background-color: var(--accent);
   border: none;
   color: #fff;
   padding: 10px 20px;
@@ -273,7 +149,7 @@
 }
 
 .btnFinalize {
-  background-color: #4cae4c;
+  background-color: var(--success);
   border: none;
   color: #fff;
   padding: 10px 20px;
@@ -282,46 +158,25 @@
   font-weight: bold;
 }
 
-/* Utilities */
-.flexBetween {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.flexGap {
-  display: flex;
-  gap: 15px;
-}
-
-.flexGap30 {
-  display: flex;
-  gap: 30px;
-}
-
-.grid2Col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-.flexCol {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.flex1 {
-  flex: 1;
+.btnFinalize:hover {
+  background-color: var(--success-hover);
 }
 
 .readonlyText {
-  background-color: #0a0a0a !important;
-  color: #4cae4c !important;
+  background-color: var(--bg-input) !important;
+  color: var(--success) !important;
+  opacity: 0.8;
 }
 
 .imgBox {
   border-radius: 8px;
   object-fit: cover;
-  background-color: #000;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+}
+.cardListContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-x: auto;
 }

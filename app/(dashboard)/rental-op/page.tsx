@@ -71,70 +71,7 @@ export default function RentalOperationPage() {
     }
   };
 
-  // const fetchAssignmentsByStation = async (stationId: string) => {
-  //   try {
-  //     setFetching(true);
-  //     const today = new Date().toISOString().split('T')[0];
-  //     const [assignRes, opRes] = await Promise.all([
-  //       apiClient.get(
-  //         `/master-vehicle/vehicle-driver-assign?station_id=${stationId}&status=Ongoing`,
-  //       ),
-  //       apiClient.get(
-  //         `/master-rental/rental-operation?station_id=${stationId}&startDate=${today}`,
-  //       ),
-  //     ]);
-
-  //     let assignData: VehicleAssign[] = [];
-  //     if (assignRes) {
-  //       if (Array.isArray(assignRes)) assignData = assignRes as VehicleAssign[];
-  //       else {
-  //         const resObj = assignRes as unknown as Record<string, unknown>;
-  //         assignData = (
-  //           Array.isArray(resObj.items)
-  //             ? resObj.items
-  //             : Array.isArray(resObj.data)
-  //               ? resObj.data
-  //               : []
-  //         ) as VehicleAssign[];
-  //       }
-  //     }
-
-  //     const uniqueAssignData = Array.from(
-  //       new Map(
-  //         assignData.map((item) => [
-  //           item.vehicle?.id || item.vehicle_id || item.id,
-  //           item,
-  //         ]),
-  //       ).values(),
-  //     );
-
-  //     let opData: ActiveOp[] = [];
-  //     if (opRes) {
-  //       if (Array.isArray(opRes)) opData = opRes as ActiveOp[];
-  //       else {
-  //         const resObj = opRes as unknown as Record<string, unknown>;
-  //         opData = (
-  //           Array.isArray(resObj.items)
-  //             ? resObj.items
-  //             : Array.isArray(resObj.data)
-  //               ? resObj.data
-  //               : []
-  //         ) as ActiveOp[];
-  //       }
-
-  //     }
-
-  //     setAssignList(uniqueAssignData);
-  //     setActiveOperations(opData);
-  //   } catch (err) {
-  //     console.error("Fetch Assign Error:", err);
-  //     toast.error("Failed to load assigned vehicles.");
-  //   } finally {
-  //     setFetching(false);
-  //   }
-  // };
-
-const fetchAssignmentsByStation = async (stationId: string) => {
+  const fetchAssignmentsByStation = async (stationId: string) => {
     try {
       setFetching(true);
       const today = new Date().toISOString().split("T")[0];
@@ -196,7 +133,7 @@ const fetchAssignmentsByStation = async (stationId: string) => {
       setFetching(false);
     }
   };
-  
+
   const openOpEntryModal = (assign: VehicleAssign) => {
     setSelectedAssign(assign);
     setShowOpEntryModal(true);
@@ -207,104 +144,6 @@ const fetchAssignmentsByStation = async (stationId: string) => {
     fetchAssignmentsByStation(selectedStationId);
   };
 
-  // const mapToCardData = (assign: VehicleAssign): RentalOperationData => {
-  //   const vId = assign.vehicle?.id || assign.vehicle_id;
-  //   const activeOp = activeOperations.find(
-  //     (op) => String(op.vehicle?.id || op.vehicle_id) === String(vId),
-  //   );
-
-  //   // const finalBranchName =
-  //   //   activeOp?.branch_name ||
-  //   //   activeOp?.station?.branch?.branch_name ||
-  //   //   assign.station?.branch_name ||
-  //   //   assign.branch_name ||
-  //   //   "-";
-  //   // const initialOdo = getInitialVehicleOdo(assign);
-
-  //   // const finalVehicleImage =
-  //   //   activeOp?.vehicle_image || assign.vehicle_image || null;
-  //   // const finalDriverImage =
-  //   //   activeOp?.driver_image || assign.driver_image || null;
-
-  //   // return {
-  //   //   id: assign.id,
-  //   //   vehicle_name:
-  //   //     assign.vehicle?.vehicle_name || assign.vehicle_name || "Unknown",
-  //   //   plate_number:
-  //   //     assign.vehicle?.license_plate || assign.license_plate || "-",
-  //   //   driver_name:
-  //   //     assign.driver?.driver_name || assign.driver_name || "Unknown",
-  //   //   driver_id: assign.driver?.id || assign.driver_id || "-",
-  //   //   station_name:
-  //   //     assign.station?.station_name || assign.station_name || "Unknown",
-  //   //   branch_name: finalBranchName,
-  //   //   trip_status: activeOp?.trip_status || "No Trip",
-  //   //   route_name: activeOp?.route?.route_name || activeOp?.route_name || "-",
-  //   //   start_odo:
-  //   //     activeOp?.start_odo && activeOp.start_odo !== "0"
-  //   //       ? activeOp.start_odo
-  //   //       : initialOdo !== "0"
-  //   //         ? initialOdo
-  //   //         : "-",
-  //   //   start_battery: activeOp?.start_battery || "-",
-  //   //   end_odo: activeOp?.end_odo || "-",
-  //   //   extra_hours: activeOp?.extra_hours || "-",
-  //   //   kw: activeOp?.kw || "-",
-  //   //   amount: activeOp?.amount || "-",
-  //   //   vehicle_image_url: finalVehicleImage,
-  //   //   driver_image_url: finalDriverImage,
-  //   //   start_time: activeOp?.start_time,
-  //   //   end_time: activeOp?.end_time,
-  //   //   end_battery: activeOp?.end_battery || "-",
-  //   //   description: activeOp?.description || "-",
-  //   //   daily_count: activeOp?.daily_count || "-",
-  //   // };
-  //   return {
-  //     id: assign.id,
-  //     vehicle_name:
-  //       assign.vehicle?.vehicle_name || assign.vehicle_name || "Unknown",
-  //     plate_number:
-  //       assign.vehicle?.license_plate || assign.license_plate || "-",
-  //     driver_name:
-  //       assign.driver?.driver_name || assign.driver_name || "Unknown",
-  //     driver_id: assign.driver?.id || assign.driver_id || "-",
-  //     station_name:
-  //       assign.station?.station_name || assign.station_name || "Unknown",
-  //     branch_name: activeOp?.branch_name || assign.station?.branch_name || "-",
-
-  //     // Status & Times
-  //     trip_status: activeOp?.trip_status || "No Trip",
-  //     start_time: activeOp?.start_time || null,
-  //     end_time: activeOp?.end_time || null,
-
-  //     // Route & Counts
-  //     route_name: activeOp?.route?.route_name || activeOp?.route_name || "-",
-  //     daily_count: activeOp?.daily_count || "-",
-
-  //     // Odo & Battery
-  //     start_odo:
-  //       activeOp?.start_odo && activeOp.start_odo !== "0"
-  //         ? activeOp.start_odo
-  //         : initialOdo,
-  //     end_odo: activeOp?.end_odo || "-",
-  //     start_battery: activeOp?.start_battery || "-",
-  //     end_battery: activeOp?.end_battery || "-",
-
-  //     // Extra Info
-  //     extra_hours: activeOp?.extra_hours || "-",
-  //     description: activeOp?.description || "-",
-
-  //     // Charging Info (Backend မှ field အသစ်များ)
-  //     kw: activeOp?.kw || "-",
-  //     amount: activeOp?.amount || "-",
-  //     power_station_name: activeOp?.power_station_name || "-",
-
-  //     // Images (Backend field name အတိုင်း ယူရန်)
-  //     vehicle_image_url:
-  //       activeOp?.vehicle_image || assign.vehicle_image || null,
-  //     driver_image_url: activeOp?.driver_image || assign.driver_image || null,
-  //   };
-  // };
   const mapToCardData = (assign: VehicleAssign): RentalOperationData => {
     const vId = assign.vehicle?.id || assign.vehicle_id;
 
@@ -331,6 +170,9 @@ const fetchAssignmentsByStation = async (stationId: string) => {
         assign.vehicle?.vehicle_name || assign.vehicle_name || "Unknown",
       plate_number:
         assign.vehicle?.license_plate || assign.license_plate || "-",
+      city_taxi_no:
+       assign.city_taxi_no || "Unknown",
+      phone: assign.driver?.phone || assign.phone || "Unknown",
       driver_name:
         assign.driver?.driver_name || assign.driver_name || "Unknown",
       driver_id: assign.driver?.id || assign.driver_id || "-",
