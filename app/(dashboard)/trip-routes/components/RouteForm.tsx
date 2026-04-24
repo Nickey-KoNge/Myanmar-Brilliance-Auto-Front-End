@@ -111,13 +111,13 @@ export const RouteForm:React.FC<RouteFormProps>=({
 
                          <div className={styles.formActionArea}>
                          <NavigationBtn
-  href="#"
-  variant="cancel"
-  onClick={(e) => {
-    e.preventDefault();
-    onClose(); 
-  }}
->
+                                href="#"
+                                variant="cancel"
+                                onClick={(e) => {
+                                e.preventDefault();
+                            onClose(); 
+                            }}
+                            >
   cancel
 </NavigationBtn>
 

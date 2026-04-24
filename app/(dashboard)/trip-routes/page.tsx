@@ -158,8 +158,8 @@ const fetchRoutes = async () => {
     setRouteData(routeList);
     setTotalRecords(total);
     setTotalPages(totalPagesCount);
-    setActiveRecords(routeList.filter(r => r.status === "Active").length);
-    setInactiveRecords(routeList.filter(r => r.status === "Inactive").length);
+    setActiveRecords(routeList.filter((r: Route) => r.status === "Active").length);
+    setInactiveRecords(routeList.filter((r: Route) => r.status === "Inactive").length);
     setLastEditedBy(res?.lastEditedBy || "N/A");
 
   } catch (err) {
