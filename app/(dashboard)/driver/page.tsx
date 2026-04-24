@@ -225,14 +225,14 @@ export default function DriverListPage() {
           : defaultImage;
 
         return (
-          <div className={styles.vehicleInfo}>
+          <div className={styles.info}>
             <Image
               src={src}
               alt={driver.driver_name}
               width={40}
               height={40}
               unoptimized
-              className={styles.vehicleImg}
+              className={styles.image}
               style={{ objectFit: "cover", borderRadius: "50%" }}
             />
             <div>
