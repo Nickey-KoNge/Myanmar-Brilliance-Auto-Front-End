@@ -233,24 +233,22 @@ export default function DriverListPage() {
               height={40}
               unoptimized
               className={styles.image}
-              style={{ objectFit: "cover", borderRadius: "50%" }}
             />
+
             <div>
-              <div style={{ fontWeight: "600" }}>{driver.driver_name}</div>
-              <div style={{ fontSize: "11px", color: "#666" }}>
-                <b>Phone : </b>
+              <div className={styles.textBold}>{driver.driver_name}</div>
+
+              <div className={[styles.textSmall, styles.textMuted].join(" ")}>
+                <span className={styles.textBold}>Phone : </span>
                 {driver.phone || "-"}
               </div>
+
               <div
-                style={{
-                  fontSize: "11px",
-                  fontWeight: "bold",
-                  color:
-                    driver.status === "Active"
-                      ? "var(--success)"
-                      : "var(--danger)",
-                  marginTop: "2px",
-                }}
+                className={
+                  driver.status === "Active"
+                    ? [styles.textSmall, styles.textSuccess].join(" ")
+                    : [styles.textSmall, styles.textDanger].join(" ")
+                }
               >
                 {driver.status || "Unknown"}
               </div>
@@ -264,16 +262,15 @@ export default function DriverListPage() {
       key: "identity",
       render: (driver: Driver) => (
         <div>
-          <div style={{ fontWeight: "500" }}>
-            <b>NRC : </b>
-            {driver.nrc || "-"}
-          </div>
-          <div style={{ fontSize: "12px", color: "#007bff" }}>
-            <b>Email : </b>
+          <div className={styles.textBold}>NRC : {driver.nrc || "-"}</div>
+
+          <div className={[styles.textSmall, styles.textInfo].join(" ")}>
+            <span className={styles.textBold}>Email : </span>
             {driver.credential_email || "-"}
           </div>
-          <div style={{ fontSize: "12px", color: "gray" }}>
-            <b>Gender : </b>
+
+          <div className={[styles.textSmall, styles.textMuted].join(" ")}>
+            <span className={styles.textBold}>Gender : </span>
             {driver.gender || "-"}
           </div>
         </div>
@@ -284,16 +281,18 @@ export default function DriverListPage() {
       key: "licenseInfo",
       render: (driver: Driver) => (
         <div>
-          <div style={{ fontSize: "12px" }}>
-            <b>No : </b>
+          <div className={styles.textSmall}>
+            <span className={styles.textBold}>No : </span>
             {driver.license_no || "-"}
           </div>
-          <div style={{ fontSize: "12px" }}>
-            <b>Type : </b>
+
+          <div className={styles.textSmall}>
+            <span className={styles.textBold}>Type : </span>
             {driver.license_type || "-"}
           </div>
-          <div style={{ fontSize: "12px" }}>
-            <b>Join Date : </b>
+
+          <div className={styles.textSmall}>
+            <span className={styles.textBold}>Join Date : </span>
             {driver.join_date || "-"}
           </div>
         </div>
@@ -301,15 +300,16 @@ export default function DriverListPage() {
     },
     {
       header: "Start & Deposit",
-      key: "licenseInfo",
+      key: "deposit",
       render: (driver: Driver) => (
         <div>
-          <div style={{ fontSize: "12px" }}>
-            <b>Join Date : </b>
+          <div className={styles.textSmall}>
+            <span className={styles.textBold}>Join Date : </span>
             {driver.join_date || "-"}
           </div>
-          <div style={{ fontSize: "12px" }}>
-            <b>Deposit : </b>
+
+          <div className={styles.textSmall}>
+            <span className={styles.textBold}>Deposit : </span>
             {driver.deposits || "-"} MMK
           </div>
         </div>
@@ -320,11 +320,12 @@ export default function DriverListPage() {
       key: "assignment",
       render: (driver: Driver) => (
         <div>
-          <div style={{ fontWeight: "500" }}>
+          <div className={styles.textBold}>
             {driver.station_name || "Unassigned"}
           </div>
-          <div style={{ fontSize: "12px", color: "gray" }}>
-            <b>Exp : </b>
+
+          <div className={[styles.textSmall, styles.textMuted].join(" ")}>
+            <span className={styles.textBold}>Exp : </span>
             {driver.driving_exp || "-"}
           </div>
         </div>
@@ -334,17 +335,7 @@ export default function DriverListPage() {
       header: "Contact Location",
       key: "address",
       render: (driver: Driver) => (
-        <div>
-          <div
-            style={{
-              fontSize: "12px",
-              maxWidth: "200px",
-              whiteSpace: "normal",
-            }}
-          >
-            {driver.fullAddress || "-"}
-          </div>
-        </div>
+        <div className={styles.textSmall}>{driver.fullAddress || "-"}</div>
       ),
     },
     {
@@ -352,12 +343,12 @@ export default function DriverListPage() {
       key: "timeline",
       render: (driver: Driver) => (
         <div>
-          <div className={styles.timelineText}>
-            <b>DOB : </b>
+          <div>
+            <span className={styles.textBold}>DOB : </span>
             {driver.dob ? String(driver.dob).split("T")[0] : "-"}
           </div>
-          <div className={styles.expireText}>
-            <b>Exp : </b>
+          <div className={[styles.textDanger, styles.textSmall].join(" ")}>
+            <span className={styles.textBold}>Exp : </span>
             {driver.license_expiry
               ? String(driver.license_expiry).split("T")[0]
               : "-"}
@@ -429,16 +420,14 @@ export default function DriverListPage() {
                   />
                 </div>
 
-                <div style={{ alignSelf: "flex-start" }}>
-                  <ActionBtn
-                    type="reset"
-                    variant="action"
-                    fullWidth={false}
-                    onClick={resetFilters}
-                  >
-                    reset
-                  </ActionBtn>
-                </div>
+                <ActionBtn
+                  type="reset"
+                  variant="action"
+                  fullWidth={false}
+                  onClick={resetFilters}
+                >
+                  reset
+                </ActionBtn>
               </div>
             </div>
 
@@ -449,20 +438,32 @@ export default function DriverListPage() {
                 <span>
                   <FontAwesomeIcon icon={faClockRotateLeft} />
                 </span>
-                <p className={styles.recentTitle}>RECENT RECORD</p>
+                <p className={styles.textBold}>RECENT RECORD</p>
                 <span />
 
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLabel}>Total Driver :</p>
+                    <p
+                      className={[styles.textBold, styles.textMuted].join(" ")}
+                    >
+                      Total Driver :
+                    </p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLabel}>Active Driver :</p>
+                    <p
+                      className={[styles.textBold, styles.textMuted].join(" ")}
+                    >
+                      Active Driver :
+                    </p>
                     <p className={styles.textSuccess}>{activeRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLabel}>Inactive Driver :</p>
+                    <p
+                      className={[styles.textBold, styles.textMuted].join(" ")}
+                    >
+                      Inactive Driver :
+                    </p>
                     <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>
@@ -470,8 +471,7 @@ export default function DriverListPage() {
 
               <hr className={styles.cuttingLine} />
               <p className={styles.lastEdited}>
-                Last Edited :{" "}
-                <span className={styles.spanText}>{lastEditedBy}</span>
+                Last Edited : <span>{lastEditedBy}</span>
               </p>
             </div>
           </div>
