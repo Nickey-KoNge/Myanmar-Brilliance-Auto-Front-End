@@ -286,15 +286,15 @@ export default function VehicleModelListPage() {
                 <span />
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLable}>Total Models :</p>
+                    <p className={styles.statLabel}>Total Models :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Active Models :</p>
+                    <p className={styles.statLabel}>Active Models :</p>
                     <p className={styles.textSuccess}>{activeRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Inactive Models :</p>
+                    <p className={styles.statLabel}>Inactive Models :</p>
                     <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>

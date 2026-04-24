@@ -224,15 +224,15 @@ export default function GroupPage() {
                 <span />
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLable}>Total Groups :</p>
+                    <p className={styles.statLabel}>Total Groups :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Active Groups :</p>
+                    <p className={styles.statLabel}>Active Groups :</p>
                     <p className={styles.textSuccess}>{activeRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Inactive Groups :</p>
+                    <p className={styles.statLabel}>Inactive Groups :</p>
                     <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>

@@ -220,15 +220,15 @@ export default function StationPage() {
                 <span />
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLable}>Total Stations :</p>
+                    <p className={styles.statLabel}>Total Stations :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Active Stations :</p>
+                    <p className={styles.statLabel}>Active Stations :</p>
                     <p className={styles.textSuccess}>{activeRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Inactive Stations :</p>
+                    <p className={styles.statLabel}>Inactive Stations :</p>
                     <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>
