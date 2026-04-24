@@ -16,7 +16,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import styles from "../station/page.module.css";
+import styles from "./page.module.css";
 import TextInput from "@/app/components/ui/Inputs/TextInput";
 import DateInput from "@/app/components/ui/Inputs/DateInput";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
@@ -260,15 +260,15 @@ useEffect(() => {
 
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLable}>Total Trips :</p>
+                    <p className={styles.statLabel}>Total Trips :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Active Routes :</p>
+                    <p className={styles.statLabel}>Active Routes :</p>
                     <p className={styles.textSuccess}>{activeRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Inactive Routes :</p>
+                    <p className={styles.statLabel}>Inactive Routes :</p>
                     <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>

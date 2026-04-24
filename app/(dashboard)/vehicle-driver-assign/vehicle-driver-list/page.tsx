@@ -152,7 +152,7 @@ export default function AssignmentListPage() {
       header: "Driver Info",
       key: "driverInfo",
       render: (row: AssignmentRecord) => (
-        <div className={styles.vehicleInfo}>
+        <div className={styles.info}>
           {row.driver_image ? (
             <Image
               src={row.driver_image}
@@ -160,7 +160,7 @@ export default function AssignmentListPage() {
               width={40}
               height={40}
               unoptimized
-              className={styles.vehicleImg}
+              className={styles.image}
             />
           ) : (
             <div className={styles.placeholderLogo}>
@@ -307,15 +307,15 @@ export default function AssignmentListPage() {
 
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLable}>Total Trips :</p>
+                    <p className={styles.statLabel}>Total Trips :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Ongoing Trips :</p>
+                    <p className={styles.statLabel}>Ongoing Trips :</p>
                     <p className={styles.textSuccess}>{activeRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Complete Trips :</p>
+                    <p className={styles.statLabel}>Complete Trips :</p>
                     <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>
