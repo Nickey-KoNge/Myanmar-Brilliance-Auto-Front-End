@@ -1,115 +1,122 @@
-.card {
-  background-color: #1e1e1e;
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 20px;
-  color: #fff;
-  font-size: 13px;
-}
-
-.topSection {
-  display: grid;
-  grid-template-columns: 2fr 1.5fr 1.5fr 1fr;
-  gap: 20px;
-  border-bottom: 1px solid #333;
-  padding-bottom: 20px;
-  margin-bottom: 20px;
-}
-
-.infoBox {
+/* Container အသစ်: တစ်တန်းတည်းဖြစ်စေရန် */
+.singleRowCard {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.actorWrap {
-  display: flex;
-  gap: 10px;
-}
-
-.actorCard {
-  background-color: #2a2a2a;
+  flex-direction: row;
+  width: 100%;
+  height: 100px;
+  margin-bottom: 6px;
   border-radius: 6px;
-  padding: 10px;
-  flex: 1;
+  overflow: hidden;
+  /* padding:10px; */
+  font-size: 11px;
+  color: var(--text-main, #e0e0e0);
+  background-color: var(--bg-card, #1e1e2d);
+  border: 1px solid var(--border-color, #3a3a4c);
+}
+
+/* အကွက်တစ်ကွက်ချင်းစီအတွက် အခြေခံဒီဇိုင်း */
+.cell {
+  padding: 6px 10px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  justify-content: space-evenly;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  flex-shrink: 0;
 }
 
-.actorImage {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 50%;
-  margin-bottom: 10px;
-  background-color: #444;
+.cell:last-child {
+  border-right: none;
+  flex-grow: 1; /* နောက်ဆုံးအကွက်ကို အပြည့်ယူစေရန် */
 }
 
-.actorName {
-  font-weight: bold;
-  font-size: 14px;
-}
+/* အရောင်တစ်မျိုးစီ (opacity လေးနဲ့ သုံးထားပါတယ်၊ ကိုယ်ကြိုက်တဲ့အရောင်ပြောင်းနိုင်ပါတယ်) */
 
-.actorSub {
-  color: #888;
-  font-size: 12px;
-}
+.cellLocation {
+  background-color: rgba(54, 162, 235, 0.1);
+  width: 170px;
+} /* အပြာနုရောင် */
+.cellStatus {
+  background-color: rgba(153, 102, 255, 0.1);
+  width: 150px;
+} /* ခရမ်းနုရောင် */
+.cellDeparture {
+  background-color: rgba(75, 192, 192, 0.1);
+  width: 150px;
+} /* အစိမ်းနုရောင် */
+.cellArrival {
+  background-color: rgba(255, 205, 86, 0.1);
+  width: 150px;
+} /* အဝါနုရောင် */
+.cellExtra {
+  background-color: rgba(201, 203, 207, 0.1);
+  width: 160px;
+} /* ခဲနုရောင် */
+.cellFinance {
+  background-color: rgba(255, 159, 64, 0.1);
+  min-width: 150px;
+} /* လိမ္မော်နုရောင် */
 
+/* အတန်းတွင်း စာသားစီမံခြင်း */
 .row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+  line-height: 1.1;
+  white-space: nowrap;
 }
 
-.label {
-  color: #888;
+.cellTitle {
+  font-weight: bold;
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--text-muted, #a0a0b0);
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+  padding-bottom: 2px;
+  margin-bottom: 2px;
+}
+.cellActors {
+  background-color: rgba(255, 99, 132, 0.1);
+  width: 25%;
 }
 
-.value {
-  color: #fff;
-}
-
-.textGreen {
-  color: #4ade80;
-}
-.textYellow {
-  color: #facc15;
-}
-.textRed {
-  color: #f87171;
-}
-
-.financeBox {
-  background-color: #2a2a2a;
-  border-left: 4px solid #f87171;
+/* Actor (Driver/Car) ပုံစံငယ် */
+.actorMini {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
   padding: 10px;
-  border-radius: 4px;
+}
+.actorCard {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
-.totalRow {
-  border-top: 1px solid #444;
-  margin-top: 8px;
-  padding-top: 8px;
+.actorImage {
+  border-radius: 4px;
+  object-fit: cover;
+  background-color: #333;
+}
+
+.actorText {
+  display: flex;
+  flex-direction: column;
+}
+
+/* စာသားအရောင်နဲ့ ပုံစံများ */
+.bold {
   font-weight: bold;
 }
-
-.bottomSection {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
+.muted {
+  color: var(--text-muted, #a0a0a0);
+  font-size: 10px;
 }
-
-.subCard {
-  border: 1px solid #333;
-  border-radius: 6px;
-  padding: 15px;
+.textGreen {
+  color: var(--success, #4caf50);
+  font-weight: 600;
 }
-
-.subCardHeader {
-  color: #888;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #333;
-  padding-bottom: 5px;
+.textYellow {
+  color: var(--selected, #ff9800);
+  font-weight: 600;
 }
