@@ -25,6 +25,9 @@ import { Pagination } from "@/app/components/ui/Pagination/Pagination";
 import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import { DataTable } from "@/app/components/ui/DataTable/DataTable";
 import DeleteModal from "@/app/components/ui/Delete/DeleteModal";
+import { TripFormData } from "./components/TripForm";
+import { set } from "react-hook-form";
+import AddTripModal from "./AddTripModal";
 
 
 interface TripPrice {
@@ -57,6 +60,10 @@ export default function TripPricePage() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
 
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<"create" | "update">("create");
+  const [selectedTrip, setSelectedTrip] = useState<TripPrice | null>(null);
+
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
     id: null as string | null,
@@ -79,8 +86,7 @@ export default function TripPricePage() {
     }
   );
 
-  useEffect(() => {
-    const fetchData = async () => {
+   const fetchData = async () => {
       try {
         const params: Record<string, string> = {
           page: currentPage.toString(),
@@ -108,6 +114,9 @@ export default function TripPricePage() {
       }
     };
 
+  useEffect(() => {
+   
+
     fetchData();
   }, [currentPage, activeFilters]);
 
@@ -118,6 +127,50 @@ export default function TripPricePage() {
   const handleDeleteSuccess = (id: string) => {
     setVehicles((prev) => prev.filter((v) => v.id !== id));
   };
+
+  const handleAddTrip=()=>{
+    setModalMode("create");
+    setSelectedTrip(null);
+    setModalOpen(true);
+  }
+
+  
+
+
+  const handleCloseModal=()=>setModalOpen(false);
+
+  const handleSubmitTrip=async(data:TripFormData)=>{
+    try{
+      if(modalMode==="create"){
+        await apiClient.post(`/master-trips/trip-prices`,data)
+      }
+
+  if (modalMode === "update" && selectedTrip) {
+  await apiClient.patch(
+    `/master-trips/trip-prices/${selectedTrip.id}`,
+    {
+      route_id: data.route_id,
+      vehicle_model_id: data.vehicle_model_id,
+      station_id: data.station_id,
+      daily_trip_rate: data.daily_trip_rate,
+      overnight_trip_rate: data.overnight_trip_rate,
+      status: data.status,
+    }
+  );
+}
+        
+        
+      
+
+      setModalOpen(false);
+      await fetchData();
+      setSelectedTrip(null);
+    } catch(err){
+      console.error(err);
+    }
+  }
+
+  console.log("Selected Trip for Edit:", selectedTrip);
 
 
 
@@ -288,22 +341,37 @@ export default function TripPricePage() {
               </div>
             </div>
 
-            <div className={styles.bottomSection}>
+              <div className={styles.bottomSection}>
               <hr className={styles.cuttingLine} />
 
               <div className={styles.recentRecord}>
-                <FontAwesomeIcon icon={faClockRotateLeft} />
+                <span>
+                  <FontAwesomeIcon icon={faClockRotateLeft} />
+                </span>
                 <p className={styles.recentTitle}>RECENT RECORD</p>
+                <span />
 
                 <div className={styles.stat}>
                   <div>
-                    <p>Total :</p>
-                    <p className={styles.textDanger}>
-                      {totalRecords}
-                    </p>
+                    <p className={styles.statLabel}>Total Trips :</p>
+                    <p className={styles.textDanger}>{totalRecords}</p>
+                  </div>
+                  <div>
+                    <p className={styles.statLabel}>Active Routes :</p>
+                    <p className={styles.textSuccess}>"N/A"</p>
+                  </div>
+                  <div>
+                    <p className={styles.statLabel}>Inactive Routes :</p>
+                    <p className={styles.textDanger}>"N/A"</p>
                   </div>
                 </div>
               </div>
+
+              <hr className={styles.cuttingLine} />
+              <p className={styles.lastEdited}>
+                Last Edited :{" "}
+                <span className={styles.spanText}>Unknown</span>
+              </p>
             </div>
           </div>
         }
@@ -329,7 +397,7 @@ export default function TripPricePage() {
             </p>
 
             <div className={styles.headerActionArea}>
-              <NavigationBtn href="#" leftIcon={faPlus}>
+              <NavigationBtn href="#" leftIcon={faPlus} onClick={handleAddTrip}>
                 Add Trip Prices
               </NavigationBtn>
             </div>
@@ -338,8 +406,12 @@ export default function TripPricePage() {
           <DataTable
             columns={columns}
             data={vehicles}
-            onRowClick={(row) =>
-              router.push(`/trip-price/${row.id}`)
+            onRowClick={(item) => {
+              setModalMode("update");
+              setSelectedTrip(item);
+              setModalOpen(true);
+            }
+            
             }
           />
         </div>
@@ -367,6 +439,15 @@ export default function TripPricePage() {
           onDeleteSuccess={handleDeleteSuccess}
         />
       )}
+
+
+      <AddTripModal
+        open={modalOpen}
+        mode={modalMode}
+        initialData={selectedTrip || undefined}
+        onClose={handleCloseModal}
+        onSubmit={handleSubmitTrip}
+      />
     </>
   );
 }

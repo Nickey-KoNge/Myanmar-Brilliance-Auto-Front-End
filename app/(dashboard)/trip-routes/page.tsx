@@ -173,11 +173,6 @@ useEffect(() => {
 
   console.log("Selected Route for Edit:", selectedRoute);
 
-  // const handleEditRoute = (route: Route) => {
-  //   setModalMode("update");
-  //   setSelectedRoute(route);
-  //   setModalOpen(true);
-  // };
 
   const handleCloseModal = () => setModalOpen(false);
 

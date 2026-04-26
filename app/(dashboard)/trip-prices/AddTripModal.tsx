@@ -20,7 +20,13 @@ export default function AddTripModal({
     onClose,
     onSubmit,
 }: AddTripModalProps) {
+
+
     if (!open) return null; 
+    
+
+    
+
     return (
          <div className={styles.modalOverlay}>
 
