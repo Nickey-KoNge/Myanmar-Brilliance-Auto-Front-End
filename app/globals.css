@@ -41,6 +41,7 @@ button {
 :root {
   --bg-layout: #1b1b1c;
   --bg-main: #252526;
+  --bg-black: #111111;
   --bg-card: #252526;
   --bg-input: #121212;
   --btn-cancel: #333333;
@@ -96,7 +97,7 @@ button {
   --bg-main: #eeecec;
   --bg-card: #f5f5f5;
   --bg-input: #ffffff;
-  /* --bg-btn: #1a1a1b; */
+  --bg-black: #d3d3d3;
   --btn-text: #eeecec;
   --color-primary: #a33b3b;
   --color-primary-hover: #962e32;

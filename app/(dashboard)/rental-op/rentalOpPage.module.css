@@ -1,4 +1,3 @@
-
 .container {
   display: flex;
   gap: 20px;
@@ -15,7 +14,8 @@
   display: flex;
   flex-direction: column;
 }
-
+/* .cardState {
+} */
 
 .pageHeader {
   display: flex;
@@ -138,14 +138,15 @@
   font-weight: bold;
 }
 
-.btnSaveOngoing {
+.btnSave {
   background-color: var(--accent);
-  border: none;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
+  color: var(--text-scuccess);
+  font-weight: var(--font-weight-bold);
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  transition: background-color 0.2s;
 }
 
 .btnFinalize {
@@ -179,4 +180,292 @@
   flex-direction: column;
   gap: 10px;
   overflow-x: auto;
+}
+.smallModalContent {
+  background-color: var(--bg-color);
+  padding: 24px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px; /* အကျယ်ကို လျှော့ထားပါတယ် */
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Modal Overlays */
+.largeModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+/* Modal Contents */
+.largeModalContent,
+.smallModalContent {
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  border-radius: var(--radius);
+  padding: 24px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.largeModalContent {
+  max-width: 1000px;
+}
+
+.smallModalContent {
+  max-width: 600px;
+}
+
+/* Layout Grids & Flex */
+.grid2Col {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .grid2Col {
+    grid-template-columns: 1fr;
+  }
+}
+
+.flexCol {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.flexBetween {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flexGap {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.flexGap30 {
+  display: flex;
+  gap: 30px;
+}
+
+.flex1 {
+  flex: 1;
+}
+
+/* Panels */
+.panel {
+  background-color: var(--bg-table);
+  border: 1px solid var(--border-color);
+  padding: 16px;
+  border-radius: var(--radius);
+}
+
+.panelHeader {
+  font-size: 14px;
+  font-weight: var(--font-weight-bold);
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+}
+
+/* Images */
+.imgBox {
+  border-radius: 8px;
+  object-fit: cover;
+  background-color: var(--bg-black);
+  border: 1px solid var(--border-color);
+}
+
+/* Inputs & Selects */
+.inputLabel {
+  display: block;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.selectBox {
+  width: 100%;
+  padding: 10px 12px;
+  background-color: var(--bg-input);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.selectBox:focus {
+  border-color: var(--accent);
+}
+
+.readonlyText {
+  background-color: var(--bg-black);
+  color: var(--accent);
+  font-weight: bold;
+}
+
+/* Buttons */
+.btnCancel {
+  background-color: var(--btn-cancel);
+  color: var(--text-cancel);
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.btnFinalize,
+.btnSaveOngoing {
+  background-color: var(--accent);
+  cursor: pointer;
+  color: var(--text-scuccess);
+  font-weight: var(--font-weight-bold);
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  transition: background-color 0.2s;
+}
+
+.btnFinalize:hover,
+.btnSaveOngoing:hover {
+  filter: brightness(1.1);
+}
+
+.btnFinalize:disabled,
+.btnSaveOngoing:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Custom Scrollbar for Modal */
+.largeModalContent::-webkit-scrollbar,
+.smallModalContent::-webkit-scrollbar {
+  width: 6px;
+}
+
+.largeModalContent::-webkit-scrollbar-thumb,
+.smallModalContent::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 10px;
+}
+/* --- New utility classes to replace inline styles --- */
+
+.headerRow {
+  margin-bottom: 20px;
+}
+
+.iconBox {
+  background-color: var(--accent);
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.primaryTextBold {
+  color: var(--accent);
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.mutedText {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.panelIcon {
+  color: var(--accent);
+  margin-right: 8px;
+}
+
+.marginBottom15 {
+  margin-bottom: 15px;
+}
+
+.halfWidthInput {
+  width: 50%;
+}
+
+.actionButtonsRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+/* --- EndOpModal အတွက် အသစ်ဖြည့်စွက်ထားသော CSS များ --- */
+
+.marginBottom20 {
+  margin-bottom: 20px;
+}
+
+.iconBoxEnd {
+  background-color: var(--accent);
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.modalTitleLarge {
+  margin: 0;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.primaryTextBold {
+  color: var(--accent);
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.mutedText {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.panelIcon {
+  color: var(--accent);
+  margin-right: 8px;
+}
+
+.marginBottom15 {
+  margin-bottom: 15px;
+}
+
+.halfWidthInput {
+  width: 50%;
+}
+
+.textAreaFixed {
+  height: 130px;
+  resize: none;
+}
+.actionButtonsCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
 }
