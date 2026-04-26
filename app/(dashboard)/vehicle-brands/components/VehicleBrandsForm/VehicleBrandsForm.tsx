@@ -15,7 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
-import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
 import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 
@@ -43,7 +43,16 @@ export const VehicleBrandsForm: React.FC<VehicleBrandsFormProps> = ({
   onSubmit,
   loading = false,
 }) => {
-  const [preview, setPreview] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  const preview =
+    selectedImage ||
+    (typeof initialData?.image === "string" ? initialData.image : null);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) setSelectedImage(URL.createObjectURL(file));
+  };
 
   const {
     register,
@@ -55,33 +64,18 @@ export const VehicleBrandsForm: React.FC<VehicleBrandsFormProps> = ({
     defaultValues: initialData || {},
   });
 
-  // Handle Initial Data Binding (For Update)
   useEffect(() => {
-    if (initialData) {
-      reset(initialData);
-      if (initialData.image) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setPreview(initialData.image);
-      }
+    if (
+      initialData &&
+      initialData.vehicle_brand_name &&
+      initialData.vehicle_brand_name.length > 0
+    ) {
+      reset({
+        ...initialData,
+        vehicle_brand_name: String(initialData.vehicle_brand_name),
+      });
     }
   }, [initialData, reset]);
-
-  // Cleanup preview URL (avoid memory leaks)
-  useEffect(() => {
-    return () => {
-      if (preview && preview.startsWith("blob:")) {
-        URL.revokeObjectURL(preview);
-      }
-    };
-  }, [preview]);
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const objectUrl = URL.createObjectURL(file);
-      setPreview(objectUrl);
-    }
-  };
 
   return (
     <>
@@ -148,7 +142,6 @@ export const VehicleBrandsForm: React.FC<VehicleBrandsFormProps> = ({
 
               <label htmlFor="photo" className={styles.imageUploadBox}>
                 {preview ? (
-                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={preview}
                     alt="Preview"
@@ -183,47 +176,46 @@ export const VehicleBrandsForm: React.FC<VehicleBrandsFormProps> = ({
           <hr className={styles.cuttingLine} />
 
           {/* <div className={styles.filterContainer}> */}
-            <TextInput
-              label="Vehicle Brand Name"
-              placeholder="TOYOTA"
-              rightIcon={faGlobe}
-              error={errors.vehicle_brand_name?.message}
-              {...register("vehicle_brand_name", {
-                required: "Vehicle brand name is required",
-              })}
-            />
+          <TextInput
+            label="Vehicle Brand Name"
+            placeholder="TOYOTA"
+            rightIcon={faGlobe}
+            error={errors.vehicle_brand_name?.message}
+            {...register("vehicle_brand_name", {
+              required: "Vehicle brand name is required",
+            })}
+          />
 
-            <TextInput
-              label="Country of Origin"
-              placeholder="JAPAN"
-              rightIcon={faGlobe}
-              error={errors.country_of_origin?.message}
-              {...register("country_of_origin", {
-                required: "Country of origin is required",
-              })}
-            />
+          <TextInput
+            label="Country of Origin"
+            placeholder="JAPAN"
+            rightIcon={faGlobe}
+            error={errors.country_of_origin?.message}
+            {...register("country_of_origin", {
+              required: "Country of origin is required",
+            })}
+          />
 
-            <TextInput
-              label="Manufacturer"
-              placeholder="TOYOTA INC"
-              rightIcon={faCity}
-              error={errors.manufacturer?.message}
-              {...register("manufacturer", {
-                required: "Manufacturer is required",
-              })}
-            />
+          <TextInput
+            label="Manufacturer"
+            placeholder="TOYOTA INC"
+            rightIcon={faCity}
+            error={errors.manufacturer?.message}
+            {...register("manufacturer", {
+              required: "Manufacturer is required",
+            })}
+          />
 
-            <TextInput
-              label="Description"
-              placeholder="Enter description..."
-              as="textarea"
-              rows={3}
-              error={errors.description?.message}
-              {...register("description", {
-                required: "Description is required",
-              })}
-            />
-          {/* </div> */}
+          <TextInput
+            label="Description"
+            placeholder="Enter description..."
+            as="textarea"
+            rows={3}
+            error={errors.description?.message}
+            {...register("description", {
+              required: "Description is required",
+            })}
+          />
         </section>
       </form>
     </>

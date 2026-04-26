@@ -9,16 +9,12 @@ import {
   faLaptop,
   faUsers,
   faBuilding,
-  faWrench,
   faCar,
-  // faFileInvoice,
   faRoute,
   faKey,
-  // faDollarSign,
   faChevronRight,
   faChevronDown,
   faUser,
-  faTruckMoving,
   faIdCardClip,
   faBuildingFlag,
   faCodeBranch,
@@ -31,29 +27,8 @@ import {
   faLayerGroup,
   faCarSide,
   faAward,
+  faTaxi,
 } from "@fortawesome/free-solid-svg-icons";
-
-const NavItem = ({
-  icon,
-  label,
-  href,
-}: {
-  icon: IconDefinition;
-  label: string;
-  href: string;
-}) => {
-  const pathname = usePathname();
-  // const isActive = pathname.startsWith(href);
-  const isActive = pathname === href || pathname.startsWith(`${href}/`);
-  return (
-    <Link href={href} style={{ textDecoration: "none" }}>
-      <div className={`${styles.menuItem} ${isActive ? styles.active : ""}`}>
-        <FontAwesomeIcon icon={icon} className={styles.icon} />
-        <span className={styles.menuText}>{label}</span>
-      </div>
-    </Link>
-  );
-};
 
 interface SubItem {
   icon: IconDefinition;
@@ -99,7 +74,11 @@ const NavDropdown: React.FC<NavDropdownProps> = ({
         <div className={styles.subMenu}>
           {subItems.map((item, index) => {
             const isActive =
-              pathname === item.href || pathname.startsWith(`${item.href}/`);
+              item.href === "/audit"
+                ? pathname === "/audit"
+                : pathname === item.href ||
+                  pathname.startsWith(`${item.href}/`);
+
             return (
               <Link
                 key={index}
@@ -133,6 +112,7 @@ export const SideNav = () => {
     if (path.match(/^\/(company|branch|station|groups)/)) return "Entity";
     if (path.match(/^\/(vehicle-brands|vehicle-models|vehicle)/))
       return "Fleet";
+    if (path.match(/^\/(rental-operations)/)) return "Rental";
     if (path.match(/^\/audit/)) return "Audit";
   };
 
@@ -187,7 +167,7 @@ export const SideNav = () => {
           subItems={[
             { icon: faUser, label: "Staff", href: "/staff" },
             // { icon: faUserTie, label: "Customer", href: "/customer" },
-            { icon: faTruckMoving, label: "Supplier", href: "/supplier" },
+            // { icon: faTruckMoving, label: "Supplier", href: "/supplier" },
             { icon: faIdCardClip, label: "Driver", href: "/driver" },
           ]}
           isOpen={openDropdown === "Personnel"}
@@ -227,17 +207,12 @@ export const SideNav = () => {
               label: "Vehicle",
               href: "/vehicle",
             },
-            {
-              icon: faIdCardClip,
-              label: "Assignments",
-              href: "/vehicle-driver-assign",
-            },
           ]}
           isOpen={openDropdown === "Fleet"}
           onToggle={() => handleToggle("Fleet")}
           isHovered={isHovered}
         />
-        <NavItem icon={faWrench} label="Spare-part" href="/spare-part" />
+        {/* <NavItem icon={faWrench} label="Spare-part" href="/spare-part" /> */}
 
         {/* <div className={styles.sectionTitle}>
           <span className={styles.menuText}>Sale</span>
@@ -249,15 +224,47 @@ export const SideNav = () => {
         </div>
         <NavItem icon={faFileInvoice} label="Purchase" href="/purchase" /> */}
 
-        <div className={styles.sectionTitle}>
+        {/* <div className={styles.sectionTitle}>
           <span className={styles.menuText}>Trip</span>
-        </div>
-        <NavItem icon={faRoute} label="Trip" href="/trip" />
+        </div> */}
+
+        <NavDropdown
+          icon={faRoute}
+          label="Trip"
+          subItems={[
+            { icon: faRoute, label: "Routes List", href: "/trip-routes" },
+            {icon: faTableList, label: "Trip List", href: "/trip-prices" },
+            {
+              icon: faCar,
+              label: "Drivers Assignment",
+              href: "/vehicle-driver-assign/vehicle-driver-list",
+            },
+            { icon: faKey, label: "Rental Operations", href: "/rental-op/rental-op-list" },
+          ]}
+          isOpen={openDropdown === "Trip"}
+          onToggle={() => handleToggle("Trip")}
+          isHovered={isHovered}
+        />
+        {/* <NavItem icon={faRoute} label="Trip" href="/trip" /> */}
 
         <div className={styles.sectionTitle}>
           <span className={styles.menuText}>Rental & Trip</span>
         </div>
-        <NavItem icon={faKey} label="Rental" href="/rental" />
+          {/* Rental OP list ထုပ်ရန်  */}
+        {/* <NavDropdown
+          icon={faKey}
+          label="Rental"
+          subItems={[
+            {
+              icon: faTaxi,
+              label: "Rental Op",
+              href: "/rental-op",
+            },
+          ]}
+          isOpen={openDropdown === "Rental"}
+          onToggle={() => handleToggle("Rental")}
+          isHovered={isHovered}
+        /> */}
 
         <div className={styles.sectionTitle}>
           <span className={styles.menuText}>Audit</span>

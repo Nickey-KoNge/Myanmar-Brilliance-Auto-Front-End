@@ -17,8 +17,8 @@ import { apiClient } from "@/app/features/lib/api-client";
 import styles from "./page.module.css";
 import DeleteModal from "../../components/ui/Delete/DeleteModal";
 import { Pagination } from "@/app/components/ui/Pagination/Pagination";
-import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
-import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
+import DateInput from "@/app/components/ui/Inputs/DateInput";
 import { FilterState, useFilters } from "@/app/hooks/userFilters";
 // import { set } from "react-hook-form";
 import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
@@ -244,15 +244,15 @@ export default function BranchPage() {
                 <span />
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLable}>Total Branches :</p>
+                    <p className={styles.statLabel}>Total Branches :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Active Branches :</p>
+                    <p className={styles.statLabel}>Active Branches :</p>
                     <p className={styles.textSuccess}>{activeRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Inactive Branches :</p>
+                    <p className={styles.statLabel}>Inactive Branches :</p>
                     <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>

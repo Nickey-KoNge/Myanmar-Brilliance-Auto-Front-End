@@ -1,9 +1,9 @@
+/* Sidebar */
 .sidebarWrapper {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
-  /* min-height: calc(100vh - 200px); */
 }
 
 .topSection {
@@ -11,22 +11,33 @@
   flex-direction: column;
 }
 
+.gridBoxTitle {
+  color: var(--text-main);
+  text-align: center;
+  font-weight: 600;
+  padding: var(--padding) 0;
+}
+
+.searchContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.filterRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: calc(var(--gap) / 2);
+}
+
 .bottomSection {
   margin-top: auto;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--gap);
 }
 
-.deleteBtn {
-  border: none;
-  background: none;
-  color: var(--danger);
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-/* --- Table Header Layout (Title Center, Actions Right, Pagination Left) --- */
+/* Table Header */
 .tableHeaderArea {
   display: flex;
   justify-content: center;
@@ -60,134 +71,13 @@
   align-items: center;
 }
 
-.gridBoxTitle {
-  color: var(--text-main);
-  text-align: center;
-  margin-bottom: var(--padding-inside);
-  font-weight: 600;
-}
-
-.cuttingLine {
-  border: none;
-  height: 0.5px;
-  background: var(--accent);
-  margin: 0.5rem 0;
-}
-
-.searchContainer {
-  display: flex;
-  flex-direction: column;
-  /* gap: 1rem; */
-  margin-top: 1rem;
-}
-
-.filterRow {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
-}
-
-.label {
-  font-size: 12px;
-  color: var(--text-main);
-}
-
-/* Hide native calendar icon */
-.dateSearch::-webkit-calendar-picker-indicator {
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-/* Reset button */
-.btnBox {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin: 0.5rem 0;
-}
-
-.resetBtn {
-  background: var(--accent);
-  color: inherit;
-  border-radius: var(--radius);
-  padding: 1rem;
-  transition: all 0.3s ease;
-  font-weight: bold;
-}
-
-.resetBtn:hover {
-  background: var(--danger);
-}
-
-/* Recent record */
-.recentRecord {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 1rem;
-  align-items: center;
-}
-
-.recentRecord span:nth-of-type(1) {
-  background: var(--accent);
-  padding: 0.5rem;
-  border-radius: var(--radius);
-}
-
-.recentTitle {
-  color: var(--text-main);
-  font-weight: bold;
-}
-
-.stat {
-  display: grid;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: var(--font-size-s);
-}
-
-.stat div {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-
-.statLable {
-  color: var(--text-muted);
-  font-weight: bold;
-}
-
-/* Last edited */
-.lastEdited {
-  text-align: center;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  font-weight: bold;
-}
-
-.filterRow select option {
-  background-color: var(--bg-input);
-  color: var(--text-main);
-}
-
-/* Status Colors */
-.textDanger {
-  color: var(--danger);
-  font-weight: var(--font-weight-bold);
-}
-
-.textSuccess {
-  color: var(--success);
-  font-weight: var(--font-weight-bold);
-}
-
-/* --- Added for Company Avatar Display --- */
-.companyInfo {
+.info {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: calc(var(--gap) / 2.5);
 }
 
-.companyImg {
+.image {
   border-radius: var(--img-border-radius);
   object-fit: cover;
 }
@@ -202,6 +92,7 @@
   justify-content: center;
   color: var(--text-muted);
 }
+
 .addressCell {
   font-size: 13px;
   max-width: 200px;
@@ -225,6 +116,83 @@
   color: var(--danger);
   margin-top: 4px;
 }
-.spanText {
+
+/* Recent Records */
+.recentRecord {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--gap);
+  align-items: center;
+}
+
+.recentTitle {
+  color: var(--text-main);
+  font-weight: bold;
+}
+
+.recentRecord span:nth-of-type(1) {
+  background: var(--accent);
+  padding: calc(var(--padding) / 2);
+  border-radius: var(--radius);
+}
+
+/* States */
+.stat {
+  display: grid;
+  align-items: center;
+  gap: calc(var(--gap) / 2);
+  font-size: 0.85rem;
+}
+
+.stat div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.statLabel {
+  color: var(--text-muted);
+  font-weight: bold;
+}
+
+/* Buttons */
+.deleteBtn {
+  border: none;
+  background: none;
+  color: var(--danger);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.deleteBtn:hover {
+  transform: scale(1.2);
+}
+
+/* Last Edited */
+.lastEdited {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: bold;
+}
+
+.lastEdited span {
   color: var(--color-primary);
+}
+
+/* Utilities */
+.cuttingLine {
+  border: none;
+  height: 0.5px;
+  background: var(--accent);
+  margin: calc(var(--margin) / 2) 0;
+}
+
+.textDanger {
+  color: var(--danger);
+  font-weight: var(--font-weight-bold);
+}
+
+.textSuccess {
+  color: var(--success);
+  font-weight: var(--font-weight-bold);
 }

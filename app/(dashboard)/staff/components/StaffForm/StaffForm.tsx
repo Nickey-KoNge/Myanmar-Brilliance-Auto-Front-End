@@ -21,9 +21,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
-import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
-import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
-import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
+import DropdownInput from "@/app/components/ui/Inputs/DropdownInput";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
+import DateInput from "@/app/components/ui/Inputs/DateInput";
 import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 
@@ -60,13 +60,13 @@ export interface StaffFormData {
   nrc: string;
   dob: string;
   gender: string;
-  photo?: FileList;
   password?: string;
   phone: string;
   email: string;
   country: string;
   city: string;
   street_address: string;
+  photo?: FileList;
   image?: string;
 }
 
@@ -83,11 +83,14 @@ export const StaffForm: React.FC<StaffFormProps> = ({
   onSubmit,
   loading = false,
 }) => {
-  const [preview, setPreview] = useState<string | null>(null);
-
   const [roles, setRoles] = useState<Role[]>([]);
   const [branches, setBranches] = useState<Branch[]>([]);
   const [companies, setCompanies] = useState<Company[]>([]);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  const preview =
+    selectedImage ||
+    (typeof initialData?.image === "string" ? initialData.image : null);
 
   const {
     register,
@@ -99,16 +102,21 @@ export const StaffForm: React.FC<StaffFormProps> = ({
     defaultValues: initialData || {},
   });
 
-  // Handle Initial Data Binding (For Update)
   useEffect(() => {
-    if (initialData) {
-      reset(initialData);
-      if (initialData.image) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setPreview(initialData.image);
-      }
+    if (
+      initialData &&
+      roles.length > 0 &&
+      branches.length > 0 &&
+      companies.length > 0
+    ) {
+      reset({
+        ...initialData,
+        role: String(initialData.role),
+        branch: String(initialData.branch),
+        company: String(initialData.company),
+      });
     }
-  }, [initialData, reset]);
+  }, [initialData, roles, branches, companies, reset]);
 
   // Fetch Dropdown Options
   useEffect(() => {
@@ -147,7 +155,7 @@ export const StaffForm: React.FC<StaffFormProps> = ({
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) setPreview(URL.createObjectURL(file));
+    if (file) setSelectedImage(URL.createObjectURL(file));
   };
 
   return (
@@ -299,7 +307,6 @@ export const StaffForm: React.FC<StaffFormProps> = ({
               <label htmlFor="photo" className={styles.imageUploadBox}>
                 {preview ? (
                   <>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={preview}
                       alt="Preview"
@@ -379,7 +386,7 @@ export const StaffForm: React.FC<StaffFormProps> = ({
               {...register("city")}
             />
             <TextInput
-              label="Street Address"
+              label="Address"
               placeholder="No. (123), Street Name..."
               as="textarea"
               rows={3}

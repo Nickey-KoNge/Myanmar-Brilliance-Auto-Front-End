@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -17,9 +16,9 @@ import { FilterState, useFilters } from "@/app/hooks/userFilters";
 import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
 
 import styles from "./page.module.css";
-import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
-import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
-import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
+import DateInput from "@/app/components/ui/Inputs/DateInput";
+import DropdownInput from "@/app/components/ui/Inputs/DropdownInput";
 
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 import { Pagination } from "@/app/components/ui/Pagination/Pagination";
@@ -273,7 +272,7 @@ export default function VehicleListPage() {
       header: "Vehicle Info",
       key: "vehicleInfo",
       render: (vehicle: Vehicle) => (
-        <div className={styles.vehicleInfo}>
+        <div className={styles.info}>
           {vehicle.image ? (
             <Image
               src={vehicle.image || "/default-user.png"}
@@ -281,7 +280,7 @@ export default function VehicleListPage() {
               width={40}
               height={40}
               unoptimized
-              className={styles.vehicleImg}
+              className={styles.image}
             />
           ) : (
             <div className={styles.placeholderLogo}>
@@ -537,15 +536,15 @@ export default function VehicleListPage() {
 
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLable}>Total Vehicle :</p>
+                    <p className={styles.statLabel}>Total Vehicle :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Active Vehicle :</p>
+                    <p className={styles.statLabel}>Active Vehicle :</p>
                     <p className={styles.textSuccess}>{activeRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Inactive Vehicle :</p>
+                    <p className={styles.statLabel}>Inactive Vehicle :</p>
                     <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>

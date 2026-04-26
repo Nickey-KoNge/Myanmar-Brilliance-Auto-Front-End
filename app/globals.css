@@ -41,6 +41,7 @@ button {
 :root {
   --bg-layout: #1b1b1c;
   --bg-main: #252526;
+  --bg-black: #111111;
   --bg-card: #252526;
   --bg-input: #121212;
   --btn-cancel: #333333;
@@ -65,7 +66,7 @@ button {
   --active-link-color: #6f2f2f;
   --active-right-link-color: #b25151;
   --radius: 8px;
-  --gap: 1.5rem;
+  --gap: 1rem;
   --img-border-radius: 50%;
 
   /* table css */
@@ -83,7 +84,7 @@ button {
   --danger: #ff4d4f;
   --success: #2b7a2c;
   --success-hover: #338f35;
-  --infor: rgb(77, 82, 216);
+  --info: #007bff;
   --selected: rgb(216, 202, 77);
   --padding: 1rem;
   --padding-inside: 0.75rem;
@@ -96,7 +97,7 @@ button {
   --bg-main: #eeecec;
   --bg-card: #f5f5f5;
   --bg-input: #ffffff;
-  /* --bg-btn: #1a1a1b; */
+  --bg-black: #d3d3d3;
   --btn-text: #eeecec;
   --color-primary: #a33b3b;
   --color-primary-hover: #962e32;

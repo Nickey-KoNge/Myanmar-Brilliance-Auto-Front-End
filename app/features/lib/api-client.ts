@@ -17,7 +17,9 @@ apiClient.interceptors.request.use((config) => {
 // ၂။ Response Interceptor
 apiClient.interceptors.response.use(
   (response) => {
-   return response.data?.data !== undefined ? response.data.data : response.data;
+    return response.data?.data !== undefined
+      ? response.data.data
+      : response.data;
   },
   async (error) => {
     const originalRequest = error.config;

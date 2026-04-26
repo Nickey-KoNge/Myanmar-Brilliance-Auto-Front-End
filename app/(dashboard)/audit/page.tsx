@@ -14,8 +14,8 @@ import { apiClient } from "@/app/features/lib/api-client";
 import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
 import { DataTable } from "@/app/components/ui/DataTable/DataTable";
 import { Pagination } from "@/app/components/ui/Pagination/Pagination";
-import TextInput from "@/app/components/ui/SearchBoxes/TextInput";
-import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
+import DateInput from "@/app/components/ui/Inputs/DateInput";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 import { FilterState, useFilters } from "@/app/hooks/userFilters";
 
@@ -131,6 +131,8 @@ export default function AuditLogPage() {
         url = `/master-company/branches/restore/${auditId}`;
       } else if (entityName === "company") {
         url = `/master-company/company/restore/${auditId}`;
+      } else if (entityName === "driver") {
+        url = `/master-company/driver/restore/${auditId}`;
       } else if (entityName === "staff") {
         url = `/master-company/staff/restore/${auditId}`;
       } else if (entityName === "stations") {
@@ -143,6 +145,8 @@ export default function AuditLogPage() {
         url = `/master-vehicle/vehicle-models/restore/${auditId}`;
       } else if (entityName === "vehicle_brands") {
         url = `/master-vehicle/vehicle-brands/restore/${auditId}`;
+      } else if (entityName === "rental_operation") {
+        url = `/master-rental/rental-operation/restore/${auditId}`;
       } else {
         toast.error("Restore not supported for this module yet.");
         return;

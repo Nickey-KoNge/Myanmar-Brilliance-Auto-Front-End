@@ -5,7 +5,7 @@ import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 
 import { FormCard } from "@/app/components/ui/FormCard/FormCard";
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
-import DropdownInput from "@/app/components/ui/SearchBoxes/DropdownInput";
+import DropdownInput from "@/app/components/ui/Inputs/DropdownInput";
 import {
   faArrowsRotate,
   faCamera,
@@ -21,7 +21,7 @@ import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import styles from "./VehicleForm.module.css";
 import { Input } from "@/app/components/ui/Input/Input";
-import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
+import DateInput from "@/app/components/ui/Inputs/DateInput";
 import { apiClient } from "@/app/features/lib/api-client";
 
 export interface VehicleFormData {
@@ -93,11 +93,27 @@ export const VehicleForm: React.FC<VehicleFormProps> = ({
     defaultValues: initialData || {},
   });
 
+  // useEffect(() => {
+  //   if (initialData && Object.keys(initialData).length > 0) {
+  //     reset(initialData);
+  //   }
+  // }, [initialData, reset]);
+
   useEffect(() => {
-    if (initialData && Object.keys(initialData).length > 0) {
-      reset(initialData);
+    if (
+      initialData &&
+      stations.length > 0 &&
+      groups.length > 0 &&
+      vehicleModels.length > 0
+    ) {
+      reset({
+        ...initialData,
+        station_id: String(initialData.station_id),
+        group_id: String(initialData.group_id),
+        vehicle_model_id: String(initialData.vehicle_model_id),
+      });
     }
-  }, [initialData, reset]);
+  }, [initialData, stations, groups, vehicleModels, reset]);
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -234,13 +250,24 @@ export const VehicleForm: React.FC<VehicleFormProps> = ({
                 id: group.id || `group-opt-${idx}`,
                 name: group.group_name,
               }))}
-              valueKey="id"
-              nameKey="name"
+              // valueKey="id"
+              // nameKey="name"
               {...register("group_id", {
                 required: mode === "create" ? "Group is required" : false,
               })}
               error={errors.group_id?.message as string}
             />
+
+            {/* <DropdownInput
+              label="Group"
+              placeholder="Select Group"
+              options={groups.map((g) => ({
+                id: g.id,
+                name: g.group_name,
+              }))}
+              error={errors.group_id?.message}
+              {...register("group_id", { required: "Group is required" })}
+            /> */}
 
             <DropdownInput
               label="Vehicle Model"

@@ -1,0 +1,194 @@
+/* Sidebar */
+.sidebarWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.topSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.gridBoxTitle {
+  color: var(--text-main);
+  text-align: center;
+  font-weight: 600;
+  padding: var(--padding) 0;
+}
+
+.searchContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.filterRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: calc(var(--gap) / 2);
+}
+
+.bottomSection {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+/* Table Header */
+.tableHeaderArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-bottom: var(--padding-inside);
+  min-height: 50px;
+}
+
+.paginationInfoWrapper {
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.tableTitle {
+  color: var(--text-main);
+  font-weight: 600;
+  margin: 0;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.headerActionArea {
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: center;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--gap) / 2.5);
+}
+
+.image {
+  border-radius: var(--img-border-radius);
+  object-fit: cover;
+}
+
+.timelineText {
+  font-size: 13px;
+  color: var(--text-main);
+}
+
+.expireText {
+  font-size: 11px;
+  color: var(--danger);
+  margin-top: 4px;
+}
+
+/* Recent Records */
+.recentRecord {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--gap);
+  align-items: center;
+}
+
+.recentTitle {
+  color: var(--text-main);
+  font-weight: bold;
+}
+
+.recentRecord span:nth-of-type(1) {
+  background: var(--accent);
+  padding: calc(var(--padding) / 2);
+  border-radius: var(--radius);
+}
+
+/* States */
+.stat {
+  display: grid;
+  align-items: center;
+  gap: calc(var(--gap) / 2);
+  font-size: 0.85rem;
+}
+
+.stat div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.statLabel {
+  color: var(--text-muted);
+  font-weight: bold;
+}
+
+/* Buttons */
+.deleteBtn {
+  border: none;
+  background: none;
+  color: var(--danger);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.deleteBtn:hover {
+  transform: scale(1.2);
+}
+
+/* Last Edited */
+.lastEdited {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: bold;
+}
+
+.lastEdited span {
+  color: var(--color-primary);
+}
+
+/* Utilities */
+.cuttingLine {
+  border: none;
+  height: 0.5px;
+  background: var(--accent);
+  margin: calc(var(--margin) / 2) 0;
+}
+
+.textDanger {
+  color: var(--danger);
+  font-weight: var(--font-weight-bold);
+}
+
+.textSuccess {
+  color: var(--success);
+  font-weight: var(--font-weight-bold);
+}
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: rgb(27, 27, 28);
+  padding: 2rem;
+  border-radius:0.75rem;
+  min-width: 350px;
+  position: relative;
+}

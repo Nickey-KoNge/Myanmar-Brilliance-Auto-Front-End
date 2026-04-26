@@ -52,7 +52,7 @@ export default function CreateVehiclePage() {
     <VehicleForm
       mode="create"
       onSubmit={handleSubmit}
-      initialData={{}}
+  
       loading={loading}
     />
   );

@@ -19,6 +19,7 @@
     "next": "^16.2.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-google-charts": "^5.2.1",
     "react-hook-form": "^7.71.2",
     "react-hot-toast": "^2.6.0",
     "react-leaflet": "^5.0.0",

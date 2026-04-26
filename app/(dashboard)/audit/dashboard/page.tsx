@@ -18,7 +18,7 @@ import {
   faCalendarDays,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
-import DateInput from "@/app/components/ui/SearchBoxes/DateInput";
+import DateInput from "@/app/components/ui/Inputs/DateInput";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
@@ -318,52 +318,85 @@ export default function AuditDashboardPage() {
           </Link>
         </div>
       </div>
-
       {/* Modal JSX */}
       {showExportModal && (
         <div className={styles.modalOverlay}>
           <div className={styles.exportModal}>
-            <h3>Export Audit Report</h3>
-            <div className={styles.modalBody}>
-              <p>
-                Current Range: {startDate || "All"} to {endDate || "Today"}
-              </p>
-
-              <label>Filter by Module:</label>
-              <select
-                onChange={(e) =>
-                  setExportOptions({
-                    ...exportOptions,
-                    entityName: e.target.value,
-                  })
-                }
+            <div className={styles.modalHeader}>
+              <h3 className={styles.modalTitle}>Export Audit Report</h3>
+              <button
+                className={styles.btnCloseIcon}
+                onClick={() => setShowExportModal(false)}
+                title="Close"
               >
-                <option value="">All Modules</option>
-                <option value="company">Company</option>
-                <option value="branches">Branches</option>
-                <option value="stations">Stations</option>
-                <option value="groups">Groups</option>
-                <option value="staff">Staff</option>
-                <option value="vehicle_models">Vehicle Model</option>
-                <option value="vehicle_brands">Vehicle Brands</option>
-                <option value="vehicle">Vehicles</option>
-              </select>
-
-              <label>Filter by Action:</label>
-              <select
-                onChange={(e) =>
-                  setExportOptions({ ...exportOptions, action: e.target.value })
-                }
-              >
-                <option value="">All Actions</option>
-                <option value="DELETE">Delete (Critical)</option>
-                <option value="CREATE">Create</option>
-                <option value="UPDATE">Update</option>
-              </select>
+                &times;
+              </button>
             </div>
+
+            <p className={styles.modalSubtitle}>
+              Current Range: <strong>{startDate || "All"}</strong> to{" "}
+              <strong>{endDate || "Today"}</strong>
+            </p>
+
+            <div className={styles.modalBody}>
+              <div className={styles.inputGroup}>
+                <label>Filter by Module</label>
+                <select
+                  value={exportOptions.entityName}
+                  onChange={(e) =>
+                    setExportOptions({
+                      ...exportOptions,
+                      entityName: e.target.value,
+                    })
+                  }
+                  className={styles.customSelect}
+                >
+                  <option value="">All Modules</option>
+                  <option value="company">Company</option>
+                  <option value="branches">Branches</option>
+                  <option value="stations">Stations</option>
+                  <option value="groups">Groups</option>
+                  <option value="staff">Staff</option>
+                  <option value="driver">Driver</option>
+                  <option value="vehicle_models">Vehicle Model</option>
+                  <option value="vehicle_brands">Vehicle Brands</option>
+                  <option value="vehicle">Vehicles</option>
+                  <option value="rental_operation">Rental Op</option>
+                </select>
+              </div>
+
+              <div className={styles.inputGroup}>
+                <label>Filter by Action</label>
+                <select
+                  value={exportOptions.action}
+                  onChange={(e) =>
+                    setExportOptions({
+                      ...exportOptions,
+                      action: e.target.value,
+                    })
+                  }
+                  className={styles.customSelect}
+                >
+                  <option value="">All Actions</option>
+                  <option value="DELETE">Delete (Critical)</option>
+                  <option value="CREATE">Create</option>
+                  <option value="UPDATE">Update</option>
+                </select>
+              </div>
+            </div>
+
             <div className={styles.modalFooter}>
-              <button onClick={() => setShowExportModal(false)}>Cancel</button>
+              <button
+                className={styles.btnCancel}
+                onClick={() => setShowExportModal(false)}
+              >
+                Cancel
+              </button>
               <button className={styles.btnDownload} onClick={handleExport}>
+                <FontAwesomeIcon
+                  icon={faDownload}
+                  style={{ marginRight: "6px" }}
+                />
                 Download Excel
               </button>
             </div>

@@ -7,36 +7,36 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 1.5rem;
-  z-index: 1;
+  z-index: 100;
+  border-radius: 8px;
+}
+
+.leftSection {
+  display: flex;
+  align-items: center;
 }
 
 .companyInfo {
   display: flex;
   align-items: center;
   gap: 1rem;
-  font-weight: 700;
 }
 
 .logobrand {
-  height: 60px;
-  display: flex;
-  align-items: center;
   font-weight: 900;
   font-size: 1.1rem;
   letter-spacing: 1px;
   color: var(--text-main);
 }
 
-.companyInfo span {
+.logobrand span {
   color: var(--color-primary);
-  margin-left: 0.5rem;
 }
 
 .logoIcon {
   width: 40px;
   height: 40px;
   background-color: var(--bg-input);
-  color: var(--color-primary);
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -44,6 +44,50 @@
   overflow: hidden;
 }
 
+/* --- Top Navigation --- */
+.topNavigation {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 1.2rem;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-bottom: 3px solid transparent;
+  background-color: transparent;
+  gap: 10px;
+  border-radius: 8px;
+}
+
+.navItem:hover,
+.navItem.active {
+  color: var(--text-main);
+  background-color: var(--bg-main);
+}
+
+.navItem.active {
+  border-bottom-color: var(--active-right-link-color);
+  background-color: var(--active-link-color);
+}
+
+.navIcon {
+  width: 18px !important;
+  height: 18px !important;
+  flex-shrink: 0;
+}
+
+.navText {
+  white-space: nowrap;
+}
+
+/* --- Actions & User Section --- */
 .actions {
   display: flex;
   align-items: center;
@@ -53,10 +97,10 @@
 .togglediv {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 1.2rem;
   padding: 0 1rem;
 }
+
 .themeToggle {
   background: var(--bg-input);
   border: 1px solid var(--border-nav-color);
@@ -69,39 +113,13 @@
   cursor: pointer;
   color: var(--text-main);
   transition: all 0.3s ease;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.themeToggle:hover {
-  color: var(--color-primary);
-  border-color: var(--color-primary);
-  background: var(--bg-card);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.toggleIcon {
-  font-size: 1.1rem;
-}
-
-.iconBtn,
 .alertBtn {
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
   color: var(--color-primary);
-  transition: color 0.3s ease;
   font-size: 20px;
-}
-
-.alertBtn:hover {
-  color: var(--color-primary);
-}
-
-.iconBtn:hover {
-  color: var(--color-primary);
+  cursor: pointer;
 }
 
 .badge {
@@ -109,8 +127,8 @@
   top: -6px;
   right: -8px;
   background-color: var(--color-primary);
-  color: #ffffff;
-  font-size: 0.75rem;
+  color: #fff;
+  font-size: 0.7rem;
   width: 18px;
   height: 18px;
   border-radius: 50%;
@@ -121,55 +139,45 @@
   border: 2px solid var(--bg-card);
 }
 
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-left: 1rem;
+  border-left: 1px solid var(--border-nav-color);
+}
+
 .userProfile {
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  cursor: pointer;
 }
 
 .avatar {
-  width: 40px;
-  height: 40px;
-  background-color: #310d0d;
-  color: #b03a3e;
   border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   overflow: hidden;
+  border: 1.5px solid var(--color-primary);
 }
 
 .userName {
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--text-main);
-  text-transform: capitalize;
-}
-
-.userSection {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding-left: 1rem;
-  border-left: 1px solid #402626;
 }
 
 .logoutBtn {
   background: var(--color-primary);
   border: none;
-  color: var(--btn-text);
-  font-size: 1rem;
+  color: #fff;
+  padding: 6px 8px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 8px;
-  border-radius: 8px;
+  transition: opacity 0.3s;
 }
 
 .logoutBtn:hover {
-  color: var(--btn-text);
-  background-color: var(--color-primary);
+  opacity: 0.8;
 }
