@@ -7,7 +7,6 @@ import { AlertsTable } from "../../features/dashboard/components/AlertsTable";
 import {
   faCalendarAlt,
   faCar,
-  faCashRegister,
   faChartLine,
   faLaptop,
   faMoneyBill,
@@ -25,12 +24,27 @@ export default function DashboardPage() {
   const [apiStatus, setApiStatus] = useState<string>("Waiting for test...");
   const [staffCount, setStaffCount] = useState<number | string>("?");
   const [vehicles, setVehicles] = useState<any[]>([]);
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const [rentalRevenue, setRentalRevenue] = useState<number>(0);
 
-  // ၂။ Token Expire စမ်းသပ်ရန် Function
+  const fetchChartData = async () => {
+    try {
+      const response = await apiClient.get("/master-vehicle/vehicles");
+      const result = response.data;
+      const vehicleList = result.data || (Array.isArray(result) ? result : []);
+      const total =
+        result.total !== undefined ? result.total : vehicleList.length;
+
+      setVehicles(vehicleList);
+      setTotalCount(total);
+    } catch (error) {
+      console.error("Failed to fetch vehicles:", error);
+    }
+  };
+
   const fetchDashboardData = async () => {
     try {
       setApiStatus("Fetching data...");
-
       const response = await apiClient.get("/master-company/staff");
       const responseData = response.data.data || response.data;
       const totalStaff =
@@ -38,36 +52,71 @@ export default function DashboardPage() {
           ? response.data.total
           : responseData.length;
 
-      console.log("Total Staff Loaded:", totalStaff);
-
       setStaffCount(totalStaff || 0);
       setApiStatus("API Success: Data Loaded!");
     } catch (error: unknown) {
       let errorMessage = "Unknown error occurred";
-
       if (isAxiosError(error)) {
         errorMessage = error.response?.data?.message || error.message;
-      } else if (error instanceof Error) {
-        errorMessage = error.message;
       }
       setApiStatus(`API Failed: ${errorMessage}`);
     }
   };
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      fetchDashboardData();
-    }, 0);
+  const fetchRevenueData = async () => {
+    try {
+      const response = await apiClient.get("master-rental/trip-finance");
+      const financeData =
+        response.data.data ||
+        (Array.isArray(response.data) ? response.data : []);
 
-    return () => clearTimeout(timeoutId);
+      const totalSum = financeData.reduce((acc: number, curr: any) => {
+        return acc + Number(curr.total || 0);
+      }, 0);
+
+      setRentalRevenue(totalSum);
+    } catch (error) {
+      console.error("Failed to fetch revenue:", error);
+    }
+  };
+
+  useEffect(() => {
+    const initDashboard = async () => {
+      await Promise.all([
+        fetchDashboardData(),
+        fetchChartData(),
+        fetchRevenueData(),
+      ]);
+    };
+    initDashboard();
   }, []);
+
+  const totalVehicles = totalCount;
+  const activeVehicles = vehicles.filter((v) => v.status === "Active").length;
+  const busyVehicles = vehicles.filter((v) => v.status === "Busy").length;
+  const maintenanceVehicles = vehicles.filter(
+    (v) => v.status === "Maintenance",
+  ).length;
+
+  const activePercentage =
+    totalVehicles > 0 ? (activeVehicles / totalVehicles) * 100 : 0;
+  const busyPercentage =
+    totalVehicles > 0 ? (busyVehicles / totalVehicles) * 100 : 0;
+  const maintenancePercentage =
+    totalVehicles > 0 ? (maintenanceVehicles / totalVehicles) * 100 : 0;
 
   const renderLiveButtonArea = (
     <div className={styles.headerActionArea}>
-      <button className={styles.calendarIconBtn} onClick={fetchDashboardData}>
+      <button
+        className={styles.calendarIconBtn}
+        onClick={() => {
+          fetchDashboardData();
+          fetchChartData();
+          fetchRevenueData();
+        }}
+      >
         <FontAwesomeIcon icon={faCalendarAlt} className={styles.calendarIcon} />
       </button>
-
       <button className={styles.liveBtn}>ANALYTICAL LIVE</button>
     </div>
   );
@@ -104,38 +153,6 @@ export default function DashboardPage() {
     ["Dec", 82000],
   ];
 
-  useEffect(() => {
-    const fetchChartData = async () => {
-      try {
-        const vehiclesResponse = await apiClient.get(
-          "http://localhost:3001/master-vehicle/vehicles",
-        );
-
-        const vehiclesData = vehiclesResponse.data;
-        setVehicles(vehiclesData);
-      } catch (error) {
-      } finally {
-      }
-    };
-
-    fetchChartData();
-  }, []);
-
-  const totalVehicles = vehicles.length;
-  const activeVehicles = vehicles.filter((v) => v.status === "Active").length;
-  const activePercentage =
-    totalVehicles > 0 ? (activeVehicles / totalVehicles) * 100 : 0;
-
-  const busyVehicles = vehicles.filter((v) => v.status === "Busy").length;
-  const busyPercentage =
-    totalVehicles > 0 ? (busyVehicles / totalVehicles) * 100 : 0;
-
-  const maintenanceVehicles = vehicles.filter(
-    (v) => v.status === "Maintenance",
-  ).length;
-  const maintenancePercentage =
-    totalVehicles > 0 ? (maintenanceVehicles / totalVehicles) * 100 : 0;
-
   return (
     <>
       <PageHeader
@@ -146,7 +163,7 @@ export default function DashboardPage() {
         actionNode={renderLiveButtonArea}
       />
 
-      <div
+      {/* <div
         style={{
           padding: "10px",
           marginBottom: "20px",
@@ -160,26 +177,26 @@ export default function DashboardPage() {
         }}
       >
         Status: {apiStatus} | Total Staff: {staffCount}
-      </div>
+      </div> */}
 
       <div className={styles.topRow}>
         <SummaryCard
           title="TOTAL RENTAL UNITS"
-          value="125 Vehicles"
-          subtitle="86% Utilization Rate"
+          value={`${totalCount} Vehicles`}
+          subtitle={`${activePercentage.toFixed(0)}% Utilization Rate`}
           status="success"
           icon={faCar}
         />
         <SummaryCard
           title="RENTAL REVENUE"
-          value="$ 429,333"
-          subtitle="High Demand"
+          value={`MMK ${rentalRevenue.toLocaleString()}`}
+          subtitle="Real-time Revenue"
           status="danger"
           icon={faChartLine}
         />
         <SummaryCard
           title="SALES REVENUE"
-          value="$ 158,483"
+          value="MMK 158,483"
           subtitle="3 UNITS SOLD"
           status="neutral"
           icon={faTags}
@@ -195,7 +212,6 @@ export default function DashboardPage() {
             icon={faMoneyBill}
           />
         </div>
-
         <div className={styles.chartPlaceholder}>
           <ReactGoogleChart
             type="LineChart"
@@ -216,9 +232,7 @@ export default function DashboardPage() {
           </div>
           <div className={styles.cardsContainer}>
             <div className={styles.card}>
-              <div className={styles.cardHeader}>
-                CURRENTLY <br /> RENTED
-              </div>
+              <div className={styles.cardHeader}>CURRENTLY RENTED</div>
               <div className={styles.cardBody}>
                 <FontAwesomeIcon icon={faCar} className={styles.cardIcon} />
                 <span className={styles.cardValue}>{busyVehicles}</span>
@@ -232,10 +246,9 @@ export default function DashboardPage() {
                 </div>
               </div>
             </div>
+
             <div className={styles.card}>
-              <div className={styles.cardHeader}>
-                AVAILABLE <br /> NOW
-              </div>
+              <div className={styles.cardHeader}>AVAILABLE NOW</div>
               <div className={styles.cardBody}>
                 <FontAwesomeIcon icon={faCar} className={styles.cardIcon} />
                 <span className={styles.cardValue}>{activeVehicles}</span>
@@ -249,6 +262,7 @@ export default function DashboardPage() {
                 </div>
               </div>
             </div>
+
             <div className={styles.card}>
               <div className={styles.cardHeader}>MAINTENANCE</div>
               <div className={styles.cardBody}>
