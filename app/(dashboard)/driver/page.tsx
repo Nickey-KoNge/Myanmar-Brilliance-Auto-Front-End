@@ -242,21 +242,19 @@ export default function DriverListPage() {
               </div>
             )}
             <div>
-              <div style={{ fontWeight: "600" }}>{driver.driver_name}</div>
-              <div style={{ fontSize: "11px", color: "#666" }}>
-                <b>Phone : </b>
+              <div className={styles.textBold}>{driver.driver_name}</div>
+              <div className={[styles.textSmall, styles.textMuted].join(" ")}>
+                <span className={styles.textBold}>Phone : </span>
                 {driver.phone || "-"}
               </div>
               <div
-                style={{
-                  fontSize: "11px",
-                  fontWeight: "bold",
-                  color:
-                    driver.status === "Active"
-                      ? "var(--success)"
-                      : "var(--danger)",
-                  marginTop: "2px",
-                }}
+                className={[
+                  styles.textSmall,
+                  styles.textBold,
+                  driver.status === "Active"
+                    ? styles.textSuccess
+                    : styles.textDanger,
+                ].join(" ")}
               >
                 {driver.status || "Unknown"}
               </div>
@@ -270,16 +268,16 @@ export default function DriverListPage() {
       key: "identity",
       render: (driver: Driver) => (
         <div>
-          <div style={{ fontWeight: "500" }}>
-            <b>NRC : </b>
+          <div>
+            <span className={styles.textBold}>NRC : </span>
             {driver.nrc || "-"}
           </div>
-          <div style={{ fontSize: "12px", color: "#007bff" }}>
-            <b>Email : </b>
+          <div className={[styles.textSmall, styles.textInfo].join(" ")}>
+            <span className={styles.textBold}>Email : </span>
             {driver.credential_email || "-"}
           </div>
-          <div style={{ fontSize: "12px", color: "gray" }}>
-            <b>Gender : </b>
+          <div className={styles.textMuted}>
+            <span className={styles.textBold}>Gender : </span>
             {driver.gender || "-"}
           </div>
         </div>
@@ -289,17 +287,17 @@ export default function DriverListPage() {
       header: "License Info",
       key: "licenseInfo",
       render: (driver: Driver) => (
-        <div>
-          <div style={{ fontSize: "12px" }}>
-            <b>No : </b>
+        <div className={styles.textSmall}>
+          <div>
+            <span className={styles.textBold}>No : </span>
             {driver.license_no || "-"}
           </div>
-          <div style={{ fontSize: "12px" }}>
-            <b>Type : </b>
+          <div>
+            <span className={styles.textBold}>Type : </span>
             {driver.license_type || "-"}
           </div>
-          <div style={{ fontSize: "12px" }}>
-            <b>Join Date : </b>
+          <div>
+            <span className={styles.textBold}>Join Date : </span>
             {driver.join_date || "-"}
           </div>
         </div>
@@ -309,13 +307,13 @@ export default function DriverListPage() {
       header: "Start & Deposit",
       key: "licenseInfo",
       render: (driver: Driver) => (
-        <div>
-          <div style={{ fontSize: "12px" }}>
-            <b>Join Date : </b>
+        <div className={styles.textSmall}>
+          <div>
+            <span className={styles.textBold}>Join Date : </span>
             {driver.join_date || "-"}
           </div>
-          <div style={{ fontSize: "12px" }}>
-            <b>Deposit : </b>
+          <div>
+            <span className={styles.textBold}>Deposit : </span>
             {driver.deposits || "-"} MMK
           </div>
         </div>
@@ -326,11 +324,11 @@ export default function DriverListPage() {
       key: "assignment",
       render: (driver: Driver) => (
         <div>
-          <div style={{ fontWeight: "500" }}>
+          <div className={styles.textBold}>
             {driver.station_name || "Unassigned"}
           </div>
-          <div style={{ fontSize: "12px", color: "gray" }}>
-            <b>Exp : </b>
+          <div className={[styles.textSmall, styles.textMuted].join(" ")}>
+            <span className={styles.textBold}>Exp : </span>
             {driver.driving_exp || "-"}
           </div>
         </div>
@@ -340,17 +338,7 @@ export default function DriverListPage() {
       header: "Contact Location",
       key: "address",
       render: (driver: Driver) => (
-        <div>
-          <div
-            style={{
-              fontSize: "12px",
-              maxWidth: "200px",
-              whiteSpace: "normal",
-            }}
-          >
-            {driver.fullAddress || "-"}
-          </div>
-        </div>
+        <div className={styles.textSmall}>{driver.fullAddress || "-"}</div>
       ),
     },
     {
@@ -358,12 +346,12 @@ export default function DriverListPage() {
       key: "timeline",
       render: (driver: Driver) => (
         <div>
-          <div className={styles.timelineText}>
-            <b>DOB : </b>
+          <div>
+            <span className={styles.textBold}>DOB : </span>
             {driver.dob ? String(driver.dob).split("T")[0] : "-"}
           </div>
-          <div className={styles.expireText}>
-            <b>Exp : </b>
+          <div>
+            <span className={styles.textBold}>Exp : </span>
             {driver.license_expiry
               ? String(driver.license_expiry).split("T")[0]
               : "-"}
@@ -435,16 +423,14 @@ export default function DriverListPage() {
                   />
                 </div>
 
-                <div style={{ alignSelf: "flex-start" }}>
-                  <ActionBtn
-                    type="reset"
-                    variant="action"
-                    fullWidth={false}
-                    onClick={resetFilters}
-                  >
-                    reset
-                  </ActionBtn>
-                </div>
+                <ActionBtn
+                  type="reset"
+                  variant="action"
+                  fullWidth={false}
+                  onClick={resetFilters}
+                >
+                  reset
+                </ActionBtn>
               </div>
             </div>
 

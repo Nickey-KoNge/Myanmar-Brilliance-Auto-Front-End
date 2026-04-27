@@ -29,7 +29,6 @@ import { TripFormData } from "./components/TripForm";
 import { set } from "react-hook-form";
 import AddTripModal from "./AddTripModal";
 
-
 interface TripPrice {
   id: string;
   route_name: string;
@@ -45,11 +44,9 @@ interface TripPrice {
 }
 
 interface PaginatedResponse {
-
-    data?: TripPrice[];
-    total?: number;
-    totalPages?: number;
-  
+  data?: TripPrice[];
+  total?: number;
+  totalPages?: number;
 }
 
 export default function TripPricePage() {
@@ -83,40 +80,38 @@ export default function TripPricePage() {
     (debouncedFilters) => {
       setActiveFilters(debouncedFilters);
       setCurrentPage(1);
-    }
+    },
   );
 
-   const fetchData = async () => {
-      try {
-        const params: Record<string, string> = {
-          page: currentPage.toString(),
-          limit: PAGE_SIZE.toString(),
-        };
+  const fetchData = async () => {
+    try {
+      const params: Record<string, string> = {
+        page: currentPage.toString(),
+        limit: PAGE_SIZE.toString(),
+      };
 
-        if (activeFilters.search) params.search = activeFilters.search;
+      if (activeFilters.search) params.search = activeFilters.search;
 
-        const query = new URLSearchParams(params).toString();
+      const query = new URLSearchParams(params).toString();
 
-        const res = await apiClient.get(
-          `/master-trips/trip-prices?${query}`
-        ) as unknown as PaginatedResponse;
+      const res = (await apiClient.get(
+        `/master-trips/trip-prices?${query}`,
+      )) as unknown as PaginatedResponse;
 
-        const list = res?.data || [];
+      const list = res?.data || [];
 
-        setVehicles(list);
-        setTotalRecords(res?.total || 0);
-        setTotalPages(res?.totalPages || 1);
+      setVehicles(list);
+      setTotalRecords(res?.total || 0);
+      setTotalPages(res?.totalPages || 1);
 
-        console.log("Fetched Trip Prices:", list);
-      } catch (err) {
-        console.error(err);
-        setVehicles([]);
-      }
-    };
+      console.log("Fetched Trip Prices:", list);
+    } catch (err) {
+      console.error(err);
+      setVehicles([]);
+    }
+  };
 
   useEffect(() => {
-   
-
     fetchData();
   }, [currentPage, activeFilters]);
 
@@ -128,82 +123,61 @@ export default function TripPricePage() {
     setVehicles((prev) => prev.filter((v) => v.id !== id));
   };
 
-  const handleAddTrip=()=>{
+  const handleAddTrip = () => {
     setModalMode("create");
     setSelectedTrip(null);
     setModalOpen(true);
-  }
+  };
 
-  
+  const handleCloseModal = () => setModalOpen(false);
 
-
-  const handleCloseModal=()=>setModalOpen(false);
-
-  const handleSubmitTrip=async(data:TripFormData)=>{
-    try{
-      if(modalMode==="create"){
-        await apiClient.post(`/master-trips/trip-prices`,data)
+  const handleSubmitTrip = async (data: TripFormData) => {
+    try {
+      if (modalMode === "create") {
+        await apiClient.post(`/master-trips/trip-prices`, data);
       }
 
-  if (modalMode === "update" && selectedTrip) {
-  await apiClient.patch(
-    `/master-trips/trip-prices/${selectedTrip.id}`,
-    {
-      route_id: data.route_id,
-      vehicle_model_id: data.vehicle_model_id,
-      station_id: data.station_id,
-      daily_trip_rate: data.daily_trip_rate,
-      overnight_trip_rate: data.overnight_trip_rate,
-      status: data.status,
-    }
-  );
-}
-        
-        
-      
+      if (modalMode === "update" && selectedTrip) {
+        await apiClient.patch(`/master-trips/trip-prices/${selectedTrip.id}`, {
+          route_id: data.route_id,
+          vehicle_model_id: data.vehicle_model_id,
+          station_id: data.station_id,
+          daily_trip_rate: data.daily_trip_rate,
+          overnight_trip_rate: data.overnight_trip_rate,
+          status: data.status,
+        });
+      }
 
       setModalOpen(false);
       await fetchData();
       setSelectedTrip(null);
-    } catch(err){
+    } catch (err) {
       console.error(err);
     }
-  }
+  };
 
-  console.log("Selected Trip for Edit:", selectedTrip);
-
-
-
- 
   const columns = [
     {
       header: "Route Info",
       key: "routeInfo",
       render: (item: TripPrice) => (
-        <div className={styles.vehicleInfo}>
-          {/* <div className={styles.placeholderLogo}>
-            <FontAwesomeIcon icon={faCar} />
-          </div> */}
-
+        <div className={styles.info}>
           <div>
-            <div style={{ fontWeight: "600" }}>
-              {item.route_name}
-            </div>
+            <div className={styles.textBold}>{item.route_name}</div>
 
-            <div style={{ fontSize: "11px", color: "#666" }}>
-              <b>Route : </b>
+            <div className={[styles.textSmall, styles.textMuted].join(" ")}>
+              <span className={styles.textBold}>Route : </span>
               {item.start_location} → {item.end_location}
             </div>
 
             <div
-              style={{
-                fontSize: "11px",
-                fontWeight: "bold",
-                color:
-                  item.status === "Active"
-                    ? "var(--success)"
-                    : "var(--danger)",
-              }}
+              className={[
+                styles.textSmall,
+                styles.textBold,
+                item.status === "Active"
+                  ? styles.textSuccess
+                  : styles.textDanger,
+              ].join(" ")}
             >
               {item.status}
             </div>
@@ -218,10 +192,12 @@ export default function TripPricePage() {
       render: (item: TripPrice) => (
         <div>
           <div>
-            <b>Daily : </b> {item.daily_trip_rate}
+            <span className={styles.textBold}>Daily : </span>{" "}
+            {item.daily_trip_rate}
           </div>
           <div>
-            <b>Overnight : </b> {item.overnight_trip_rate}
+            <span className={styles.textBold}>Overnight : </span>{" "}
+            {item.overnight_trip_rate}
           </div>
         </div>
       ),
@@ -230,19 +206,7 @@ export default function TripPricePage() {
     {
       header: "Vehicle Model",
       key: "model",
-      render: (item: TripPrice) => (
-     
-
-    
-        <div>
-          {item.vehicle_model_name || "-"}
-        </div>
-
-        
-
-          
-        
-      ),
+      render: (item: TripPrice) => <div>{item.vehicle_model_name || "-"}</div>,
     },
 
     {
@@ -250,24 +214,19 @@ export default function TripPricePage() {
       key: "Station",
       render: (item: TripPrice) => (
         <div>
-        <div>
-          {item.station_name || "Unassigned"}
-        </div>
+          <div>{item.station_name || "Unassigned"}</div>
           <div>
-            <b>Phone : </b> {item.station_phone || "-"}
+            <span className={styles.textBold}>Phone : </span>{" "}
+            {item.station_phone || "-"}
           </div>
-          </div>
+        </div>
       ),
     },
 
     {
       header: "Timeline",
       key: "timeline",
-      render: (item: TripPrice) => (
-        <div className={styles.timelineText}>
-          {item.created_at?.split("T")[0]}
-        </div>
-      ),
+      render: (item: TripPrice) => <div>{item.created_at?.split("T")[0]}</div>,
     },
 
     {
@@ -287,9 +246,6 @@ export default function TripPricePage() {
     },
   ];
 
-
-  
-
   return (
     <>
       <PageGridLayout
@@ -304,44 +260,36 @@ export default function TripPricePage() {
                   label="Searching"
                   placeholder="Search route..."
                   value={filters.search}
-                  onChange={(e) =>
-                    updateFilter("search", e.target.value)
-                  }
+                  onChange={(e) => updateFilter("search", e.target.value)}
                 />
 
                 <div className={styles.filterRow}>
                   <DateInput
                     label="From"
                     value={filters.startDate}
-                    onChange={(e) =>
-                      updateFilter("startDate", e.target.value)
-                    }
+                    onChange={(e) => updateFilter("startDate", e.target.value)}
                     rightIcon={faCalendarDays}
                   />
                   <DateInput
                     label="To"
                     value={filters.endDate}
-                    onChange={(e) =>
-                      updateFilter("endDate", e.target.value)
-                    }
+                    onChange={(e) => updateFilter("endDate", e.target.value)}
                     rightIcon={faCalendarDays}
                   />
                 </div>
-                  <div style={{ alignSelf: "flex-start" }}>
 
-                <ActionBtn 
-                 type="reset"
-                 variant="action"
-                 fullWidth={false}
-                 onClick={resetFilters}>
+                <ActionBtn
+                  type="reset"
+                  variant="action"
+                  fullWidth={false}
+                  onClick={resetFilters}
+                >
                   reset
                 </ActionBtn>
-                </div>
-                
               </div>
             </div>
 
-              <div className={styles.bottomSection}>
+            <div className={styles.bottomSection}>
               <hr className={styles.cuttingLine} />
 
               <div className={styles.recentRecord}>
@@ -369,8 +317,7 @@ export default function TripPricePage() {
 
               <hr className={styles.cuttingLine} />
               <p className={styles.lastEdited}>
-                Last Edited :{" "}
-                <span className={styles.spanText}>Unknown</span>
+                Last Edited : <span className={styles.spanText}>Unknown</span>
               </p>
             </div>
           </div>
@@ -379,22 +326,17 @@ export default function TripPricePage() {
         <div>
           <div className={styles.tableHeaderArea}>
             <div className={styles.paginationInfoWrapper}>
-
-                    <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              totalRecords={totalRecords}
-              pageSize={PAGE_SIZE}
-              onPageChange={setCurrentPage}
-              showOnlyInfo
-            />
-
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalRecords={totalRecords}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCurrentPage}
+                showOnlyInfo
+              />
             </div>
-        
 
-            <p className={styles.tableTitle}>
-              TRIP PRICE RECORDS
-            </p>
+            <p className={styles.tableTitle}>TRIP PRICE RECORDS</p>
 
             <div className={styles.headerActionArea}>
               <NavigationBtn href="#" leftIcon={faPlus} onClick={handleAddTrip}>
@@ -410,9 +352,9 @@ export default function TripPricePage() {
               setModalMode("update");
               setSelectedTrip(item);
               setModalOpen(true);
-            }
-            
-            }
+              {console.log("DEBUG", item)}
+            }}
+
           />
         </div>
 
@@ -429,9 +371,7 @@ export default function TripPricePage() {
       {deleteModal.isOpen && deleteModal.id && (
         <DeleteModal
           isOpen={deleteModal.isOpen}
-          onClose={() =>
-            setDeleteModal({ isOpen: false, id: null, name: "" })
-          }
+          onClose={() => setDeleteModal({ isOpen: false, id: null, name: "" })}
           itemName={deleteModal.name}
           name="Trip Price"
           id={deleteModal.id}
@@ -439,7 +379,6 @@ export default function TripPricePage() {
           onDeleteSuccess={handleDeleteSuccess}
         />
       )}
-
 
       <AddTripModal
         open={modalOpen}

@@ -114,7 +114,7 @@ export default function VehicleModelListPage() {
       header: "Model Name",
       key: "vehicle_model_name",
       render: (model: VehicleModel) => (
-        <span style={{ fontWeight: "bold" }}>{model.vehicle_model_name}</span>
+        <span className={styles.textBold}>{model.vehicle_model_name}</span>
       ),
     },
     {
@@ -142,10 +142,10 @@ export default function VehicleModelListPage() {
       key: "status",
       render: (model: VehicleModel) => (
         <span
-          className={
-            model.status === "Active" ? styles.textSuccess : styles.textDanger
-          }
-          style={{ fontWeight: "bold" }}
+          className={[
+            styles.textBold,
+            model.status === "Active" ? styles.textSuccess : styles.textDanger,
+          ].join(" ")}
         >
           {model.status}
         </span>
@@ -263,16 +263,14 @@ export default function VehicleModelListPage() {
                     rightIcon={faCalendarDays}
                   />
                 </div>
-                <div style={{ alignSelf: "flex-start" }}>
-                  <ActionBtn
-                    type="reset"
-                    variant="action"
-                    fullWidth={false}
-                    onClick={resetFilters}
-                  >
-                    reset
-                  </ActionBtn>
-                </div>
+                <ActionBtn
+                  type="reset"
+                  variant="action"
+                  fullWidth={false}
+                  onClick={resetFilters}
+                >
+                  reset
+                </ActionBtn>
               </div>
             </div>
 
