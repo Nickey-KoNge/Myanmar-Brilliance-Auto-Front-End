@@ -2,7 +2,7 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap:  var(--gap);
+  gap: var(--gap);
 }
 
 /* GRID: 2 columns */
@@ -16,7 +16,7 @@
 .fieldGroup {
   display: flex;
   flex-direction: column;
-  gap:  var(--gap);
+  gap: var(--gap);
 }
 
 .textareaLabel {
@@ -107,5 +107,3 @@
   padding: 8px;
   border-radius: 4px;
 }
-
-

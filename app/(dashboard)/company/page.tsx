@@ -188,13 +188,13 @@ export default function CompanyPage() {
                 unoptimized
               />
             ) : (
-              <div className={styles.placeholderLogo}>
+              <div className={styles.defaultImage}>
                 <FontAwesomeIcon icon={faBuilding} />
               </div>
             )}
             <div>
-              <div style={{ fontWeight: "600" }}>{compName}</div>
-              <div style={{ fontSize: "11px", color: "#666" }}>
+              <div className={styles.textBold}>{compName}</div>
+              <div className={[styles.textSmall, styles.textMuted].join(" ")}>
                 Reg: {company.reg_number}
               </div>
             </div>
@@ -207,11 +207,11 @@ export default function CompanyPage() {
       key: "owner",
       render: (company: Company) => (
         <div>
-          <div style={{ fontWeight: "500" }}>{company.owner_name}</div>
-          <div style={{ fontSize: "12px", color: "#007bff" }}>
+          <div className={styles.textBold}>{company.owner_name}</div>
+          <div className={[styles.textSmall, styles.textInfo].join(" ")}>
             {company.owner_email}
           </div>
-          <div style={{ fontSize: "12px" }}>{company.owner_phone}</div>
+          <div className={styles.textSmall}>{company.owner_phone}</div>
         </div>
       ),
     },
@@ -221,10 +221,10 @@ export default function CompanyPage() {
       render: (company: Company) => (
         <div>
           <div>{company.email}</div>
-          <div style={{ fontSize: "12px", color: "gray" }}>
+          <div className={[styles.textSmall, styles.textMuted].join(" ")}>
             {company.website_url}
           </div>
-          <div style={{ fontSize: "12px" }}>{company.phone}</div>
+          <div className={styles.textSmall}>{company.phone}</div>
         </div>
       ),
     },
@@ -232,9 +232,7 @@ export default function CompanyPage() {
       header: "Full Address",
       key: "fullAddress",
       render: (company: Company) => (
-        <div title={company.fullAddress} className={styles.addressCell}>
-          {company.fullAddress || "-"}
-        </div>
+        <div className={styles.textSmall}>{company.fullAddress || "-"}</div>
       ),
     },
     {
@@ -243,10 +241,12 @@ export default function CompanyPage() {
       render: (company: Company) => (
         <div>
           <div className={styles.timelineText}>
-            Est: {company.establish_year}
+            <span className={styles.textBold}>Est : </span>{" "}
+            {company.establish_year}
           </div>
           <div className={styles.expireText}>
-            Exp: {company.reg_exp_date?.split("T")[0] || "-"}
+            <span className={styles.textBold}>Exp : </span>{" "}
+            {company.reg_exp_date?.split("T")[0] || "-"}
           </div>
         </div>
       ),
@@ -319,16 +319,14 @@ export default function CompanyPage() {
                   />
                 </div>
 
-                <div style={{ alignSelf: "flex-start" }}>
-                  <ActionBtn
-                    type="reset"
-                    variant="action"
-                    fullWidth={false}
-                    onClick={resetFilters}
-                  >
-                    reset
-                  </ActionBtn>
-                </div>
+                <ActionBtn
+                  type="reset"
+                  variant="action"
+                  fullWidth={false}
+                  onClick={resetFilters}
+                >
+                  reset
+                </ActionBtn>
               </div>
             </div>
 

@@ -163,7 +163,7 @@ export default function AssignmentListPage() {
               className={styles.image}
             />
           ) : (
-            <div className={styles.placeholderLogo}>
+            <div className={styles.defaultImage}>
               <FontAwesomeIcon icon={faUserTie} />
             </div>
           )}

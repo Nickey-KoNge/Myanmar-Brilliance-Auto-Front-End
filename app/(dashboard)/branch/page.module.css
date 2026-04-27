@@ -71,17 +71,34 @@
   align-items: center;
 }
 
+.info {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--gap) / 2.5);
+}
+
+.image {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.defaultImage {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--bg-input);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
 /* Recent Records */
 .recentRecord {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: var(--gap);
   align-items: center;
-}
-
-.recentTitle {
-  color: var(--text-main);
-  font-weight: bold;
 }
 
 .recentRecord span:nth-of-type(1) {
@@ -101,11 +118,6 @@
 .stat div {
   display: grid;
   grid-template-columns: 1fr 1fr;
-}
-
-.statLabel {
-  color: var(--text-muted);
-  font-weight: bold;
 }
 
 /* Buttons */
@@ -141,12 +153,26 @@
   margin: calc(var(--margin) / 2) 0;
 }
 
+.textSmall {
+  font-size: calc(1rem / 1.25);
+}
+
+.textBold {
+  font-weight: 600;
+}
+
 .textDanger {
   color: var(--danger);
-  font-weight: var(--font-weight-bold);
 }
 
 .textSuccess {
   color: var(--success);
-  font-weight: var(--font-weight-bold);
+}
+
+.textMuted {
+  color: var(--text-muted);
+}
+
+.textInfo {
+  color: var(--info);
 }

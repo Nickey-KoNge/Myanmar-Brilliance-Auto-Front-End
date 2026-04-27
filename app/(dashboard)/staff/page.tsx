@@ -9,6 +9,7 @@ import {
   faClockRotateLeft,
   faPlus,
   faTrashCan,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
 // components
@@ -233,14 +234,20 @@ export default function StaffPage() {
       key: "staffName",
       render: (staff: Staff) => (
         <div className={styles.info}>
-          <Image
-            src={staff.image || "/default-user.png"}
-            alt={staff.staffName}
-            width={40}
-            height={40}
-            unoptimized
-            className={styles.image}
-          />
+          {staff.image ? (
+            <Image
+              src={staff.image || "/default-user.png"}
+              alt={staff.staffName}
+              width={40}
+              height={40}
+              unoptimized
+              className={styles.image}
+            />
+          ) : (
+            <div className={styles.defaultImage}>
+              <FontAwesomeIcon icon={faUser} />
+            </div>
+          )}
           {staff.staffName}
         </div>
       ),
@@ -333,16 +340,14 @@ export default function StaffPage() {
                   />
                 </div>
 
-                <div style={{ alignSelf: "flex-start" }}>
-                  <ActionBtn
-                    type="reset"
-                    variant="action"
-                    fullWidth={false}
-                    onClick={resetFilters}
-                  >
-                    reset
-                  </ActionBtn>
-                </div>
+                <ActionBtn
+                  type="reset"
+                  variant="action"
+                  fullWidth={false}
+                  onClick={resetFilters}
+                >
+                  reset
+                </ActionBtn>
               </div>
             </div>
 
