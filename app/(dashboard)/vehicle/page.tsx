@@ -283,7 +283,7 @@ export default function VehicleListPage() {
               className={styles.image}
             />
           ) : (
-            <div className={styles.placeholderLogo}>
+            <div className={styles.defaultImage}>
               <FontAwesomeIcon icon={faCar} />
             </div>
           )}

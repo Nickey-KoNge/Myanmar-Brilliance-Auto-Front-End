@@ -82,7 +82,7 @@
   object-fit: cover;
 }
 
-.placeholderLogo {
+.defaultImage {
   width: 40px;
   height: 40px;
   border-radius: 50%;

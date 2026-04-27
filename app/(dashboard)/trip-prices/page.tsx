@@ -29,7 +29,6 @@ import { TripFormData } from "./components/TripForm";
 import { set } from "react-hook-form";
 import AddTripModal from "./AddTripModal";
 
-
 interface TripPrice {
   id: string;
   route_name: string;
@@ -45,11 +44,9 @@ interface TripPrice {
 }
 
 interface PaginatedResponse {
-
-    data?: TripPrice[];
-    total?: number;
-    totalPages?: number;
-  
+  data?: TripPrice[];
+  total?: number;
+  totalPages?: number;
 }
 
 export default function TripPricePage() {
@@ -83,7 +80,7 @@ export default function TripPricePage() {
     (debouncedFilters) => {
       setActiveFilters(debouncedFilters);
       setCurrentPage(1);
-    }
+    },
   );
 
    const fetchData = async () => {
@@ -97,9 +94,9 @@ export default function TripPricePage() {
 
         const query = new URLSearchParams(params).toString();
 
-        const res = await apiClient.get(
-          `/master-trips/trip-prices?${query}`
-        ) as unknown as PaginatedResponse;
+        const res = (await apiClient.get(
+          `/master-trips/trip-prices?${query}`,
+        )) as unknown as PaginatedResponse;
 
         const list = res?.data || [];
 
@@ -128,50 +125,6 @@ export default function TripPricePage() {
     setVehicles((prev) => prev.filter((v) => v.id !== id));
   };
 
-  const handleAddTrip=()=>{
-    setModalMode("create");
-    setSelectedTrip(null);
-    setModalOpen(true);
-  }
-
-  
-
-
-  const handleCloseModal=()=>setModalOpen(false);
-
-  const handleSubmitTrip=async(data:TripFormData)=>{
-    try{
-      if(modalMode==="create"){
-        await apiClient.post(`/master-trips/trip-prices`,data)
-      }
-
-  if (modalMode === "update" && selectedTrip) {
-  await apiClient.patch(
-    `/master-trips/trip-prices/${selectedTrip.id}`,
-    {
-      route_id: data.route_id,
-      vehicle_model_id: data.vehicle_model_id,
-      station_id: data.station_id,
-      daily_trip_rate: data.daily_trip_rate,
-      overnight_trip_rate: data.overnight_trip_rate,
-      status: data.status,
-    }
-  );
-}
-        
-        
-      
-
-      setModalOpen(false);
-      await fetchData();
-      setSelectedTrip(null);
-    } catch(err){
-      console.error(err);
-    }
-  }
-
-  console.log("Selected Trip for Edit:", selectedTrip);
-
 
 
  
@@ -181,14 +134,12 @@ export default function TripPricePage() {
       key: "routeInfo",
       render: (item: TripPrice) => (
         <div className={styles.vehicleInfo}>
-          {/* <div className={styles.placeholderLogo}>
+          {/* <div className={styles.defaultImage}>
             <FontAwesomeIcon icon={faCar} />
           </div> */}
 
           <div>
-            <div style={{ fontWeight: "600" }}>
-              {item.route_name}
-            </div>
+            <div style={{ fontWeight: "600" }}>{item.route_name}</div>
 
             <div style={{ fontSize: "11px", color: "#666" }}>
               <b>Route : </b>
@@ -200,9 +151,7 @@ export default function TripPricePage() {
                 fontSize: "11px",
                 fontWeight: "bold",
                 color:
-                  item.status === "Active"
-                    ? "var(--success)"
-                    : "var(--danger)",
+                  item.status === "Active" ? "var(--success)" : "var(--danger)",
               }}
             >
               {item.status}
@@ -230,19 +179,7 @@ export default function TripPricePage() {
     {
       header: "Vehicle Model",
       key: "model",
-      render: (item: TripPrice) => (
-     
-
-    
-        <div>
-          {item.vehicle_model_name || "-"}
-        </div>
-
-        
-
-          
-        
-      ),
+      render: (item: TripPrice) => <div>{item.vehicle_model_name || "-"}</div>,
     },
 
     {
@@ -250,13 +187,11 @@ export default function TripPricePage() {
       key: "Station",
       render: (item: TripPrice) => (
         <div>
-        <div>
-          {item.station_name || "Unassigned"}
-        </div>
+          <div>{item.station_name || "Unassigned"}</div>
           <div>
             <b>Phone : </b> {item.station_phone || "-"}
           </div>
-          </div>
+        </div>
       ),
     },
 
@@ -287,9 +222,6 @@ export default function TripPricePage() {
     },
   ];
 
-
-  
-
   return (
     <>
       <PageGridLayout
@@ -304,40 +236,33 @@ export default function TripPricePage() {
                   label="Searching"
                   placeholder="Search route..."
                   value={filters.search}
-                  onChange={(e) =>
-                    updateFilter("search", e.target.value)
-                  }
+                  onChange={(e) => updateFilter("search", e.target.value)}
                 />
 
                 <div className={styles.filterRow}>
                   <DateInput
                     label="From"
                     value={filters.startDate}
-                    onChange={(e) =>
-                      updateFilter("startDate", e.target.value)
-                    }
+                    onChange={(e) => updateFilter("startDate", e.target.value)}
                     rightIcon={faCalendarDays}
                   />
                   <DateInput
                     label="To"
                     value={filters.endDate}
-                    onChange={(e) =>
-                      updateFilter("endDate", e.target.value)
-                    }
+                    onChange={(e) => updateFilter("endDate", e.target.value)}
                     rightIcon={faCalendarDays}
                   />
                 </div>
-                  <div style={{ alignSelf: "flex-start" }}>
-
-                <ActionBtn 
-                 type="reset"
-                 variant="action"
-                 fullWidth={false}
-                 onClick={resetFilters}>
-                  reset
-                </ActionBtn>
+                <div style={{ alignSelf: "flex-start" }}>
+                  <ActionBtn
+                    type="reset"
+                    variant="action"
+                    fullWidth={false}
+                    onClick={resetFilters}
+                  >
+                    reset
+                  </ActionBtn>
                 </div>
-                
               </div>
             </div>
 
@@ -353,16 +278,10 @@ export default function TripPricePage() {
 
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLabel}>Total Trips :</p>
-                    <p className={styles.textDanger}>{totalRecords}</p>
-                  </div>
-                  <div>
-                    <p className={styles.statLabel}>Active Routes :</p>
-                    <p className={styles.textSuccess}>"N/A"</p>
-                  </div>
-                  <div>
-                    <p className={styles.statLabel}>Inactive Routes :</p>
-                    <p className={styles.textDanger}>"N/A"</p>
+                    <p>Total :</p>
+                    <p className={styles.textDanger}>
+                      {totalRecords}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -379,22 +298,17 @@ export default function TripPricePage() {
         <div>
           <div className={styles.tableHeaderArea}>
             <div className={styles.paginationInfoWrapper}>
-
-                    <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              totalRecords={totalRecords}
-              pageSize={PAGE_SIZE}
-              onPageChange={setCurrentPage}
-              showOnlyInfo
-            />
-
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalRecords={totalRecords}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCurrentPage}
+                showOnlyInfo
+              />
             </div>
-        
 
-            <p className={styles.tableTitle}>
-              TRIP PRICE RECORDS
-            </p>
+            <p className={styles.tableTitle}>TRIP PRICE RECORDS</p>
 
             <div className={styles.headerActionArea}>
               <NavigationBtn href="#" leftIcon={faPlus} onClick={handleAddTrip}>
@@ -406,12 +320,8 @@ export default function TripPricePage() {
           <DataTable
             columns={columns}
             data={vehicles}
-            onRowClick={(item) => {
-              setModalMode("update");
-              setSelectedTrip(item);
-              setModalOpen(true);
-            }
-            
+            onRowClick={(row) =>
+              router.push(`/trip-price/${row.id}`)
             }
           />
         </div>
@@ -429,9 +339,7 @@ export default function TripPricePage() {
       {deleteModal.isOpen && deleteModal.id && (
         <DeleteModal
           isOpen={deleteModal.isOpen}
-          onClose={() =>
-            setDeleteModal({ isOpen: false, id: null, name: "" })
-          }
+          onClose={() => setDeleteModal({ isOpen: false, id: null, name: "" })}
           itemName={deleteModal.name}
           name="Trip Price"
           id={deleteModal.id}

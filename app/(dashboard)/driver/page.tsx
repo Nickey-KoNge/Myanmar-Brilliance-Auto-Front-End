@@ -9,6 +9,7 @@ import {
   faClockRotateLeft,
   faPlus,
   faTrashCan,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
 // Components
@@ -226,15 +227,20 @@ export default function DriverListPage() {
 
         return (
           <div className={styles.info}>
-            <Image
-              src={src}
-              alt={driver.driver_name}
-              width={40}
-              height={40}
-              unoptimized
-              className={styles.image}
-              style={{ objectFit: "cover", borderRadius: "50%" }}
-            />
+            {driver.image ? (
+              <Image
+                src={driver.image}
+                alt={driver.driver_name}
+                width={40}
+                height={40}
+                className={styles.image}
+                unoptimized
+              />
+            ) : (
+              <div className={styles.defaultImage}>
+                <FontAwesomeIcon icon={faUser} />
+              </div>
+            )}
             <div>
               <div style={{ fontWeight: "600" }}>{driver.driver_name}</div>
               <div style={{ fontSize: "11px", color: "#666" }}>

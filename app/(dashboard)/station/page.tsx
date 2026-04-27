@@ -196,16 +196,14 @@ export default function StationPage() {
                   />
                 </div>
 
-                <div style={{ alignSelf: "flex-start" }}>
-                  <ActionBtn
-                    type="reset"
-                    variant="action"
-                    fullWidth={false}
-                    onClick={resetFilters}
-                  >
-                    reset
-                  </ActionBtn>
-                </div>
+                <ActionBtn
+                  type="reset"
+                  variant="action"
+                  fullWidth={false}
+                  onClick={resetFilters}
+                >
+                  reset
+                </ActionBtn>
               </div>
             </div>
 
