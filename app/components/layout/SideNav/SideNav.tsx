@@ -232,7 +232,7 @@ export const SideNav = () => {
           icon={faRoute}
           label="Trip"
           subItems={[
-            { icon: faRoute, label: "Routes List", href: "/trip-routes" },
+            { icon: faRoute, label: "Trip Routes", href: "/trip-routes" },
             {icon: faTableList, label: "Trip List", href: "/trip-prices" },
             {
               icon: faCar,

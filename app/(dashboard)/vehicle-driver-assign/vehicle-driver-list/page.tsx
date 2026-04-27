@@ -124,11 +124,13 @@ export default function AssignmentListPage() {
         setTotalRecords(total);
         setTotalPages(totalPagesCount);
 
-        setActiveRecords(records.filter((r) => r.status === "Ongoing").length);
-        setInactiveRecords(
-          records.filter((r) => r.status === "Completed").length,
-        );
-        setLastEditedBy("Unknown");
+        setActiveRecords(records.filter(r => r.status === "Ongoing").length);
+       setInactiveRecords(records.filter(r => r.status === "Completed").length);
+    setLastEditedBy("Unknown"); 
+
+
+        
+   
 
         // if (res.success && res.data) {
         //   setRecords(res.data.data || []);
