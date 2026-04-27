@@ -18,6 +18,8 @@ import {
   faArrowsRotate,
   faEnvelope,
   faBriefcase,
+  faLink,
+  faHome,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
@@ -26,8 +28,10 @@ import { Input } from "@/app/components/ui/Input/Input";
 import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 
-import styles from "./page.module.css";
+import styles from "./page1.module.css"
 import DateInput from "@/app/components/ui/Inputs/DateInput";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
+import { error } from "console";
 
 export interface CompanyFormData {
   company_name: string;
@@ -137,11 +141,11 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
       <form
         id="companyForm"
         onSubmit={handleSubmit(submitHandler)}
-        className={styles.page}
+        className={styles.formGridContainer}
       >
-        <div className={styles.grid}>
+     
           {/* LEFT 1 — Owner & Web Information (🛑 ၄ ပိုင်းဖြစ်အောင် ဒီထဲကို Owner အချက်အလက်တွေ ပေါင်းထည့်လိုက်ပါတယ်) */}
-          <FormCard title="Owner & Web Information" icon={faBriefcase}>
+          {/* <FormCard title="Owner & Web Information" icon={faBriefcase}>
             <div className={styles.row}>
               <Input
                 label="OWNER NAME"
@@ -195,10 +199,69 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
                 {...register("website_url")}
               />
             </div>
-          </FormCard>
+          </FormCard> */}
+
+          <section className={styles.formGridBox}>
+            <header className={styles.gridBoxTitle}>
+              <span className={styles.pill}></span>
+              <FontAwesomeIcon icon={faBriefcase} className={styles.textDanger} />
+              OWNER & WEB INFORMATION
+            </header>
+            <hr className={styles.cuttingLine} />
+
+            <div className={styles.filterContainer}>
+              <TextInput
+                label="OWNER NAME"
+                type="text"
+                placeholder="Enter Owner Name"
+                rightIcon={faUser}
+                error={errors.owner_name?.message}
+                {...register("owner_name", {
+                  required: "Owner Name is required",
+                })}
+              />
+              <TextInput  
+                label="OWNER PHONE"
+                type="text"
+                placeholder="+95 9 xxx xxx xxx"
+                rightIcon={faPhone}
+                error={errors.owner_phone?.message}
+                {...register("owner_phone")}
+              />
+              <TextInput
+                label="OWNER EMAIL"
+                type="email"
+                placeholder="owner@gmail.com"
+                rightIcon={faEnvelope}
+                error={errors.owner_email?.message}
+                {...register("owner_email")}
+              />
+              <TextInput
+                label="COMPANY EMAIL"
+                type="email"
+                placeholder="company@gmail.com"
+                rightIcon={faEnvelope}
+                error={errors.email?.message}
+                {...register("email")}
+              />
+              <TextInput
+                label="WEB SITE URL"
+                type="text"
+                placeholder="Enter Company Url"
+                rightIcon={faLink}
+                error={errors.website_url?.message}
+                {...register("website_url")}  
+                />
+
+
+                
+
+            </div>
+
+          </section>
 
           {/* RIGHT 1 — Core Identity Attributes */}
-          <FormCard
+          {/* <FormCard
             title="Core Identity Attributes"
             icon={faPersonCircleExclamation}
           >
@@ -240,10 +303,57 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
                 })}
               />
             </div>
-          </FormCard>
+          </FormCard> */}
+          <section className={styles.formGridBox}>
+            <header className={styles.gridBoxTitle}>
+              <span className={styles.pill}></span>
+              <FontAwesomeIcon
+                icon={faPersonCircleExclamation}
+                className={styles.textDanger}
+              />
+              CORE IDENTITY ATTRIBUTES
+            </header>
+            <hr className={styles.cuttingLine} />
+            <div className={styles.filterContainer}>
+              <TextInput
+                label="COMPANY NAME"
+                type="text"
+                placeholder="Enter Company Name...."
+                rightIcon={faBuilding}
+                error={errors.company_name?.message}
+                {...register("company_name", {
+                  required: "Company Name is required",
+                })}
+              />
+              <TextInput 
+                label="COMPANY REGISTRATION NO"
+                type="text"
+                placeholder="Enter Your Reg Number...."
+                rightIcon={faIdCard}
+                error={errors.reg_number?.message}
+                {...register("reg_number")}
+              />
+              <DateInput
+                label="REGISTRATION EXPIRE"
+                error={errors.reg_exp_date?.message}
+                {...register("reg_exp_date", {
+                  required: "reg_exp_date is required",
+                })}
+              />
+              
+              <DateInput
+                label="ESTABLISH YEAR"
+                error={errors.establish_year?.message}
+                {...register("establish_year", {
+                  required: "establish_year is required",
+                })}
+              />  
+              </div>
+
+          </section>
 
           {/* LEFT 2 — Security & Photo */}
-          <FormCard title="Security & Photo" icon={faShieldHalved}>
+          {/* <FormCard title="Security & Photo" icon={faShieldHalved}>
             <div className={styles.imageUploadSection}>
               <div className={styles.imageUploadWrapper}>
                 <input
@@ -255,7 +365,7 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
                 />
                 <label htmlFor="companyPhoto" className={styles.imageUploadBox}>
                   {preview ? (
-                    /* eslint-disable-next-line @next/next/no-img-element */
+
                     <img
                       src={preview}
                       alt="Preview"
@@ -274,10 +384,49 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
                 </label>
               </div>
             </div>
-          </FormCard>
+          </FormCard> */}
+
+          <section className={styles.formGridBox}>
+            <header className={styles.gridBoxTitle}>
+              <span className={styles.pill}></span>
+              <FontAwesomeIcon icon={faShieldHalved} className={styles.textDanger} />
+              SECURITY & PHOTO
+            </header>
+            <hr className={styles.cuttingLine} />
+         
+              <div className={styles.imageUploadSection}>
+                <div className={styles.imageUploadWrapper}>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    id="companyPhoto"
+                    onChange={handleImageChange}
+                    hidden
+                  />
+                  <label htmlFor="companyPhoto" className={styles.imageUploadBox}>
+                    {preview ? (
+                      <img
+                        src={preview}
+                        alt="Preview"
+                        className={styles.previewImage}
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={faBuilding}
+                        className={styles.defaultIcon}
+                      />
+                    )}
+                    <div className={styles.cameraButton}>
+                      <FontAwesomeIcon icon={faCamera} />
+                    </div>
+                  </label>
+                </div>
+              </div>
+     
+          </section>
 
           {/* RIGHT 2 — Contact & Address Details */}
-          <FormCard title="Contact & Address Details" icon={faPortrait}>
+          {/* <FormCard title="Contact & Address Details" icon={faPortrait}>
             <div className={styles.row}>
               <Input
                 label="COMPANY PHONE"
@@ -314,8 +463,52 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
                 {...register("street_address")}
               />
             </div>
-          </FormCard>
-        </div>
+          </FormCard> */}
+          <section className={styles.formGridBox}>
+            <header className={styles.gridBoxTitle}>
+              <span className={styles.pill}></span>
+              <FontAwesomeIcon icon={faPortrait} className={styles.textDanger} />
+              CONTACT & ADDRESS DETAILS
+            </header>
+            <hr className={styles.cuttingLine} />
+            <div className={styles.filterContainer}>
+              <TextInput
+                label="COMPANY PHONE"
+                type="text"
+                placeholder="+95 9 xxx xxx xxx"
+                rightIcon={faPhone}
+                error={errors.phone?.message}
+                {...register("phone")}
+              />
+              <TextInput
+                label="COUNTRY"
+                type="text"
+                placeholder="Country"
+                rightIcon={faGlobe}
+                error={errors.country?.message}
+                {...register("country")}
+              />
+              <TextInput
+                label="CITY"
+                type="text"
+                placeholder="City"
+                rightIcon={faCity}
+                error={errors.city?.message}
+                {...register("city")}
+              />
+              <TextInput
+                label="STREET ADDRESS"
+        
+                placeholder="Enter Your Address...."
+                as="textarea"
+                rightIcon={faHome}
+                rows={3}
+                error={errors.street_address?.message}
+                {...register("street_address")}
+              />
+            </div>
+          </section>
+     
       </form>
     </>
   );

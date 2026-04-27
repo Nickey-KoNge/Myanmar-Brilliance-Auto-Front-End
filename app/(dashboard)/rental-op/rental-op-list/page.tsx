@@ -386,9 +386,9 @@ export default function AssignmentListPage() {
           <DataTable
             columns={columns}
             data={records}
-            onRowClick={(row) =>
-              router.push(`/vehicle/Assignment/Update/${row.id}`)
-            }
+            // onRowClick={(row) =>
+            //   router.push(`/vehicle/Assignment/Update/${row.id}`)
+            // }
             emptyMessage="No assignment records found."
           />
         </div>
