@@ -4,9 +4,10 @@ import { AxiosError } from "axios";
 import { apiClient } from "../../features/lib/api-client";
 import styles from "./rentalOpPage.module.css";
 
+// ဒီနေရာမှာ onSuccess ကို Promise<void> လက်ခံနိုင်အောင် ပြင်ပေးထားပါတယ်
 interface Props {
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: () => void | Promise<void>;
 }
 
 export default function AddRouteModal({ onClose, onSuccess }: Props) {
@@ -39,47 +40,39 @@ export default function AddRouteModal({ onClose, onSuccess }: Props) {
   };
 
   return (
-    <div className={styles.modalOverlay}>
-      <div className={styles.modalContent}>
-        <h2 style={{ marginBottom: 15, fontWeight: "bold" }}>Add New Route</h2>
-        <input
-          placeholder="Route Name"
-          className={styles.selectBox}
-          style={{ marginBottom: 10 }}
-          value={routeName}
-          onChange={(e) => setRouteName(e.target.value)}
-        />
-        <input
-          placeholder="Start Location"
-          className={styles.selectBox}
-          style={{ marginBottom: 10 }}
-          value={startLocation}
-          onChange={(e) => setStartLocation(e.target.value)}
-        />
-        <input
-          placeholder="End Location"
-          className={styles.selectBox}
-          style={{ marginBottom: 10 }}
-          value={endLocation}
-          onChange={(e) => setEndLocation(e.target.value)}
-        />
-        <div
-          style={{
-            display: "flex",
-            gap: 10,
-            justifyContent: "flex-end",
-            marginTop: 20,
-          }}
-        >
-          <button
-            className={styles.btnPrimary}
-            style={{ backgroundColor: "#555" }}
-            onClick={onClose}
-          >
+    <div className={styles.largeModalOverlay}>
+      <div className={styles.smallModalContent}>
+        <h2 className={`${styles.modalTitle} ${styles.marginBottom15}`}>
+          Add New Route
+        </h2>
+
+        <div className={styles.flexCol}>
+          <input
+            placeholder="Route Name"
+            className={styles.selectBox}
+            value={routeName}
+            onChange={(e) => setRouteName(e.target.value)}
+          />
+          <input
+            placeholder="Start Location"
+            className={styles.selectBox}
+            value={startLocation}
+            onChange={(e) => setStartLocation(e.target.value)}
+          />
+          <input
+            placeholder="End Location"
+            className={styles.selectBox}
+            value={endLocation}
+            onChange={(e) => setEndLocation(e.target.value)}
+          />
+        </div>
+
+        <div className={`${styles.flexGap} ${styles.actionButtonsRow}`}>
+          <button className={styles.btnCancel} onClick={onClose}>
             Cancel
           </button>
-          <button className={styles.btnPrimary} onClick={handleCreateRoute}>
-            Save
+          <button className={styles.btnSave} onClick={handleCreateRoute}>
+            Save Route
           </button>
         </div>
       </div>
