@@ -1,0 +1,168 @@
+/* Sidebar Layout */
+.sidebarWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.topSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.gridBoxTitle {
+  color: var(--text-main);
+  text-align: center;
+  font-weight: 600;
+  padding: var(--padding) 0;
+  font-size: 1.1rem;
+}
+
+.searchContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  padding: 0.5rem 0;
+}
+
+.filterRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: calc(var(--gap) / 1.5);
+  margin-top: 1rem;
+}
+
+.bottomSection {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+/* Utilities for Lines */
+.cuttingLine {
+  border: none;
+  height: 1px;
+  background: var(--accent);
+  margin: calc(var(--margin) / 2) 0;
+}
+
+/* Recent Records / Summary Box */
+.recentRecord {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--gap);
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.recentRecord span:nth-of-type(1) {
+  background: var(--accent, #3b82f6);
+  padding: 0.75rem;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.recentTitle {
+  color: var(--text-main);
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+/* Stats inside Summary */
+.stat {
+  display: grid;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.stat div {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.statLabel {
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* Table Header Area */
+.tableHeaderArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-bottom: var(--padding-inside);
+  min-height: 50px;
+}
+
+.tableTitle {
+  color: var(--text-main);
+  font-weight: 600;
+  margin: 0;
+  font-size: 1.15rem;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.headerActionArea {
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Custom Table Cell Utilities */
+.info {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--gap) / 1.5);
+}
+
+.defaultImage {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: var(--bg-input, #333);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted, #aaa);
+}
+
+/* Typography Utilities */
+.textSmall {
+  font-size: calc(13 / 16 * 1rem);
+}
+
+.textBold {
+  font-weight: 600;
+}
+
+.textDanger {
+  color: var(--danger, #ef4444);
+}
+
+.textWarning {
+  color: var(--warning, #f59e0b);
+}
+
+.textSuccess {
+  color: var(--success, #22c55e);
+}
+
+.textMuted {
+  color: var(--text-muted, #9ca3af);
+}
+
+.textInfo {
+  color: var(--info, #3b82f6);
+}
