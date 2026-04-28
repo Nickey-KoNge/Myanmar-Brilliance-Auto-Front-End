@@ -154,7 +154,7 @@
 }
 
 .textSmall {
-  font-size: calc(1rem / 1.25);
+  font-size: calc(12 / 16 * 1rem);
 }
 
 .textBold {
@@ -163,6 +163,10 @@
 
 .textDanger {
   color: var(--danger);
+}
+
+.textWarning {
+  color: var(--warning);
 }
 
 .textSuccess {
@@ -175,4 +179,29 @@
 
 .textInfo {
   color: var(--info);
+}
+
+.recentTitle, .statLabel {
+  color: var(--text-main);
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: rgb(27, 27, 28);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  min-width: 350px;
+  position: relative;
 }

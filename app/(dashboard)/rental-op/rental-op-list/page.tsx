@@ -161,7 +161,7 @@ export default function AssignmentListPage() {
                     : styles.textDanger,
               ].join(" ")}
             >
-              {row.trip_status.toUpperCase()}
+              {row.trip_status}
             </div>
           </div>
         </div>
@@ -340,15 +340,15 @@ export default function AssignmentListPage() {
 
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLable}>Total Trips :</p>
+                    <p className={styles.statLabel}>Total Trips :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Active Routes :</p>
+                    <p className={styles.statLabel}>Active Routes :</p>
                     <p className={styles.textSuccess}>{activeRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Inactive Routes :</p>
+                    <p className={styles.statLabel}>Inactive Routes :</p>
                     <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>
