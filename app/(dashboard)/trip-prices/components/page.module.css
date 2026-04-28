@@ -5,6 +5,10 @@
     margin-top: 1.5rem;
 }
 
-.DropGroup{
-    margin-bottom: 1.5rem;
+.filterContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap);
+  row-gap: unset;
+  gap: 1rem;
 }

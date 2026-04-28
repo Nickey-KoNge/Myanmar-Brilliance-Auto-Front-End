@@ -1,0 +1,115 @@
+/* ====== LAYOUT ====== */
+.formGridContainer {
+  display: grid;
+  grid-template-columns: 1.25fr 2fr;
+  gap: var(--gap);
+}
+
+.formGridBox {
+  padding: calc(var(--padding) * 1);
+  background: var(--bg-main);
+  border-radius: calc(var(--radius));
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.gridBoxTitle {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: calc(var(--gap) / 2);
+  text-transform: uppercase;
+  color: var(--text-main, #fff);
+}
+
+.filterContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+  row-gap: unset;
+  gap: 1rem;
+}
+
+.formGridBox:last-child .filterContainer > :last-child {
+  grid-column: 1 / 3;
+}
+
+/* Utilities */
+.cuttingLine {
+  border: none;
+  height: 0.5px;
+  background: var(--accent);
+}
+
+.pill {
+  width: 2px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--color-primary);
+}
+
+.textDanger {
+  color: var(--danger);
+  font-weight: var(--font-weight-bold);
+}
+
+.textSuccess {
+  color: var(--success);
+  font-weight: var(--font-weight-bold);
+}
+
+/* ====== BUTTONS ====== */
+.headerActionArea {
+  display: flex;
+  gap: 10px;
+}
+
+/* ====== IMAGE UPLOAD ====== */
+.imageUploadSection {
+  display: flex;
+  justify-content: center;
+}
+
+.imageUploadWrapper {
+  position: relative;
+  width: 230px;
+  height: 230px;
+  margin: 0 auto;
+}
+
+.imageUploadBox {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--color-primary, #c0392b);
+  background: var(--bg-input, #2a2a2a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.previewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.defaultIcon {
+  font-size: 3rem;
+  color: var(--text-muted, #888);
+}
+
+.cameraButton {
+  position: absolute;
+  bottom: -5px;
+  right: -5px;
+  background: var(--color-primary, #c0392b);
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+

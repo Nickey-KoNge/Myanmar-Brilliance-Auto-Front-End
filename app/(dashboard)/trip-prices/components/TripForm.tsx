@@ -6,11 +6,12 @@ import { FormCard } from "@/app/components/ui/FormCard/FormCard";
 import { Input } from "@/app/components/ui/Input/Input";
 import DropdownInput from "@/app/components/ui/Inputs/DropdownInput";
 import { apiClient } from "@/app/features/lib/api-client";
-import { faCircleCheck, faMap } from "@fortawesome/free-solid-svg-icons";
+import { faCircleCheck, faMap, faMoneyBill } from "@fortawesome/free-solid-svg-icons";
 import { register } from "module";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import styles from "./page.module.css"
+import TextInput from "@/app/components/ui/Inputs/TextInput";
 
 
 
@@ -160,9 +161,9 @@ console.log("stations", stations);
         <form id="tripForm" onSubmit={handleSubmit(onSubmit)}>
 
             <FormCard title="TRIP ASSIGNMENT" icon={faMap}>
-                <div>
+                <div className={styles.filterContainer}>
                         
-                        <div className={styles.DropGroup}>
+                      
                         <DropdownInput
                         label="Route"
                         placeholder="Select Route"
@@ -186,9 +187,9 @@ console.log("stations", stations);
                         })}
                         error={errors.route_id?.message as string}
                         /> */}
-                        </div>
+                   
 
-                        <div className={styles.DropGroup}>
+                  
 
                                  <DropdownInput
                             label="Vehicle Model"
@@ -197,10 +198,10 @@ console.log("stations", stations);
                             {...register("vehicle_model_id", { required: "Vehicle Model is required" })}
                             error={errors.vehicle_model_id?.message}
                         />
-                        </div>
+               
 
 
-                            <div className={styles.DropGroup}>
+                          
 
                                    <DropdownInput
                             label="Station"
@@ -209,24 +210,23 @@ console.log("stations", stations);
                             {...register("station_id", { required: "Station is required" })}
                             error={errors.station_id?.message}
                         />
-
-                            </div>
-                   
-
-                     
+               
+                                
              
 
                 
-                        <Input
+                        <TextInput
                             label="Daily Trip Rate"
+                            rightIcon={faMoneyBill}
                             placeholder="Enter Daily Trip Rate"
                             {...register("daily_trip_rate", { required: "Daily Trip Rate is required" })}
                             error={errors.daily_trip_rate?.message}
                         />
 
 
-                        <Input
+                        <TextInput
                             label="Overnight Trip Rate"
+                            rightIcon={faMoneyBill}
                             placeholder="Enter Overnight Trip Rate"
                             {...register("overnight_trip_rate", { required: "Overnight Trip Rate is required" })}
                             error={errors.overnight_trip_rate?.message}

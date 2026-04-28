@@ -11,6 +11,7 @@ import {
   faCogs,
   faCar,
   faInfoCircle,
+  faTag,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
@@ -21,7 +22,9 @@ import DateInput from "@/app/components/ui/Inputs/DateInput";
 import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 
-import styles from "./VehicleModelForm.module.css";
+// import styles from "./VehicleModelForm.module.css";
+import styles from "./page1.module.css";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
 
 export interface VehicleModelFormData {
   id?: string;
@@ -114,11 +117,11 @@ export const VehicleModelForm: React.FC<VehicleModelFormProps> = ({
       <form
         id="vehicleModelForm"
         onSubmit={handleSubmit(onSubmit)}
-        className={styles.page}
+        className={styles.formGridContainer}
       >
-        <div className={styles.grid}>
+        {/* <div className={styles.grid}> */}
           {/* SECTION 1: CORE MODEL IDENTITY & ASSIGNMENT */}
-          <FormCard title="CORE MODEL IDENTITY & ASSIGNMENT" icon={faTags}>
+          {/* <FormCard title="CORE MODEL IDENTITY & ASSIGNMENT" icon={faTags}>
             <div className={styles.row}>
               <Input
                 label={nameLabel}
@@ -150,10 +153,10 @@ export const VehicleModelForm: React.FC<VehicleModelFormProps> = ({
                 })}
               />
             </div>
-          </FormCard>
+          </FormCard> */}
 
           {/* SECTION 2: TECHNICAL SPECIFICATIONS */}
-          <FormCard title="TECHNICAL SPECIFICATIONS" icon={faCogs}>
+          {/* <FormCard title="TECHNICAL SPECIFICATIONS" icon={faCogs}>
             <div className={styles.row}>
               <Input
                 label="Engine Capacity"
@@ -212,8 +215,133 @@ export const VehicleModelForm: React.FC<VehicleModelFormProps> = ({
                 {...register("body_type")}
               />
             </div>
-          </FormCard>
-        </div>
+          </FormCard> */}
+        {/* </div> */}
+
+
+
+
+        <section className={styles.formGridBox}>
+          <header className={styles.gridBoxTitle}>
+            <span className={styles.pill} />
+                <FontAwesomeIcon icon={faTag} className={styles.textDanger} />
+                  CORE MODEL IDENTITY & ASSIGNMENT
+            </header>
+            <hr className={styles.cuttingLine}/>
+
+            <div className={styles.filterContainer}>
+              <TextInput
+                label={nameLabel}
+                placeholder={`e.g. Toyota Crown`}
+                rightIcon={faCar}
+                error={errors[nameField]?.message as string}
+                {...register(nameField, {
+                  required: `${nameLabel} is required`,
+                })}
+              />
+              {dropdown && (
+                <DropdownInput
+                  label={dropdown.label}
+                  placeholder={`Select ${dropdown.label}`}
+                  options={dropdown.options}
+                  error={errors[dropdown.name]?.message as string}
+                  {...register(dropdown.name, {
+                    required: `${dropdown.label} is required`,
+                  })}
+                />
+              )}
+              <DateInput
+                label="Year of Release"
+                error={errors.year_of_release?.message as string}
+                {...register("year_of_release", {
+                  required: "Release year is required",
+                })}
+              />
+              <div></div>
+            </div>
+          </section>
+
+
+          <section className={styles.formGridBox}>
+          <header className={styles.gridBoxTitle}>
+            <span className={styles.pill} />
+                <FontAwesomeIcon icon={faCogs} className={styles.textDanger} />
+                TECHNICAL SPECIFICATIONS
+          </header>
+          <hr className={styles.cuttingLine}/>
+
+          <div className={styles.filterContainer}>
+               <TextInput
+                label="Engine Capacity"
+                placeholder="e.g. 2500cc"
+                rightIcon={faInfoCircle}
+                error={errors.engine_capacity?.message as string}
+                {...register("engine_capacity")}
+              />
+                
+
+              <DropdownInput
+                label="Fuel Type"
+                placeholder="Select Fuel"
+                options={[
+                  { id: "Petrol", name: "Petrol" },
+                  { id: "Diesel", name: "Diesel" },
+                  { id: "Hybrid", name: "Hybrid" },
+                  { id: "Electric", name: "Electric" },
+                ]}
+                error={errors.fuel_type?.message as string}
+                {...register("fuel_type")}
+              />
+
+              <DropdownInput
+                label="Transmission"
+                placeholder="Select Transmission"
+                options={[
+                  { id: "Automatic", name: "Automatic" },
+                  { id: "Manual", name: "Manual" },
+                  { id: "CVT", name: "CVT" },
+                  { id: "DCT", name: "Dual-Clutch (DCT)" },
+                  { id: "Single-Speed", name: "Single-Speed (EV)" },
+                ]}
+                valueKey="id"
+                nameKey="name"
+                error={errors.transmission?.message as string}
+                {...register("transmission")}
+              />
+
+              <DropdownInput
+                label="Body Type"
+                placeholder="Select Body Type"
+                options={[
+                  { id: "Sedan", name: "Sedan" },
+                  { id: "SUV", name: "SUV" },
+                  { id: "Hatchback", name: "Hatchback" },
+                  { id: "Pickup", name: "Pickup" },
+                  { id: "MPV", name: "MPV / Minivan" },
+                  { id: "Van", name: "Van" },
+                  { id: "Wagon", name: "Station Wagon" },
+                  { id: "Crossover", name: "Crossover (CUV)" },
+                  { id: "Truck", name: "Truck / Light Truck" },
+                ]}
+                valueKey="id"
+                nameKey="name"
+                error={errors.body_type?.message as string}
+                {...register("body_type")}
+              />
+              <div></div>
+
+
+          </div>
+        </section>
+
+
+
+
+
+        
+
+
+
       </form>
     </>
   );

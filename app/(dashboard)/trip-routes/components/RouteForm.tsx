@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
 import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
 
 
 
@@ -81,31 +82,31 @@ export const RouteForm:React.FC<RouteFormProps>=({
 
         <form id="routeForm" onSubmit={handleSubmit(onSubmit)}>
             <FormCard title="ROUTE ASSIGNMENT" icon={faMapLocationDot}>
-                <div>
-                    <Input 
+                <div className={styles.filterContainer}>
+                    <TextInput 
                      label="Route Name"
                      type="text"
                      placeholder="Enter Route Info"
-                     icon={<FontAwesomeIcon icon={faMap} />}
+                     rightIcon={faMap}
                      {...register("route_name",{required:"Route Name is required"})}
                      error={errors.route_name?.message}/>
 
 
 
-                    <Input 
+                    <TextInput 
                      label="Start Location"
                      type="text"
                      placeholder="Enter Start Location"
-                     icon={<FontAwesomeIcon icon={faMapLocation} />}
+                     rightIcon={faMapLocation}
                      {...register("start_location",{required:"Start Location is required"})}
                      error={errors.start_location?.message}/>
 
 
-                    <Input 
+                    <TextInput 
                      label="End Location"
                      type="text"
                      placeholder="Enter End Location"
-                     icon={<FontAwesomeIcon icon={faRoute} />}
+                     rightIcon={faRoute}
                      {...register("end_location",{required:"End Location is required"})}
                      error={errors.end_location?.message}/>
 

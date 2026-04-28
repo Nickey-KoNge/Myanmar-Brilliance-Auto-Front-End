@@ -20,7 +20,8 @@ import DropdownInput from "@/app/components/ui/Inputs/DropdownInput";
 import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 
-import styles from "./page.module.css";
+import styles from "./page1.module.css";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
 
 interface DropDownConfig {
   label: string;
@@ -106,9 +107,9 @@ export const GroupsForm: React.FC<GroupsFormProps> = ({
       <form
         id="groupsForm"
         onSubmit={handleSubmit(onSubmit)}
-        className={styles.page}
+        className={styles.formGridContainer}
       >
-        <div className={styles.grid}>
+        {/* <div className={styles.grid}>
           {dropdown && (
             <FormCard title="Assignment" icon={faTable}>
               <div className={styles.fieldGroup}>
@@ -120,10 +121,35 @@ export const GroupsForm: React.FC<GroupsFormProps> = ({
                 />
               </div>
             </FormCard>
-          )}
+          )} */}
+
+           <section className={styles.formGridBox}>
+          <header className={styles.gridBoxTitle}>
+            <span className={styles.pill} />
+                <FontAwesomeIcon icon={faTable} className={styles.textDanger} />
+                  ASSIGNMENT
+           
+
+            </header>
+            <hr className={styles.cuttingLine}/>
+            <div className={styles.filterContainer}>
+              {dropdown && (
+                <DropdownInput
+                  label={dropdown.label}
+                  placeholder={`Select ${dropdown.label}`}
+                  options={dropdown.options}
+                  {...register(dropdown.name)}
+                />
+              )}
+            </div>
+
+          </section>
+
+
+
 
           {/* RIGHT SECTION */}
-          <FormCard title="CORE IDENTITY ATTRIBUTES" icon={faUserTag}>
+          {/* <FormCard title="CORE IDENTITY ATTRIBUTES" icon={faUserTag}>
             <div className={styles.row}>
               <Input
                 label={nameLabel}
@@ -154,8 +180,49 @@ export const GroupsForm: React.FC<GroupsFormProps> = ({
                 required: "Description is required",
               })}
             />
-          </FormCard>
-        </div>
+          </FormCard> */}
+
+          <section className={styles.formGridBox}>
+            <header className={styles.gridBoxTitle}>
+              <span className={styles.pill}/>
+                <FontAwesomeIcon icon={faUserTag} className={styles.textDanger} />
+                  CORE IDENTITY ATTRIBUTES
+           
+
+            </header>
+            <hr className={styles.cuttingLine}/>
+            <div className={styles.filterContainer}>
+              <TextInput
+                label={nameLabel}
+                placeholder={`Enter ${nameLabel}`}
+                rightIcon={faTags}
+                error={errors[nameField]?.message}
+                {...register("group_name", {
+                  required: `${nameLabel} is required`,
+                })}
+              />
+              <TextInput
+                label="GROUP TYPE"
+                placeholder="Enter Your Group Type ..."
+                rightIcon={faAddressCard}
+                error={errors.group_type?.message}
+                {...register("group_type", {
+                  required: "Group Type is required",
+                })}
+              />
+              <TextInput
+                label="DESCRIPTION"
+                as="textarea"
+                rows={3}
+                placeholder="Enter Description..."
+                error={errors.description?.message}
+                {...register("description", {
+                  required: "Description is required",
+                })}
+              />
+            </div>
+          </section>
+        
       </form>
     </>
   );

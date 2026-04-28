@@ -501,7 +501,6 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
         
                 placeholder="Enter Your Address...."
                 as="textarea"
-                rightIcon={faHome}
                 rows={3}
                 error={errors.street_address?.message}
                 {...register("street_address")}
