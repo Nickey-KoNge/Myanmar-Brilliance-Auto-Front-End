@@ -36,6 +36,18 @@ export default function AuditLogPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
+
+  const [logs, setLogs] = useState<AuditLog[]>([]);
+
+  useEffect(() => {
+    const getAllRecords = async () => {
+      const response = await apiClient.get("/master-audit/all");
+      setLogs(response.data || response);
+    };
+
+    getAllRecords();
+  }, []);
+
   const PAGE_SIZE = 6;
 
   const [activeFilters, setActiveFilters] = useState<FilterState>({
@@ -411,22 +423,20 @@ export default function AuditLogPage() {
                 />
               </div>
 
-              <div style={{ alignSelf: "flex-start" }}>
-                <ActionBtn
-                  type="reset"
-                  variant="action"
-                  fullWidth={false}
-                  onClick={resetFilters}
-                >
-                  Reset
-                </ActionBtn>
-              </div>
+              <ActionBtn
+                type="reset"
+                variant="action"
+                fullWidth={false}
+                onClick={resetFilters}
+              >
+                Reset
+              </ActionBtn>
             </div>
           </div>
 
           <div className={styles.bottomSection}>
             <hr className={styles.cuttingLine} />
-            <div className={styles.recentRecord}>
+            {/* <div className={styles.recentRecord}>
               <span>
                 <FontAwesomeIcon
                   icon={faShieldHalved}
@@ -441,7 +451,47 @@ export default function AuditLogPage() {
                   <p className={styles.textMain}>{totalRecords}</p>
                 </div>
               </div>
+            </div> */}
+
+            <div className={styles.recentRecord}>
+              <span>
+                <FontAwesomeIcon icon={faShieldHalved} />
+              </span>
+              <p className={styles.recentTitle}>SECURITY STATS</p>
+              <span />
+
+              <div className={styles.stat}>
+                <div>
+                  <p className={styles.statLabel}>Total Records :</p>
+                  <p className={styles.textMain}>{totalRecords}</p>
+                </div>
+                <div>
+                  <p className={styles.statLabel}>Create :</p>
+                  <p className={styles.textSuccess}>
+                    {logs.filter((log) => log.action === "CREATE").length}
+                  </p>
+                </div>
+                <div>
+                  <p className={styles.statLabel}>Update :</p>
+                  <p className={styles.textWarning}>
+                    {logs.filter((log) => log.action === "UPDATE").length}
+                  </p>
+                </div>
+                <div>
+                  <p className={styles.statLabel}>Delete :</p>
+                  <p className={styles.textDanger}>
+                    {logs.filter((log) => log.action === "DELETE").length}
+                  </p>
+                </div>
+                <div>
+                  <p className={styles.statLabel}>Restore :</p>
+                  <p className={styles.textInfo}>
+                    {logs.filter((log) => log.action === "RESTORE").length}
+                  </p>
+                </div>
+              </div>
             </div>
+
             <hr className={styles.cuttingLine} />
           </div>
         </div>

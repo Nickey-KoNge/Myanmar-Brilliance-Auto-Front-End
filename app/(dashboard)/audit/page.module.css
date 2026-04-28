@@ -22,21 +22,20 @@
   border: none;
   height: 0.5px;
   background: var(--accent);
-  margin: 0.5rem 0;
+  margin: calc(var(--margin) / 2) 0;
 }
 
 .gridBoxTitle {
   color: var(--text-main);
   text-align: center;
-  margin-bottom: var(--padding-inside);
   font-weight: 600;
+  padding: var(--padding) 0;
 }
 
 /* Search Container */
 .searchContainer {
   display: flex;
   flex-direction: column;
-  margin-top: 1rem;
   gap: var(--gap);
 }
 
@@ -284,4 +283,45 @@
 .dateText {
   font-size: 11px;
   color: var(--text-muted);
+}
+
+.recentTitle,
+.statLabel {
+  color: var(--text-main);
+}
+
+/* Utilities */
+.cuttingLine {
+  border: none;
+  height: 0.5px;
+  background: var(--accent);
+  margin: calc(var(--margin) / 2) 0;
+}
+
+.textSmall {
+  font-size: calc(12 / 16 * 1rem);
+}
+
+.textBold {
+  font-weight: 600;
+}
+
+.textDanger {
+  color: var(--danger);
+}
+
+.textWarning {
+  color: var(--warning);
+}
+
+.textSuccess {
+  color: var(--success);
+}
+
+.textMuted {
+  color: var(--text-muted);
+}
+
+.textInfo {
+  color: var(--info);
 }

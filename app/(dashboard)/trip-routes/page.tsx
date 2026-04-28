@@ -250,7 +250,7 @@ export default function TripRoutesPage() {
 
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLabel}>Total Trips :</p>
+                    <p className={styles.statLabel}>Total Routes :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>

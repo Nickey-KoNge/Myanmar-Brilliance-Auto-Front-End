@@ -313,11 +313,11 @@ export default function TripPricePage() {
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLabel}>Active Routes :</p>
+                    <p className={styles.statLabel}>Active Trips :</p>
                     <p className={styles.textSuccess}>{activeTripCount}</p>
                   </div>
                   <div>
-                    <p className={styles.statLabel}>Inactive Routes :</p>
+                    <p className={styles.statLabel}>Inactive Trips :</p>
                     <p className={styles.textDanger}>{inactiveTripCount}</p>
                   </div>
                 </div>

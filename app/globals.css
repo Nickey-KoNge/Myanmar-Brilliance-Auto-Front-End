@@ -48,7 +48,7 @@ button {
   --color-primary-hover: #962e32;
   --text-main: #d1d1d1;
   --icon-main: #d1d1d1;
-  --text-scuccess: #eeecec;
+  --text-success: #eeecec;
   --text-muted: #888888;
   --border-color: #333333;
   --font-size-xl: 1.5rem;
@@ -102,6 +102,7 @@ button {
   --color-primary: #a33b3b;
   --color-primary-hover: #962e32;
   --text-main: #000000;
+  --text-success: #000000;
   --text-cancel: #eeecec;
   --nav-main: #000000;
   --text-muted: #131313;

@@ -47,12 +47,12 @@ export const AlertsTable = () => {
                     : styles.statusWarning
                 }
               >
-                <span style={{ color: "#fff", marginRight: "1rem" }}>
+                <span style={{ marginRight: "1rem" }}>
                   {a.vehicle}
                 </span>{" "}
                 {a.status}
               </td>
-              <td style={{ color: "#888" }}>{a.date}</td>
+              <td>{a.date}</td>
             </tr>
           ))}
         </tbody>
