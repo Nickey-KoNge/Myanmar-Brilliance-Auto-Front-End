@@ -20,7 +20,7 @@
   align-items: center;
   gap: calc(var(--gap) / 2);
   text-transform: uppercase;
-  color: var(--text-main, #fff);
+  color: var(--text-main);
 }
 
 .filterContainer {
@@ -62,28 +62,30 @@
 /* ====== BUTTONS ====== */
 .headerActionArea {
   display: flex;
-  gap: 10px;
+  gap: 1rem;
 }
 
 /* ====== IMAGE UPLOAD ====== */
 .imageUploadSection {
   display: flex;
   justify-content: center;
+  height: 100%;
 }
 
 .imageUploadWrapper {
   position: relative;
-  width: 230px;
-  height: 230px;
   margin: 0 auto;
+  height: inherit;
+  width: auto;
+  aspect-ratio: 1/1;
 }
 
 .imageUploadBox {
   width: 100%;
   height: 100%;
-  border-radius: 8px;
-  border: 1px solid var(--color-primary, #c0392b);
-  background: var(--bg-input, #2a2a2a);
+  border-radius: var(--radius);
+  border: 1px solid var(--color-primary);
+  background: var(--bg-input);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -99,17 +101,30 @@
 
 .defaultIcon {
   font-size: 3rem;
-  color: var(--text-muted, #888);
+  color: var(--text-muted);
 }
 
 .cameraButton {
   position: absolute;
   bottom: -5px;
   right: -5px;
-  background: var(--color-primary, #c0392b);
+  background: var(--color-primary);
   color: white;
-  padding: 8px;
+  padding: calc(var(--padding) / 3);
   border-radius: 4px;
 }
 
-
+.mapPlaceholder {
+  flex: 1;
+  height: 100%;
+  min-height: 250px;
+  background: #1a1a1a;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #444;
+  font-size: 28px;
+  overflow: hidden;
+}

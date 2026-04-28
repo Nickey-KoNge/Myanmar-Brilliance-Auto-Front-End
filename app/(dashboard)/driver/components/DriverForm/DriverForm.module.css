@@ -62,28 +62,29 @@
 /* ====== BUTTONS ====== */
 .headerActionArea {
   display: flex;
-  gap: calc(var(--gap) / 1.65);
+  gap: 1rem;
 }
 
 /* ====== IMAGE UPLOAD ====== */
 .imageUploadSection {
   display: flex;
   justify-content: center;
+  height: 100%;
 }
 
 .imageUploadWrapper {
   position: relative;
-  width: 230px;
-  height: 230px;
   margin: 0 auto;
+  height: inherit;
+  width: auto;
+  aspect-ratio: 1/1;
 }
 
 .imageUploadBox {
   width: 100%;
   height: 100%;
-  border-radius: var(--border-radius);
+  border-radius: var(--radius);
   border: 1px solid var(--color-primary);
-  border-radius: 8px;
   background: var(--bg-input);
   display: flex;
   align-items: center;
@@ -108,7 +109,22 @@
   bottom: -5px;
   right: -5px;
   background: var(--color-primary);
-  color: var(--text-main);
-  padding: calc(var(--padding) / 2);
-  border-radius: calc(var(--radius) / 2);
+  color: white;
+  padding: calc(var(--padding)/3);
+  border-radius: 4px;
+}
+
+.mapPlaceholder {
+  flex: 1;
+  height: 100%;
+  min-height: 250px;
+  background: #1a1a1a;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #444;
+  font-size: 28px;
+  overflow: hidden;
 }

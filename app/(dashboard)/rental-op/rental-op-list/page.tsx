@@ -40,7 +40,7 @@ interface AssignmentRecord {
   vehicle_id: string;
   vehicle_name: string;
   vehicle_image_url: string;
-  plate_number: string | null;
+  license_plate: string | null;
   start_odo: string;
   station_name: string;
   branch_name: string;
@@ -91,6 +91,8 @@ export default function AssignmentListPage() {
       setCurrentPage(1);
     },
   );
+
+  console.log("RECORDS", records)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -175,7 +177,7 @@ export default function AssignmentListPage() {
           <div className={styles.textBold}>{row.vehicle_name}</div>
           <div className={[styles.textSmall, styles.textMuted].join(" ")}>
             <span className={styles.textBold}>Plate:</span>{" "}
-            {row.plate_number || "N/A"}
+            {row.license_plate || "N/A"}
           </div>
           <div className={styles.textSmall}>
             <span className={styles.textBold}>Battery : </span>{" "}
