@@ -61,6 +61,9 @@ export default function TripPricePage() {
   const [modalMode, setModalMode] = useState<"create" | "update">("create");
   const [selectedTrip, setSelectedTrip] = useState<TripPrice | null>(null);
 
+  const [activeTripCount, setActiveTripCount] = useState(0);
+  const [inactiveTripCount, setInactiveTripCount] = useState(0);
+
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
     id: null as string | null,
@@ -104,7 +107,12 @@ export default function TripPricePage() {
       setTotalRecords(res?.total || 0);
       setTotalPages(res?.totalPages || 1);
 
-      console.log("Fetched Trip Prices:", list);
+      const activeTripCount =
+        res.data?.filter((trip) => trip.status === "Active").length || 0;
+      const inactiveTripCount =
+        res.data?.filter((trip) => trip.status === "Inactive").length || 0;
+      setActiveTripCount(activeTripCount);
+      setInactiveTripCount(inactiveTripCount);
     } catch (err) {
       console.error(err);
       setVehicles([]);
@@ -306,11 +314,11 @@ export default function TripPricePage() {
                   </div>
                   <div>
                     <p className={styles.statLabel}>Active Routes :</p>
-                    <p className={styles.textSuccess}>"N/A"</p>
+                    <p className={styles.textSuccess}>{activeTripCount}</p>
                   </div>
                   <div>
                     <p className={styles.statLabel}>Inactive Routes :</p>
-                    <p className={styles.textDanger}>"N/A"</p>
+                    <p className={styles.textDanger}>{inactiveTripCount}</p>
                   </div>
                 </div>
               </div>
@@ -352,9 +360,10 @@ export default function TripPricePage() {
               setModalMode("update");
               setSelectedTrip(item);
               setModalOpen(true);
-              {console.log("DEBUG", item)}
+              {
+                console.log("DEBUG", item);
+              }
             }}
-
           />
         </div>
 
