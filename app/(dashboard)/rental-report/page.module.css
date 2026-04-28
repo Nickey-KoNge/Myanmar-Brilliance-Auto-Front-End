@@ -1,168 +1,217 @@
-/* Sidebar Layout */
+/* Sidebar Layouts */
 .sidebarWrapper {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   height: 100%;
+  padding: 1rem;
+  background-color: #f8fafc; /* Light gray background for sidebar */
+  border-radius: 8px;
 }
 
 .topSection {
-  display: flex;
-  flex-direction: column;
-}
-
-.gridBoxTitle {
-  color: var(--text-main);
-  text-align: center;
-  font-weight: 600;
-  padding: var(--padding) 0;
-  font-size: 1.1rem;
-}
-
-.searchContainer {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap);
-  padding: 0.5rem 0;
-}
-
-.filterRow {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: calc(var(--gap) / 1.5);
-  margin-top: 1rem;
+  margin-bottom: 2rem;
 }
 
 .bottomSection {
-  margin-top: auto;
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap);
+  margin-top: auto; /* Push to bottom if space is available */
 }
 
-/* Utilities for Lines */
-.cuttingLine {
-  border: none;
-  height: 1px;
-  background: var(--accent);
-  margin: calc(var(--margin) / 2) 0;
-}
-
-/* Recent Records / Summary Box */
-.recentRecord {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: var(--gap);
-  align-items: center;
-  padding: 0.5rem 0;
-}
-
-.recentRecord span:nth-of-type(1) {
-  background: var(--accent, #3b82f6);
-  padding: 0.75rem;
-  border-radius: var(--radius);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
+/* Typography & Titles */
+.gridBoxTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.5rem;
 }
 
 .recentTitle {
-  color: var(--text-main);
-  font-weight: bold;
-  letter-spacing: 0.5px;
-  margin: 0;
-}
-
-/* Stats inside Summary */
-.stat {
-  display: grid;
-  align-items: center;
-  gap: 0.75rem;
   font-size: 0.9rem;
-}
-
-.stat div {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-}
-
-.statLabel {
-  color: var(--text-muted);
-  margin: 0;
-}
-
-/* Table Header Area */
-.tableHeaderArea {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  margin-bottom: var(--padding-inside);
-  min-height: 50px;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.05em;
+  margin: 1rem 0;
 }
 
 .tableTitle {
-  color: var(--text-main);
-  font-weight: 600;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
   margin: 0;
-  font-size: 1.15rem;
-  text-transform: uppercase;
-  text-align: center;
+}
+
+/* Lines */
+.cuttingLine {
+  border: 0;
+  height: 1px;
+  background-color: #e2e8f0;
+  margin: 1rem 0;
+}
+
+/* Containers */
+.searchContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.filterRow {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.recentRecord {
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #3b82f6; /* Blue left border */
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.statLabel {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 0.2rem;
+}
+
+/* Header Area for Table */
+.tableHeaderArea {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .headerActionArea {
-  position: absolute;
-  right: 0;
   display: flex;
-  align-items: center;
+  gap: 1rem;
 }
 
-/* Custom Table Cell Utilities */
-.info {
-  display: flex;
-  align-items: center;
-  gap: calc(var(--gap) / 1.5);
-}
-
-.defaultImage {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  background-color: var(--bg-input, #333);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-muted, #aaa);
-}
-
-/* Typography Utilities */
-.textSmall {
-  font-size: calc(13 / 16 * 1rem);
-}
-
+/* Text Utilities */
 .textBold {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.textSuccess {
+  color: #10b981; /* Green color for income/profit */
   font-weight: 600;
 }
 
 .textDanger {
-  color: var(--danger, #ef4444);
+  color: #ef4444; /* Red color for expenses */
+  font-weight: 600;
 }
 
-.textWarning {
-  color: var(--warning, #f59e0b);
-}
-
-.textSuccess {
-  color: var(--success, #22c55e);
+.textSmall {
+  font-size: 0.875rem;
 }
 
 .textMuted {
-  color: var(--text-muted, #9ca3af);
+  color: #64748b;
 }
 
-.textInfo {
-  color: var(--info, #3b82f6);
+/* Table Specific Icons/Info */
+.info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.defaultImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  background-color: #e2e8f0;
+  color: #475569;
+  border-radius: 50%;
+  font-size: 0.9rem;
+}
+
+/* =========================================
+   🌟 NEW: Inputs & Forms Styles
+   ========================================= */
+
+.searchInput {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #cbd5e1;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.searchInput:focus {
+  border-color: #3b82f6; /* Blue border on focus */
+}
+
+.tableSearchInput {
+  width: 250px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #cbd5e1;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.tableSearchInput:focus {
+  border-color: #3b82f6;
+}
+
+/* =========================================
+   🌟 NEW: Invoice Specific Styles
+   ========================================= */
+
+.invoiceCard {
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-top: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.invoiceHeader {
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.financeBox {
+  background-color: #f8fafc;
+  padding: 16px;
+  border-radius: 6px;
+  margin-top: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+.totalAmount {
+  color: #10b981;
+  margin-top: 10px;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+/* =========================================
+   🌟 NEW: Loading State
+   ========================================= */
+
+.loadingText {
+  padding: 2rem;
+  text-align: center;
+  color: #64748b;
+  font-weight: 500;
+  font-size: 1.1rem;
 }
