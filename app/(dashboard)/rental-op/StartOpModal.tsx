@@ -34,6 +34,9 @@ export default function StartOpModal({
   const [tripsDay, setTripsDay] = useState("");
   const [overnightCount, setOvernightCount] = useState("");
 
+  const [allowedRoutes, setAllowedRoutes] = useState<Route[]>([]);
+  const [loadingRoutes, setLoadingRoutes] = useState(false);
+
   const selectedRouteObj = routesList.find((rt) => rt.id === opRouteId);
   const isCityTrip = selectedRouteObj?.route_name
     ?.toLowerCase()
@@ -43,8 +46,136 @@ export default function StartOpModal({
     setVehicleImg(assign.vehicle_image || "/placeholder-car.png");
     setDriverImg(assign.driver_image || "/placeholder-driver.png");
     fetchActiveOperation();
+    fetchAllowedRoutesForModel();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assign]);
+
+  // --- အသစ်ထည့်ရမည့် Function (Trip Price ကိုစစ်၍ Route များကို Filter လုပ်ခြင်း) ---
+  const fetchAllowedRoutesForModel = async () => {
+    try {
+      setLoadingRoutes(true);
+
+      // ၁။ Typescript Error ရှင်းရန် Types များ သတ်မှတ်ခြင်း (any မသုံးပါ)
+      type TripPriceItem = { route_id?: string; route?: { id: string } };
+      type VehicleItem = {
+        vehicle_model_id?: string;
+        vehicle_model?: { id: string };
+      };
+
+      // ၂။ Fallback Logic (API မှ မရပါက ကားနာမည်ဖြင့် အလိုအလျောက် စစ်ထုတ်ပေးမည်)
+      const fallbackToNameCheck = () => {
+        const carName = (
+          assign.vehicle?.vehicle_name ||
+          assign.vehicle_name ||
+          ""
+        ).toLowerCase();
+        const isCityOnlyCar = carName.includes("byd");
+
+        if (isCityOnlyCar) {
+          const cityRoutes = routesList.filter(
+            (rt) =>
+              rt.route_name.toLowerCase().includes("city") ||
+              rt.route_name.includes("မြို့တွင်း"),
+          );
+          setAllowedRoutes(cityRoutes);
+          if (cityRoutes.length > 0) setOpRouteId(cityRoutes[0].id);
+        } else {
+          setAllowedRoutes(routesList);
+        }
+      };
+
+      const vId = assign.vehicle?.id || assign.vehicle_id;
+      if (!vId) {
+        fallbackToNameCheck();
+        return;
+      }
+
+      // ၃။ ကား Model ID ကို assign ထဲမှ အရင်ရှာပါမည်
+      const assignVehicle = assign.vehicle as unknown as VehicleItem;
+      let modelId =
+        assignVehicle?.vehicle_model_id || assignVehicle?.vehicle_model?.id;
+
+      if (!modelId) {
+        try {
+          let vRes = await apiClient
+            .get(`/master-vehicle/vehicle/${vId}`)
+            .catch(() => null);
+          if (!vRes) {
+            vRes = await apiClient
+              .get(`/master-vehicle/vehicles/${vId}`)
+              .catch(() => null);
+          }
+
+          if (vRes) {
+            const axiosRes = vRes as { data?: VehicleItem };
+            const vData = axiosRes.data || (vRes as VehicleItem);
+            modelId = vData?.vehicle_model_id || vData?.vehicle_model?.id;
+          }
+        } catch (e) {
+          console.error("Error fetching vehicle details", e);
+        }
+      }
+
+      if (!modelId) {
+        fallbackToNameCheck();
+        return;
+      }
+
+      // ၅။ Trip Price ဆွဲယူခြင်း
+      const tpRes = await apiClient.get(
+        `/master-trips/trip-prices?vehicle_model_id=${modelId}`,
+      );
+
+      // API Response မှ Array ကို Safe ဖြစ်အောင် ဆွဲထုတ်မည့် Helper Function
+      const extractArray = <T,>(res: unknown): T[] => {
+        if (!res) return [];
+        if (Array.isArray(res)) return res as T[];
+        const resObj = res as { data?: unknown };
+        const payload = resObj.data ? resObj.data : res;
+
+        if (Array.isArray(payload)) return payload as T[];
+        const payloadObj = payload as { items?: unknown; data?: unknown };
+        if (Array.isArray(payloadObj.items)) return payloadObj.items as T[];
+        if (Array.isArray(payloadObj.data)) return payloadObj.data as T[];
+        return [];
+      };
+
+      const tripPrices = extractArray<TripPriceItem>(tpRes);
+
+      // ၆။ ရလာတဲ့ Trip Price ဖြင့် Routes များကို Filter လုပ်ခြင်း
+      if (tripPrices.length > 0) {
+        const validRouteIds = tripPrices.map((tp) =>
+          String(tp.route_id || tp.route?.id),
+        );
+        const filteredRoutes = routesList.filter((rt) =>
+          validRouteIds.includes(rt.id),
+        );
+
+        if (filteredRoutes.length > 0) {
+          setAllowedRoutes(filteredRoutes);
+          const cityRoute = filteredRoutes.find(
+            (rt) =>
+              rt.route_name.toLowerCase().includes("city") ||
+              rt.route_name.includes("မြို့တွင်း"),
+          );
+          setOpRouteId(cityRoute ? cityRoute.id : filteredRoutes[0].id);
+        } else {
+          // Trip Price ဇယားထဲမှာ ID ရှိပေမယ့် Route Table ထဲမှာ မရှိရင် Fallback သုံးပါမည်
+          fallbackToNameCheck();
+        }
+      } else {
+        // Trip Price လုံးဝ မချိတ်ထားသေးရင်လည်း Fallback ပြန်သုံးပါမည် (Dropdown အလွတ်မဖြစ်စေရန်)
+        fallbackToNameCheck();
+      }
+    } catch (error) {
+      console.error("Error fetching allowed routes:", error);
+
+      setAllowedRoutes(routesList);
+    } finally {
+      setLoadingRoutes(false);
+    }
+  };
+  // -------------------------------------------------------------------------
 
   const fetchActiveOperation = async () => {
     const vId = assign.vehicle?.id || assign.vehicle_id;
@@ -91,6 +222,17 @@ export default function StartOpModal({
       } else {
         setActiveOpId(null);
         setStartOdoValue(Number(getInitialVehicleOdo(assign)));
+        // --- ဒီနေရာတွင် Auto Select Logic ကိုထည့်ပါ ---
+        const defaultCityRoute = routesList.find((rt) =>
+          rt.route_name.toLowerCase().includes("city"),
+        );
+
+        if (defaultCityRoute) {
+          setOpRouteId(defaultCityRoute.id); // City route တွေ့ရင် Auto Select လုပ်မည်
+        } else {
+          setOpRouteId(""); // မတွေ့ရင် Empty ထားမည်
+        }
+        // ------------------------------------------
       }
     } catch (err) {
       console.error(err);
@@ -100,6 +242,16 @@ export default function StartOpModal({
 
   const handleSaveOngoing = async () => {
     if (!opRouteId) return toast.error("Route အပြည့်အစုံ ဖြည့်ပေးပါ။");
+    // UI တွင် Filter လုပ်ထားသော်လည်း လုံခြုံရေးအရ ထပ်စစ်ပါသည်
+    const isValidRouteForModel = allowedRoutes.some(
+      (rt) => rt.id === opRouteId,
+    );
+    if (!isValidRouteForModel && allowedRoutes.length > 0) {
+      return toast.error(
+        "ဤကားအမျိုးအစားအတွက် သတ်မှတ်ထားသော ခရီးစဉ်ကိုသာ ရွေးချယ်ပါ။",
+      );
+    }
+
     if (startTime && isCityTrip && !tripsDay)
       return toast.error("City Trip အတွက် Trips Day ကို ဖြည့်ပေးပါ။");
     if (startTime && !isCityTrip && !overnightCount)
@@ -220,15 +372,21 @@ export default function StartOpModal({
                   onChange={(e) => setStartTime(e.target.value)}
                 />
               </div>
+
               <div className={styles.flex1}>
-                <label className={styles.inputLabel}>Routes</label>
+                <label className={styles.inputLabel}>
+                  Routes {loadingRoutes && <small>(Loading...)</small>}
+                </label>
                 <select
                   className={styles.selectBox}
                   value={opRouteId}
                   onChange={(e) => setOpRouteId(e.target.value)}
+                  disabled={loadingRoutes}
                 >
-                  <option value="">All Routes</option>
-                  {routesList.map((rt) => (
+                  <option value="">-- ရွေးချယ်ရန် --</option>
+
+                  {/* routesList အစား allowedRoutes ကို အသုံးပြုပါ */}
+                  {allowedRoutes.map((rt) => (
                     <option key={rt.id} value={rt.id}>
                       {rt.route_name}
                     </option>

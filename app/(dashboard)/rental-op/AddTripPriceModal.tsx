@@ -1,15 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { AxiosError } from "axios";
 import { apiClient } from "../../features/lib/api-client";
 import styles from "./rentalOpPage.module.css";
-import { Route, Station, VehicleModel } from "./types";
+
+// Types များကို တိကျစွာ သတ်မှတ်ထားပါသည်
+export interface Route {
+  id: string;
+  route_name: string;
+}
+
+export interface Station {
+  id: string;
+  station_name: string;
+}
+
+export interface VehicleModel {
+  id?: string;
+  vehicle_model_id?: string;
+  vehicle_model_name: string;
+}
 
 interface Props {
   routesList: Route[];
   stationsList: Station[];
   vehicleModelsList: VehicleModel[];
   onClose: () => void;
+  onSuccess?: () => void;
+}
+
+interface ModelPriceEntry {
+  vehicle_model_id: string;
+  vehicle_model_name: string;
+  daily_price: string;
+  overnight_price: string;
+  isSelected: boolean;
 }
 
 export default function AddTripPriceModal({
@@ -17,114 +41,205 @@ export default function AddTripPriceModal({
   stationsList,
   vehicleModelsList,
   onClose,
+  onSuccess,
 }: Props) {
-  const [tpRouteId, setTpRouteId] = useState("");
-  const [tpStationId, setTpStationId] = useState("");
-  const [tpVehicleModelId, setTpVehicleModelId] = useState("");
-  const [dailyRate, setDailyRate] = useState("");
-  const [overnightRate, setOvernightRate] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [selectedRouteId, setSelectedRouteId] = useState("");
+  const [selectedStationId, setSelectedStationId] = useState("");
 
-  const handleCreateTripPrice = async () => {
+  const [priceEntries, setPriceEntries] = useState<ModelPriceEntry[]>([]);
+
+  useEffect(() => {
+    const initialEntries = vehicleModelsList.map((model, index) => ({
+      vehicle_model_id: model.id || model.vehicle_model_id || `vm-${index}`,
+      vehicle_model_name: model.vehicle_model_name || "Unknown Model",
+      daily_price: "",
+      overnight_price: "",
+      isSelected: false,
+    }));
+    setPriceEntries(initialEntries);
+  }, [vehicleModelsList]);
+
+  const handlePriceChange = (
+    index: number,
+    field: keyof ModelPriceEntry,
+    value: string | boolean,
+  ) => {
+    const updatedEntries = [...priceEntries];
+    updatedEntries[index] = { ...updatedEntries[index], [field]: value };
+
     if (
-      !tpRouteId ||
-      !tpVehicleModelId ||
-      !tpStationId ||
-      !dailyRate ||
-      !overnightRate
+      (field === "daily_price" || field === "overnight_price") &&
+      value !== ""
     ) {
-      toast.error("Please fill all trip price fields.");
-      return;
+      updatedEntries[index].isSelected = true;
     }
+
+    setPriceEntries(updatedEntries);
+  };
+
+  const handleSaveBulk = async () => {
+    if (!selectedRouteId || !selectedStationId) {
+      return toast.error("Route နှင့် Station ကို အရင်ရွေးချယ်ပါ။");
+    }
+
+    const validEntries = priceEntries.filter(
+      (entry) =>
+        entry.isSelected && (entry.daily_price || entry.overnight_price),
+    );
+
+    if (validEntries.length === 0) {
+      return toast.error("အနည်းဆုံး ကားတစ်စီးအတွက် ဈေးနှုန်း သတ်မှတ်ပေးပါ။");
+    }
+
     try {
-      toast.loading("Creating Trip Price...", { id: "create-tp" });
-      await apiClient.post("/master-trips/trip-prices", {
-        route_id: tpRouteId,
-        vehicle_model_id: tpVehicleModelId,
-        station_id: tpStationId,
-        daily_trip_rate: dailyRate,
-        overnight_trip_rate: overnightRate,
+      setLoading(true);
+      toast.loading("ဈေးနှုန်းများ သိမ်းဆည်းနေပါသည်...", { id: "save-prices" });
+
+      const bulkPayload = {
+        route_id: selectedRouteId,
+        station_id: selectedStationId,
+        prices: validEntries.map((entry) => ({
+          vehicle_model_id: entry.vehicle_model_id,
+          daily_trip_rate: entry.daily_price || "0",
+          overnight_trip_rate: entry.overnight_price || "0",
+        })),
+      };
+
+      await apiClient.post("/master-trips/trip-prices/bulk", bulkPayload);
+
+      toast.success("ဈေးနှုန်းများ အောင်မြင်စွာ ထည့်သွင်းပြီးပါပြီ!", {
+        id: "save-prices",
       });
-      toast.success("Trip Price created successfully!", { id: "create-tp" });
+
+      if (onSuccess) onSuccess();
       onClose();
-    } catch (error: unknown) {
-      const axiosError = error as AxiosError<{ message: string }>;
-      toast.error(
-        axiosError?.response?.data?.message || "Failed to create Trip Price",
-        { id: "create-tp" },
-      );
+    } catch (error) {
+      console.error(error);
+      toast.error("သိမ်းဆည်းရာတွင် အမှားအယွင်းရှိပါသည်", { id: "save-prices" });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className={styles.largeModalOverlay}>
-      <div className={styles.smallModalContent}>
-        <h2 className={`${styles.modalTitle} ${styles.marginBottom15}`}>
-          Add Trip Price
-        </h2>
+      <div className={`${styles.largeModalContent} ${styles.bulkModalContent}`}>
+        <h2>Add Bulk Trip Prices</h2>
 
-        <div className={styles.flexCol}>
-          <select
-            className={styles.selectBox}
-            value={tpRouteId}
-            onChange={(e) => setTpRouteId(e.target.value)}
-          >
-            <option value="">Select Route</option>
-            {routesList.map((rt) => (
-              <option key={rt.id} value={rt.id}>
-                {rt.route_name}
-              </option>
-            ))}
-          </select>
+        <div className={styles.flexGap}>
+          <div className={styles.flex1}>
+            <label className={styles.inputLabel}>Select Route</label>
+            <select
+              className={styles.selectBox}
+              value={selectedRouteId}
+              onChange={(e) => setSelectedRouteId(e.target.value)}
+            >
+              <option value="">-- ခရီးစဉ် ရွေးချယ်ရန် --</option>
+              {routesList.map((rt) => (
+                <option key={rt.id} value={rt.id}>
+                  {rt.route_name}
+                </option>
+              ))}
+            </select>
+          </div>
 
-          <select
-            className={styles.selectBox}
-            value={tpStationId}
-            onChange={(e) => setTpStationId(e.target.value)}
-          >
-            <option value="">Select Station</option>
-            {stationsList.map((st) => (
-              <option key={st.id} value={st.id}>
-                {st.station_name}
-              </option>
-            ))}
-          </select>
-
-          <select
-            className={styles.selectBox}
-            value={tpVehicleModelId}
-            onChange={(e) => setTpVehicleModelId(e.target.value)}
-          >
-            <option value="">Select Vehicle Model</option>
-            {vehicleModelsList.map((vm) => (
-              <option key={vm.id} value={vm.id}>
-                {vm.vehicle_model_name}
-              </option>
-            ))}
-          </select>
-
-          <input
-            placeholder="Daily Trip Rate"
-            type="number"
-            className={styles.selectBox}
-            value={dailyRate}
-            onChange={(e) => setDailyRate(e.target.value)}
-          />
-
-          <input
-            placeholder="Overnight Trip Rate"
-            type="number"
-            className={styles.selectBox}
-            value={overnightRate}
-            onChange={(e) => setOvernightRate(e.target.value)}
-          />
+          <div className={styles.flex1}>
+            <label className={styles.inputLabel}>Select Station</label>
+            <select
+              className={styles.selectBox}
+              value={selectedStationId}
+              onChange={(e) => setSelectedStationId(e.target.value)}
+            >
+              <option value="">-- Station ရွေးချယ်ရန် --</option>
+              {stationsList.map((st) => (
+                <option key={st.id} value={st.id}>
+                  {st.station_name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        <div className={`${styles.flexGap} ${styles.actionButtonsRow}`}>
-          <button className={styles.btnCancel} onClick={onClose}>
-            Cancel
+        <div className={styles.tableContainer}>
+          <table className={styles.priceTable}>
+            <thead>
+              <tr className={styles.tableHeadRow}>
+                <th className={styles.tableCell}>Include</th>
+                <th className={styles.tableCell}>Vehicle Model</th>
+                <th className={styles.tableCell}>Daily Price (MMK)</th>
+                <th className={styles.tableCell}>Overnight Price (MMK)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {priceEntries.map((entry, index) => (
+                <tr
+                  key={`price-row-${entry.vehicle_model_id}-${index}`}
+                  className={styles.tableBodyRow}
+                >
+                  <td className={styles.tableCellCenter}>
+                    <input
+                      type="checkbox"
+                      checked={entry.isSelected}
+                      onChange={(e) =>
+                        handlePriceChange(index, "isSelected", e.target.checked)
+                      }
+                      className={styles.checkboxInput}
+                    />
+                  </td>
+                  <td className={styles.tableCellBold}>
+                    {entry.vehicle_model_name}
+                  </td>
+                  <td className={styles.tableCell}>
+                    <input
+                      type="number"
+                      placeholder="e.g 90000"
+                      className={styles.selectBox}
+                      value={entry.daily_price}
+                      onChange={(e) =>
+                        handlePriceChange(index, "daily_price", e.target.value)
+                      }
+                      disabled={!entry.isSelected}
+                    />
+                  </td>
+                  <td className={styles.tableCell}>
+                    <input
+                      type="number"
+                      placeholder="e.g 130000"
+                      className={styles.selectBox}
+                      value={entry.overnight_price}
+                      onChange={(e) =>
+                        handlePriceChange(
+                          index,
+                          "overnight_price",
+                          e.target.value,
+                        )
+                      }
+                      disabled={!entry.isSelected}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div
+          className={`${styles.actionButtonsCenter} ${styles.actionButtonsContainer}`}
+        >
+          <button
+            className={styles.btnCancel}
+            onClick={onClose}
+            disabled={loading}
+          >
+            CANCEL
           </button>
-          <button className={styles.btnSave} onClick={handleCreateTripPrice}>
-            Save Trips Price
+          <button
+            className={styles.btnSave}
+            onClick={handleSaveBulk}
+            disabled={loading}
+          >
+            {loading ? "Saving..." : "✔️ SAVE ALL PRICES"}
           </button>
         </div>
       </div>

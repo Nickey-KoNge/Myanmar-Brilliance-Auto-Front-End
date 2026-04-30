@@ -42,6 +42,8 @@ export default function EndOpModal({
 
   const [overtimeDistance, setOvertimeDistance] = useState("");
   const [extraTime, setExtraTime] = useState("");
+  const [tripsDay, setTripsDay] = useState("");
+  const [overnightCount, setOvernightCount] = useState("");
 
   const selectedRouteObj = routesList.find((rt) => rt.id === opRouteId);
   const isCityTrip = selectedRouteObj?.route_name
@@ -78,16 +80,33 @@ export default function EndOpModal({
             setExtraTime("0");
           }
         } else {
-          const diffHrs = Math.floor(
-            (end.getTime() - start.getTime()) / (1000 * 60 * 60),
-          );
-          setExtraTime(String(diffHrs));
+          const diffMs = end.getTime() - start.getTime();
+          const diffMins = Math.floor(diffMs / (1000 * 60));
+
+          let autoCount = Math.floor(diffMins / (24 * 60));
+
+          if (autoCount < 1) autoCount = 1;
+
+          setOvernightCount(String(autoCount));
+
+          // ၂။ Overtime တွက်ချက်ခြင်း (UI တွင် ပြသရန်)
+          const benchmarkMins = autoCount * 24 * 60;
+          const extraMins = diffMins - benchmarkMins; 
+
+          if (extraMins > 0) {
+            const eHrs = Math.floor(extraMins / 60);
+            const eMins = extraMins % 60;
+            // ဥပမာ - "1 Hr 51 Min" ဟု ထွက်ပေါ်မည်
+            setExtraTime(`${eHrs > 0 ? eHrs + " Hr " : ""}${eMins} Min`);
+          } else {
+            setExtraTime("0");
+          }
         }
       } else {
         setExtraTime("0");
       }
     }
-  }, [endOdo, startOdoValue, startTime, endTime, isCityTrip]);
+  }, [endOdo, startOdoValue, startTime, endTime, isCityTrip, overnightCount]);
 
   const fetchActiveOperation = async () => {
     const vId = assign.vehicle?.id || assign.vehicle_id;
@@ -107,8 +126,14 @@ export default function EndOpModal({
       else if (Array.isArray(resObj.data)) ops = resObj.data;
 
       if (ops.length > 0) {
+        // 💡 ပြင်ဆင်ချက်- activeOp ကို အရင်ဆုံး Declare လုပ်ပါ။
         const activeOp = ops[0] as unknown as ActiveOp;
         setActiveOpId(String(activeOp.id));
+
+        // 💡 ပြီးမှ activeOp ထဲက တန်ဖိုးတွေကို စစ်ပြီး State သွင်းပါ။
+        if (activeOp.daily_count) setTripsDay(String(activeOp.daily_count));
+        if (activeOp.overnight_count)
+          setOvernightCount(String(activeOp.overnight_count));
 
         if (activeOp.vehicle_image_url)
           setVehicleImg(activeOp.vehicle_image_url);
@@ -139,7 +164,6 @@ export default function EndOpModal({
       setStartOdoValue(Number(getInitialVehicleOdo(assign)));
     }
   };
-
   const handleFinalize = async () => {
     if (!activeOpId)
       return toast.error(
@@ -167,6 +191,8 @@ export default function EndOpModal({
         extra_hours: extraTime.slice(0, 20),
         trip_status: "Completed",
         status: "Inactive",
+        daily_count: isCityTrip ? tripsDay.slice(0, 2) : null,
+        overnight_count: !isCityTrip ? overnightCount.slice(0, 2) : null,
       };
 
       await apiClient.patch(

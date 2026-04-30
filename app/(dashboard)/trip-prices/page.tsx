@@ -1,16 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import { apiClient } from "@/app/features/lib/api-client";
-import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarDays,
   faClockRotateLeft,
   faPlus,
   faTrashCan,
-  faCar,
 } from "@fortawesome/free-solid-svg-icons";
 import { FilterState, useFilters } from "@/app/hooks/userFilters";
 import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
@@ -18,16 +15,16 @@ import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridL
 import styles from "./page.module.css";
 import TextInput from "@/app/components/ui/Inputs/TextInput";
 import DateInput from "@/app/components/ui/Inputs/DateInput";
-import DropdownInput from "@/app/components/ui/Inputs/DropdownInput";
-
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 import { Pagination } from "@/app/components/ui/Pagination/Pagination";
 import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import { DataTable } from "@/app/components/ui/DataTable/DataTable";
 import DeleteModal from "@/app/components/ui/Delete/DeleteModal";
 import { TripFormData } from "./components/TripForm";
-import { set } from "react-hook-form";
+
+// Modals
 import AddTripModal from "./AddTripModal";
+import AddTripPriceModal from "../rental-op/AddTripPriceModal";
 
 interface TripPrice {
   id: string;
@@ -49,20 +46,61 @@ interface PaginatedResponse {
   totalPages?: number;
 }
 
+// Dropdown များအတွက် အတိအကျ Type သတ်မှတ်ခြင်း
+interface RouteItem {
+  id: string;
+  route_name: string;
+}
+
+interface StationItem {
+  id: string;
+  station_name: string;
+}
+
+interface VehicleModelItem {
+  id: string;
+  vehicle_model_name: string;
+}
+
+// API မှ ပြန်လာနိုင်သော နာမည်အမျိုးမျိုးကို လက်ခံနိုင်ရန် Raw Type များ
+interface RawRoute {
+  id: string;
+  route_name?: string;
+  name?: string;
+}
+
+interface RawStation {
+  id: string;
+  station_name?: string;
+  name?: string;
+}
+
+interface RawVehicleModel {
+  id: string;
+  vehicle_model_name?: string;
+  model_name?: string;
+  name?: string;
+}
+
 export default function TripPricePage() {
-  const router = useRouter();
   const [vehicles, setVehicles] = useState<TripPrice[]>([]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState<"create" | "update">("create");
-  const [selectedTrip, setSelectedTrip] = useState<TripPrice | null>(null);
-
   const [activeTripCount, setActiveTripCount] = useState(0);
   const [inactiveTripCount, setInactiveTripCount] = useState(0);
+
+  // Modals States
+  const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [selectedTrip, setSelectedTrip] = useState<TripPrice | null>(null);
+
+  // Dropdown Data States
+  const [routes, setRoutes] = useState<RouteItem[]>([]);
+  const [stations, setStations] = useState<StationItem[]>([]);
+  const [vehicleModels, setVehicleModels] = useState<VehicleModelItem[]>([]);
 
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
@@ -78,15 +116,18 @@ export default function TripPricePage() {
     endDate: "",
   });
 
+  // ဖြေရှင်းချက်: useFilters ထဲသို့ ပေးပို့မည့် Function အား Render တိုင်း အသစ်မဖြစ်စေရန် useCallback ဖြင့် ပတ်ထားပါသည်
+  const handleFilterChange = useCallback((debouncedFilters: FilterState) => {
+    setActiveFilters(debouncedFilters);
+    setCurrentPage(1);
+  }, []);
+
   const { filters, updateFilter, resetFilters } = useFilters(
     { search: "", startDate: "", endDate: "" },
-    (debouncedFilters) => {
-      setActiveFilters(debouncedFilters);
-      setCurrentPage(1);
-    },
+    handleFilterChange,
   );
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const params: Record<string, string> = {
         page: currentPage.toString(),
@@ -107,21 +148,86 @@ export default function TripPricePage() {
       setTotalRecords(res?.total || 0);
       setTotalPages(res?.totalPages || 1);
 
-      const activeTripCount =
+      const activeCount =
         res.data?.filter((trip) => trip.status === "Active").length || 0;
-      const inactiveTripCount =
+      const inactiveCount =
         res.data?.filter((trip) => trip.status === "Inactive").length || 0;
-      setActiveTripCount(activeTripCount);
-      setInactiveTripCount(inactiveTripCount);
+      setActiveTripCount(activeCount);
+      setInactiveTripCount(inactiveCount);
     } catch (err) {
       console.error(err);
       setVehicles([]);
     }
-  };
+  }, [currentPage, activeFilters]);
+
+  const fetchDropdownData = useCallback(async () => {
+    try {
+      const [routesRes, stationsRes, modelsRes] = await Promise.all([
+        apiClient.get("/master-trips/routes"),
+        apiClient.get("/master-company/stations"),
+        apiClient.get("/master-vehicle/vehicle-models?limit=1000"),
+      ]);
+
+      const getArray = <T,>(response: unknown): T[] => {
+        const resObj = response as { data?: T[] | { data?: T[] }; items?: T[] };
+
+        if (Array.isArray(resObj?.items)) return resObj.items;
+        if (Array.isArray(resObj?.data)) return resObj.data as T[];
+        if (
+          resObj?.data &&
+          typeof resObj.data === "object" &&
+          "data" in resObj.data &&
+          Array.isArray((resObj.data as { data: T[] }).data)
+        ) {
+          return (resObj.data as { data: T[] }).data;
+        }
+        if (Array.isArray(response)) return response as T[];
+        return [];
+      };
+
+      const rData = getArray<RawRoute>(routesRes);
+      const sData = getArray<RawStation>(stationsRes);
+      const mData = getArray<RawVehicleModel>(modelsRes);
+
+      setRoutes(
+        rData.map((r) => ({
+          id: r.id,
+          route_name: r.route_name || r.name || "Unknown Route",
+        })),
+      );
+
+      setStations(
+        sData.map((s) => ({
+          id: s.id,
+          station_name: s.station_name || s.name || "Unknown Station",
+        })),
+      );
+
+      setVehicleModels(
+        mData.map((m) => ({
+          id: m.id,
+          vehicle_model_name:
+            m.vehicle_model_name || m.model_name || m.name || "Unknown Model",
+        })),
+      );
+    } catch (err) {
+      console.error("Dropdown data ဆွဲထုတ်ရာတွင် အမှားရှိနေပါသည်", err);
+    }
+  }, []);
 
   useEffect(() => {
-    fetchData();
-  }, [currentPage, activeFilters]);
+    const runFetch = async () => {
+      await fetchData();
+    };
+    runFetch();
+  }, [fetchData]);
+
+  useEffect(() => {
+    const runDropdownFetch = async () => {
+      await fetchDropdownData();
+    };
+    runDropdownFetch();
+  }, [fetchDropdownData]);
 
   const openDeleteModal = (id: string, name: string) => {
     setDeleteModal({ isOpen: true, id, name });
@@ -132,20 +238,17 @@ export default function TripPricePage() {
   };
 
   const handleAddTrip = () => {
-    setModalMode("create");
-    setSelectedTrip(null);
-    setModalOpen(true);
+    setIsBulkModalOpen(true);
   };
 
-  const handleCloseModal = () => setModalOpen(false);
+  const handleRowClick = (item: TripPrice) => {
+    setSelectedTrip(item);
+    setIsUpdateModalOpen(true);
+  };
 
-  const handleSubmitTrip = async (data: TripFormData) => {
+  const handleUpdateTrip = async (data: TripFormData) => {
     try {
-      if (modalMode === "create") {
-        await apiClient.post(`/master-trips/trip-prices`, data);
-      }
-
-      if (modalMode === "update" && selectedTrip) {
+      if (selectedTrip) {
         await apiClient.patch(`/master-trips/trip-prices/${selectedTrip.id}`, {
           route_id: data.route_id,
           vehicle_model_id: data.vehicle_model_id,
@@ -154,11 +257,11 @@ export default function TripPricePage() {
           overnight_trip_rate: data.overnight_trip_rate,
           status: data.status,
         });
-      }
 
-      setModalOpen(false);
-      await fetchData();
-      setSelectedTrip(null);
+        setIsUpdateModalOpen(false);
+        setSelectedTrip(null);
+        await fetchData();
+      }
     } catch (err) {
       console.error(err);
     }
@@ -172,12 +275,10 @@ export default function TripPricePage() {
         <div className={styles.info}>
           <div>
             <div className={styles.textBold}>{item.route_name}</div>
-
             <div className={[styles.textSmall, styles.textMuted].join(" ")}>
               <span className={styles.textBold}>Route : </span>
               {item.start_location} → {item.end_location}
             </div>
-
             <div
               className={[
                 styles.textSmall,
@@ -193,7 +294,6 @@ export default function TripPricePage() {
         </div>
       ),
     },
-
     {
       header: "Prices",
       key: "prices",
@@ -210,13 +310,11 @@ export default function TripPricePage() {
         </div>
       ),
     },
-
     {
       header: "Vehicle Model",
       key: "model",
       render: (item: TripPrice) => <div>{item.vehicle_model_name || "-"}</div>,
     },
-
     {
       header: "Station",
       key: "Station",
@@ -230,13 +328,11 @@ export default function TripPricePage() {
         </div>
       ),
     },
-
     {
       header: "Timeline",
       key: "timeline",
       render: (item: TripPrice) => <div>{item.created_at?.split("T")[0]}</div>,
     },
-
     {
       header: "Actions",
       key: "actions",
@@ -356,14 +452,7 @@ export default function TripPricePage() {
           <DataTable
             columns={columns}
             data={vehicles}
-            onRowClick={(item) => {
-              setModalMode("update");
-              setSelectedTrip(item);
-              setModalOpen(true);
-              {
-                console.log("DEBUG", item);
-              }
-            }}
+            onRowClick={handleRowClick}
           />
         </div>
 
@@ -389,12 +478,29 @@ export default function TripPricePage() {
         />
       )}
 
+      {/* အသစ်ထည့်ရန် (Bulk Create Modal) */}
+      {isBulkModalOpen && (
+        <AddTripPriceModal
+          routesList={routes}
+          stationsList={stations}
+          vehicleModelsList={vehicleModels}
+          onClose={() => setIsBulkModalOpen(false)}
+          onSuccess={() => {
+            fetchData();
+          }}
+        />
+      )}
+
+      {/* ပြင်ဆင်ရန် (Update Single Modal) */}
       <AddTripModal
-        open={modalOpen}
-        mode={modalMode}
+        open={isUpdateModalOpen}
+        mode="update"
         initialData={selectedTrip || undefined}
-        onClose={handleCloseModal}
-        onSubmit={handleSubmitTrip}
+        onClose={() => {
+          setIsUpdateModalOpen(false);
+          setSelectedTrip(null);
+        }}
+        onSubmit={handleUpdateTrip}
       />
     </>
   );

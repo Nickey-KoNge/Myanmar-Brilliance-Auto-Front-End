@@ -182,10 +182,10 @@ export default function VehicleDriverAssignPage() {
 
         const [driversRes, vehiclesRes, assignedRes] = await Promise.all([
           apiClient.get(
-            `http://localhost:3001/master-company/driver`,
+            `http://localhost:3001/master-company/driver?limit=500`,
           ) as Promise<DriverApiResponse>,
           apiClient.get(
-            `http://localhost:3001/master-vehicle/vehicles`,
+            `http://localhost:3001/master-vehicle/vehicles?limit=500`,
           ) as Promise<VehicleApiResponse>,
           apiClient.get(
             `http://localhost:3001/master-vehicle/vehicle-driver-assign?${params.toString()}`,

@@ -23,6 +23,7 @@ export interface VehicleAssign {
     vehicle_name: string;
     license_plate?: string;
     current_odometer?: string;
+    vehicle_model_id?: string;
   };
   driver?: {
     id: string;

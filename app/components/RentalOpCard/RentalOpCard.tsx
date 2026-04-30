@@ -15,9 +15,17 @@ export interface RentalOperationData {
   driver_image_url: string | null;
   station_name: string;
   branch_name: string;
-  route_name: string;
+  // Backend က တိုက်ရိုက်ပို့ရင် သုံးရန်
+  route_name?: string;
+
+  // Backend က Object နဲ့ပို့ရင် သုံးရန်
+  route?: {
+    route_name: string;
+  };
+  default_route_name?: string;
   trip_status: string;
   daily_count: string;
+  overnight_count?: string;
   start_time: string | null;
   end_time: string | null;
   start_odo: string | number;
@@ -63,6 +71,24 @@ export default function RentalOpCard({
   onOpenStartModal,
   onOpenEndModal,
 }: RentalOpCardProps) {
+  // ဤနေရာတွင် default_route_name ကိုပါ ထည့်သွင်းစဉ်းစားပါမည်
+  const actualRouteName =
+    data?.route_name ||
+    data?.route?.route_name ||
+    data?.default_route_name || // <--- Operation မရှိရင် Default Route ကို ယူပြမည်
+    "";
+
+  const isValidRoute = actualRouteName !== "" && actualRouteName !== "-";
+
+  const isCityTrip =
+    actualRouteName.toLowerCase().includes("city") ||
+    actualRouteName.includes("မြို့တွင်း");
+
+  const tripTypeLabel = isValidRoute
+    ? isCityTrip
+      ? "(မြို့တွင်း)"
+      : "(နယ်ဝေး)"
+    : "";
   return (
     <div className={styles.singleRowCard}>
       {/* 1. Actors (Vehicle & Driver) - Color 1 */}
@@ -79,7 +105,17 @@ export default function RentalOpCard({
               className={styles.actorImage}
             />
             <div className={styles.actorText}>
-              <span className={styles.bold}>{data?.vehicle_name || "-"}</span>
+              <span className={styles.bold}>
+                {data?.vehicle_name || "-"}{" "}
+                <span
+                  style={{
+                    color: isCityTrip ? "#10b981" : "#f59e0b",
+                    fontSize: "0.85em",
+                  }}
+                >
+                  {tripTypeLabel}
+                </span>
+              </span>
 
               {/* Plate ကို တစ်တန်းတည်းဖြစ်အောင် div ဖြင့်ထုပ်ခြင်း */}
               <div className={styles.textLine}>
@@ -158,13 +194,22 @@ export default function RentalOpCard({
             {data?.trip_status || "No Trip"}
           </span>
         </div>
+
+        {/* 💡 ဒီနေရာလေးကို ပြင်ဆင်လိုက်ပါသည် */}
         <div className={styles.row}>
-          <span className={styles.textLabel}>Daily Trips :</span>{" "}
-          <strong>{data?.daily_count || "-"}</strong>
+          <span className={styles.textLabel}>
+            {isCityTrip ? "Daily Trips :" : "Overnight :"}
+          </span>{" "}
+          <strong>
+            {isCityTrip
+              ? data?.daily_count || "-"
+              : data?.overnight_count || "-"}
+          </strong>
         </div>
+
         <div className={styles.row}>
           <span className={styles.textLabel}>Record :</span>{" "}
-          <strong>Daily</strong>
+          <strong>{isCityTrip ? "Daily" : "Overnight"}</strong>
         </div>
       </div>
 
@@ -222,7 +267,7 @@ export default function RentalOpCard({
         <div className={styles.row}>
           <span className={styles.textLabel}>OT Hours :</span>{" "}
           <span className={styles.textYellow}>
-            {data?.extra_hours ? `${data.extra_hours} Hr` : "0 Hr"}
+            {data?.extra_hours ? `${data.extra_hours} ` : "0 Hr"}
           </span>
         </div>
         <div className={styles.row}>
