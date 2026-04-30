@@ -78,19 +78,19 @@
 }
 
 .image {
-  border-radius: var(--img-border-radius);
+  border-radius: 50%;
   object-fit: cover;
 }
 
-.timelineText {
-  font-size: 13px;
-  color: var(--text-main);
-}
-
-.expireText {
-  font-size: 11px;
-  color: var(--danger);
-  margin-top: 4px;
+.defaultImage {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--bg-input);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
 }
 
 /* Recent Records */
@@ -99,11 +99,6 @@
   grid-template-columns: auto 1fr;
   gap: var(--gap);
   align-items: center;
-}
-
-.recentTitle {
-  color: var(--text-main);
-  font-weight: bold;
 }
 
 .recentRecord span:nth-of-type(1) {
@@ -123,11 +118,6 @@
 .stat div {
   display: grid;
   grid-template-columns: 1fr 1fr;
-}
-
-.statLabel {
-  color: var(--text-muted);
-  font-weight: bold;
 }
 
 /* Buttons */
@@ -163,12 +153,56 @@
   margin: calc(var(--margin) / 2) 0;
 }
 
+.textSmall {
+  font-size: calc(12 / 16 * 1rem);
+}
+
+.textBold {
+  font-weight: 600;
+}
+
 .textDanger {
   color: var(--danger);
-  font-weight: var(--font-weight-bold);
+}
+
+.textWarning {
+  color: var(--warning);
 }
 
 .textSuccess {
   color: var(--success);
-  font-weight: var(--font-weight-bold);
+}
+
+.textMuted {
+  color: var(--text-muted);
+}
+
+.textInfo {
+  color: var(--info);
+}
+
+.recentTitle,
+.statLabel {
+  color: var(--text-main);
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: rgb(27, 27, 28);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  min-width: 350px;
+  position: relative;
 }

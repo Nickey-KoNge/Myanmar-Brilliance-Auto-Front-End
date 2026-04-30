@@ -1,8 +1,9 @@
 .card {
-  background-color: #1e1e1e;
+  /* background-color: #1e1e1e; */
+  background-color: var(--bg-main);
   border-radius: 12px;
   padding: 1.5rem;
-  border: 1px solid #2a2a2a;
+  /* border: 1px solid #2a2a2a; */
   flex: 1;
 }
 .header {
@@ -12,6 +13,7 @@
   margin-bottom: 1rem;
   font-weight: 700;
   font-size: 0.9rem;
+  color: var(--text-main);
 }
 .table {
   width: 100%;
@@ -21,14 +23,18 @@
 .table th {
   text-align: left;
   padding-bottom: 1rem;
-  color: #666;
-  border-bottom: 1px solid #2a2a2a;
+  /* color: #666; */
+  color: var(--text-main);
+  /* border-bottom: 1px solid #2a2a2a; */
+  border-bottom: 1px solid var(--text-muted);
   font-weight: 600;
 }
 .table td {
   padding: 0.8rem 0;
-  color: #ddd;
-  border-bottom: 1px solid #262626;
+  /* color: #ddd; */
+  color: var(--text-main);
+  /* border-bottom: 1px solid #262626; */
+  border-bottom: 1px solid var(--text-muted);
 }
 .statusDanger {
   color: #f87171;

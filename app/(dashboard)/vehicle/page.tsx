@@ -283,27 +283,24 @@ export default function VehicleListPage() {
               className={styles.image}
             />
           ) : (
-            <div className={styles.placeholderLogo}>
+            <div className={styles.defaultImage}>
               <FontAwesomeIcon icon={faCar} />
             </div>
           )}
           <div>
-            <div style={{ fontWeight: "600" }}> {vehicle.vehicle_name}</div>
-            <div style={{ fontSize: "11px", color: "#666" }}>
-              <b>Plate : </b>
+            <div className={styles.textBold}> {vehicle.vehicle_name}</div>
+            <div className={[styles.textSmall, styles.textMuted].join(" ")}>
+              <span className={styles.textBold}>Plate : </span>
               {vehicle.license_plate || "-"}
             </div>
 
             <div
-              style={{
-                fontSize: "11px",
-                fontWeight: "bold",
-                color:
-                  vehicle.status === "Active"
-                    ? "var(--success)"
-                    : "var(--danger)",
-                marginTop: "2px",
-              }}
+              className={[
+                styles.textSmall,
+                vehicle.status === "Active"
+                  ? styles.textSuccess
+                  : styles.textDanger,
+              ].join(" ")}
             >
               {vehicle.status || "Unknown"}
             </div>
@@ -316,17 +313,17 @@ export default function VehicleListPage() {
       key: "identifiers",
       render: (vehicle: Vehicle) => (
         <div>
-          <div style={{ fontWeight: "500" }}>
-            <b>VIN : </b>
+          <div className={styles.textBold}>
+            <span>VIN : </span>
             {vehicle.vin_no || "-"}
           </div>
-          <div style={{ fontSize: "12px", color: "#007bff" }}>
-            <b>ENG : </b>
+          <div className={[styles.textSmall, styles.textInfo].join(" ")}>
+            <span>ENG : </span>
             {vehicle.engine_no || "-"}
           </div>
 
-          <div style={{ fontSize: "12px" }}>
-            <b>Serial : </b>
+          <div className={styles.textBold}>
+            <span>Serial : </span>
             {vehicle.serial_no || "-"}
           </div>
         </div>
@@ -336,13 +333,13 @@ export default function VehicleListPage() {
       header: "Vehicle Identifiers",
       key: "vehicleIdentifiers",
       render: (vehicle: Vehicle) => (
-        <div>
-          <div style={{ fontSize: "12px" }}>
-            <b>CITY TAXI : </b>
+        <div className={styles.textSmall}>
+          <div>
+            <span className={styles.textBold}>CITY TAXI : </span>
             {vehicle.city_taxi_no || "-"}
           </div>
-          <div style={{ fontSize: "12px" }}>
-            <b>Type : </b>
+          <div>
+            <span className={styles.textBold}>Type : </span>
             {vehicle.license_type || "-"}
           </div>
         </div>
@@ -352,13 +349,13 @@ export default function VehicleListPage() {
       header: "Specifications",
       key: "specs",
       render: (vehicle: Vehicle) => (
-        <div>
-          <div style={{ fontWeight: "500" }}>
-            <b>Model : </b>
+        <div className={styles.textSmall}>
+          <div>
+            <span className={styles.textBold}>Model : </span>
             {vehicle.vehicle_model_name || "-"}
           </div>
-          <div style={{ fontSize: "12px", color: "gray" }}>
-            <b>Color : </b>
+          <div className={[styles.textSmall, styles.textMuted].join(" ")}>
+            <span className={styles.textBold}>Color : </span>
             {vehicle.color || "-"}
           </div>
         </div>
@@ -369,13 +366,13 @@ export default function VehicleListPage() {
       header: "Maintenance",
       key: "maintenance",
       render: (vehicle: Vehicle) => (
-        <div>
-          <div style={{ fontWeight: "500" }}>
-            <b>Odo : </b>
+        <div className={styles.textSmall}>
+          <div>
+            <span className={styles.textBold}>Odo : </span>
             {vehicle.current_odometer ? `${vehicle.current_odometer} km` : "-"}
           </div>
-          <div style={{ fontSize: "12px", color: "gray" }}>
-            <b>Service : </b>
+          <div className={[styles.textSmall, styles.textMuted].join(" ")}>
+            <span className={styles.textBold}>Service : </span>
             {vehicle.service_intervals
               ? String(vehicle.service_intervals).split("T")[0]
               : "-"}
@@ -388,11 +385,11 @@ export default function VehicleListPage() {
       key: "assignment",
       render: (vehicle: Vehicle) => (
         <div>
-          <div style={{ fontWeight: "500" }}>
+          <div className={styles.textBold}>
             {vehicle.station_name || "Unassigned"}
           </div>
-          <div style={{ fontSize: "12px", color: "gray" }}>
-            <b>Group : </b>
+          <div className={[styles.textSmall, styles.textMuted].join(" ")}>
+            <span className={styles.textBold}>Group : </span>
             {vehicle.group_name || "-"}
           </div>
         </div>
@@ -403,14 +400,14 @@ export default function VehicleListPage() {
       key: "timeline",
       render: (vehicle: Vehicle) => (
         <div>
-          <div className={styles.timelineText}>
-            <b>Purchased : </b>
+          <div>
+            <span className={styles.textBold}>Purchased : </span>
             {vehicle.purchase_date
               ? String(vehicle.purchase_date).split("T")[0]
               : "-"}
           </div>
-          <div className={styles.expireText}>
-            <b>Exp : </b>
+          <div>
+            <span className={styles.textBold}>Exp : </span>
             {vehicle.vehicle_license_exp
               ? String(vehicle.vehicle_license_exp).split("T")[0]
               : "-"}
@@ -511,16 +508,14 @@ export default function VehicleListPage() {
                   />
                 </div>
 
-                <div style={{ alignSelf: "flex-start" }}>
-                  <ActionBtn
-                    type="reset"
-                    variant="action"
-                    fullWidth={false}
-                    onClick={resetFilters}
-                  >
-                    reset
-                  </ActionBtn>
-                </div>
+                <ActionBtn
+                  type="reset"
+                  variant="action"
+                  fullWidth={false}
+                  onClick={resetFilters}
+                >
+                  reset
+                </ActionBtn>
               </div>
             </div>
 

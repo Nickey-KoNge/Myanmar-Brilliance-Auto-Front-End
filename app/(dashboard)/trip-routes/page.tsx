@@ -147,23 +147,24 @@ export default function TripRoutesPage() {
       const total = res?.total ?? 0;
       const totalPagesCount = res?.totalPages ?? 1;
 
-    setRouteData(routeList);
-    setTotalRecords(total);
-    setTotalPages(totalPagesCount);
-    setActiveRecords(routeList.filter((r: Route) => r.status === "Active").length);
-    setInactiveRecords(routeList.filter((r: Route) => r.status === "Inactive").length);
-    setLastEditedBy(res?.lastEditedBy || "N/A");
-
-  } catch (err) {
-    console.error("Failed to fetch routes:", err);
-    setRouteData([]);
-  }
-};
-useEffect(() => {
-  fetchRoutes();
-}, [currentPage, activeFilters]);
-
-
+      setRouteData(routeList);
+      setTotalRecords(total);
+      setTotalPages(totalPagesCount);
+      setActiveRecords(
+        routeList.filter((r: Route) => r.status === "Active").length,
+      );
+      setInactiveRecords(
+        routeList.filter((r: Route) => r.status === "Inactive").length,
+      );
+      setLastEditedBy(res?.lastEditedBy || "N/A");
+    } catch (err) {
+      console.error("Failed to fetch routes:", err);
+      setRouteData([]);
+    }
+  };
+  useEffect(() => {
+    fetchRoutes();
+  }, [currentPage, activeFilters]);
 
   const handleAddRoute = () => {
     setModalMode("create");
@@ -172,12 +173,6 @@ useEffect(() => {
   };
 
   console.log("Selected Route for Edit:", selectedRoute);
-
-  // const handleEditRoute = (route: Route) => {
-  //   setModalMode("update");
-  //   setSelectedRoute(route);
-  //   setModalOpen(true);
-  // };
 
   const handleCloseModal = () => setModalOpen(false);
 
@@ -237,15 +232,9 @@ useEffect(() => {
                   />
                 </div>
 
-                <div style={{ alignSelf: "flex-start" }}>
-                  <ActionBtn
-                    type="reset"
-                    variant="action"
-                    onClick={resetFilters}
-                  >
-                    reset
-                  </ActionBtn>
-                </div>
+                <ActionBtn type="reset" variant="action" onClick={resetFilters}>
+                  reset
+                </ActionBtn>
               </div>
             </div>
 
@@ -261,7 +250,7 @@ useEffect(() => {
 
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLabel}>Total Trips :</p>
+                    <p className={styles.statLabel}>Total Routes :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>

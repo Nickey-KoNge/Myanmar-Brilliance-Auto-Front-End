@@ -1,5 +1,5 @@
 "use client";
-import { Input } from "@/app/components/ui/Input/Input";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCodeBranch,
@@ -18,12 +18,14 @@ import {
 import React, { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { PageHeader } from "@/app/components/ui/PageHeader/pageheader";
+
 import styles from "./page.module.css";
 import dynamic from "next/dynamic";
 import DropdownInput from "@/app/components/ui/Inputs/DropdownInput";
-import { FormCard } from "@/app/components/ui/FormCard/FormCard";
+
 import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
+import TextInput from "@/app/components/ui/Inputs/TextInput";
 
 interface DropDownConfig {
   label: string;
@@ -103,51 +105,66 @@ export const BranchForm: React.FC<BranchFormProps> = ({
       <form
         id="branchForm"
         onSubmit={handleSubmit(onSubmit)}
-        className={styles.page}
+        // className={styles.page}
+        className={styles.formGridContainer}
       >
-        <div className={styles.grid}>
-          {/* Dropdown */}
-          {dropdown && (
-            <FormCard title="Assignment" icon={faTable}>
-              <div className={styles.fieldGroup}>
+  
+          <section className={styles.formGridBox}>
+            <header className={styles.gridBoxTitle}>
+              <span className={styles.pill}></span>
+              <FontAwesomeIcon icon={faTable} className={styles.textDanger} />
+              ASSIGNMENT
+
+            </header>
+            <hr className={styles.cuttingLine} />
+
+            <div className={styles.filterContainer}>
+              {dropdown && (
                 <DropdownInput
                   label={dropdown.label}
                   placeholder={`Select ${dropdown.label}`}
                   options={dropdown.options}
                   {...register(dropdown.name)}
                 />
-              </div>
-            </FormCard>
-          )}
+              )}
+            </div>
 
-          {/* Name + GPS */}
-          <FormCard title="Core Info" icon={faIdCard}>
-            <div className={styles.row}>
-              <Input
+          </section>
+
+  
+
+          <section className={styles.formGridBox}>
+            <header className={styles.gridBoxTitle}>
+              <span className={styles.pill}></span>
+              <FontAwesomeIcon icon={faIdCard} className={styles.textDanger} />
+              CORE INFO
+
+            </header>
+            <hr className={styles.cuttingLine} />
+            <div className={styles.filterContainer}>
+              <TextInput
                 label={nameLabel}
                 type="text"
                 placeholder={`Enter ${nameLabel}`}
-                icon={<FontAwesomeIcon icon={faUser} />}
+                rightIcon={faUser}
                 error={errors[nameField]?.message as string}
                 {...register(nameField, {
                   required: `${nameLabel} is required`,
                 })}
               />
-
-              <Input
+              <TextInput
                 readOnly
                 label="GPS LOCATION"
                 type="text"
                 placeholder="Enter GPS Location..."
-                icon={<FontAwesomeIcon icon={faMapLocation} />}
+                rightIcon={faMapLocation}
                 error={errors.gps_location?.message as string}
                 {...register("gps_location", {
                   required: "GPS location is required",
                 })}
               />
-            </div>
 
-            <Input
+                <TextInput
               label="DESCRIPTION"
               placeholder="Enter Description..."
               error={errors.description?.message as string}
@@ -155,62 +172,87 @@ export const BranchForm: React.FC<BranchFormProps> = ({
                 required: "Description is required",
               })}
             />
-          </FormCard>
 
-          {/* Map */}
-          <FormCard title="Location Map" icon={faLocationDot}>
-            <div className={styles.mapPlaceholder}>
+            </div>
+          </section>
+
+
+
+   
+
+          <section className={styles.formGridBox}>
+            <header className={styles.gridBoxTitle}>
+              <span className={styles.pill}></span>
+              <FontAwesomeIcon icon={faLocationDot} className={styles.textDanger} />
+              LOCATION MAP
+            </header>
+            <hr className={styles.cuttingLine} />
+
+   
+                <div className={styles.mapPlaceholder}>
               <MapPicker setValue={setValue} />
             </div>
-          </FormCard>
+            
+          
+          </section>
 
-          {/* Contact */}
-          <FormCard title="Contact & Address" icon={faAddressBook}>
-            <div className={styles.row}>
-              <Input
+ 
+
+          <section className={styles.formGridBox}>
+            <header className={styles.gridBoxTitle}>
+              <span className={styles.pill}></span>
+              <FontAwesomeIcon icon={faAddressBook} className={styles.textDanger} />
+              CONTACT & ADDRESS
+            </header>
+            <hr className={styles.cuttingLine} />
+            <div className={styles.filterContainer}>
+              <TextInput
                 label="PHONE NUMBER"
                 type="text"
                 placeholder="+95..."
-                icon={<FontAwesomeIcon icon={faPhone} />}
+                rightIcon={faPhone}
                 error={errors.phone?.message as string}
                 {...register("phone", {
                   required: "Phone number is required",
                 })}
               />
-
-              <Input
+              <TextInput
                 label="DIVISION"
                 type="text"
                 placeholder="Division"
-                icon={<FontAwesomeIcon icon={faMapPin} />}
+                rightIcon={faMapPin}
                 error={errors.division?.message as string}
                 {...register("division", {
                   required: "Division is required",
                 })}
               />
-            </div>
+              <TextInput
+                label="CITY"
+                type="text"
+                placeholder="City"
+                rightIcon={faCity}
+                error={errors.city?.message as string}
+                {...register("city", { required: "City is required" })}
+              />
 
-            <Input
-              label="CITY"
-              type="text"
-              placeholder="City"
-              icon={<FontAwesomeIcon icon={faCity} />}
-              error={errors.city?.message as string}
-              {...register("city", { required: "City is required" })}
-            />
 
-            <div className={styles.fieldGroup}>
-              <label className={styles.textareaLabel}>Street Address</label>
-              <textarea
-                className={styles.textarea}
+              <TextInput
+                label="Street Address"
                 placeholder="Enter Address..."
+                as="textarea"
+                rows={3}
                 {...register("address", {
                   required: "Address is required",
                 })}
+                error={errors.address?.message}
               />
+           
             </div>
-          </FormCard>
-        </div>
+          </section>
+
+            
+
+        
       </form>
     </>
   );

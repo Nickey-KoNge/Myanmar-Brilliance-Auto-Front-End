@@ -27,7 +27,8 @@ import {
   faLayerGroup,
   faCarSide,
   faAward,
-  faTaxi,
+  faCarOn,
+  faReorder,
 } from "@fortawesome/free-solid-svg-icons";
 
 interface SubItem {
@@ -107,13 +108,21 @@ export const SideNav = () => {
   const pathname = usePathname();
   const [isHovered, setIsHovered] = useState(false);
 
+  // ပြဿနာဖြစ်နေတဲ့ Active Menu ရှာတဲ့ နေရာကို သေချာအောင် ပြင်ထားပါတယ်
   const getActiveMenu = (path: string) => {
     if (path.match(/^\/(staff|customer|supplier|driver)/)) return "Personnel";
-    if (path.match(/^\/(company|branch|station|groups)/)) return "Entity";
-    if (path.match(/^\/(vehicle-brands|vehicle-models|vehicle)/))
-      return "Fleet";
-    if (path.match(/^\/(rental-operations)/)) return "Rental";
+    if (path.match(/^\/(company|branch|station|groups)/)) return "Company";
+
+    if (path.match(/^\/(vehicle-brands|vehicle-models|vehicle)(\/|$)/))
+      return "Vehicle";
+
+    // Trip နဲ့ Rental အတွက် အသစ်ထည့်ထားပါတယ်
+    if (path.match(/^\/(trip-routes|trip-prices)/)) return "Trip";
+    if (path.match(/^\/(vehicle-driver-assign|rental-op)/)) return "Rental";
+    if (path.match(/^\/(customer-invoice|daily-fleet-income | driver | vehicle | vehicle-log )/))
+      return "rental-report";
     if (path.match(/^\/audit/)) return "Audit";
+    return null;
   };
 
   const [clickedDropdown, setClickedDropdown] = useState<string | null>(null);
@@ -137,7 +146,7 @@ export const SideNav = () => {
       className={styles.sidebar}
       onMouseEnter={() => {
         setIsHovered(true);
-        setClickedDropdown(null);
+        // Sidebar ပေါ် Mouse တင်လိုက်တိုင်း ဖွင့်ထားတာတွေ Reset မဖြစ်သွားအောင် ပြင်ထားပါတယ်
       }}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -166,8 +175,6 @@ export const SideNav = () => {
           label="Personnel"
           subItems={[
             { icon: faUser, label: "Staff", href: "/staff" },
-            // { icon: faUserTie, label: "Customer", href: "/customer" },
-            // { icon: faTruckMoving, label: "Supplier", href: "/supplier" },
             { icon: faIdCardClip, label: "Driver", href: "/driver" },
           ]}
           isOpen={openDropdown === "Personnel"}
@@ -177,20 +184,21 @@ export const SideNav = () => {
 
         <NavDropdown
           icon={faBuilding}
-          label="Entity"
+          label="Company"
           subItems={[
             { icon: faBuildingFlag, label: "Company", href: "/company" },
             { icon: faCodeBranch, label: "Branch", href: "/branch" },
             { icon: faChargingStation, label: "Station", href: "/station" },
             { icon: faObjectGroup, label: "Groups", href: "/groups" },
           ]}
-          isOpen={openDropdown === "Entity"}
-          onToggle={() => handleToggle("Entity")}
+          isOpen={openDropdown === "Company"}
+          onToggle={() => handleToggle("Company")}
           isHovered={isHovered}
         />
+
         <NavDropdown
           icon={faCar}
-          label="Fleet"
+          label="Vehicle"
           subItems={[
             {
               icon: faAward,
@@ -208,84 +216,101 @@ export const SideNav = () => {
               href: "/vehicle",
             },
           ]}
-          isOpen={openDropdown === "Fleet"}
-          onToggle={() => handleToggle("Fleet")}
+          isOpen={openDropdown === "Vehicle"}
+          onToggle={() => handleToggle("Vehicle")}
           isHovered={isHovered}
         />
-        {/* <NavItem icon={faWrench} label="Spare-part" href="/spare-part" /> */}
-
-        {/* <div className={styles.sectionTitle}>
-          <span className={styles.menuText}>Sale</span>
-        </div>
-        <NavItem icon={faShoppingCart} label="Sale" href="/sale" /> */}
-
-        {/* <div className={styles.sectionTitle}>
-          <span className={styles.menuText}>Purchase</span>
-        </div>
-        <NavItem icon={faFileInvoice} label="Purchase" href="/purchase" /> */}
-
-        {/* <div className={styles.sectionTitle}>
-          <span className={styles.menuText}>Trip</span>
-        </div> */}
 
         <NavDropdown
           icon={faRoute}
           label="Trip"
           subItems={[
-            { icon: faRoute, label: "Routes List", href: "/trip-routes" },
-            {icon: faTableList, label: "Trip List", href: "/trip-prices" },
-            {
-              icon: faCar,
-              label: "Drivers Assignment",
-              href: "/vehicle-driver-assign/vehicle-driver-list",
-            },
-            { icon: faKey, label: "Rental Operations", href: "/rental-op/rental-op-list" },
+            { icon: faRoute, label: "Routes", href: "/trip-routes" },
+            { icon: faTableList, label: "Trip", href: "/trip-prices" },
           ]}
           isOpen={openDropdown === "Trip"}
           onToggle={() => handleToggle("Trip")}
           isHovered={isHovered}
         />
-        {/* <NavItem icon={faRoute} label="Trip" href="/trip" /> */}
 
         <div className={styles.sectionTitle}>
-          <span className={styles.menuText}>Rental & Trip</span>
+          <span className={styles.menuText}>Rental Operations</span>
         </div>
-          {/* Rental OP list ထုပ်ရန်  */}
-        {/* <NavDropdown
-          icon={faKey}
+
+        <NavDropdown
+          icon={faCarOn} // faTaxi icon လေးသုံးပေးထားပါတယ်
           label="Rental"
           subItems={[
             {
-              icon: faTaxi,
-              label: "Rental Op",
-              href: "/rental-op",
+              icon: faCar,
+              label: "Assignment",
+              href: "/vehicle-driver-assign/vehicle-driver-list",
+            },
+            {
+              icon: faKey,
+              label: "Operations",
+              href: "/rental-op/rental-op-list",
             },
           ]}
           isOpen={openDropdown === "Rental"}
           onToggle={() => handleToggle("Rental")}
           isHovered={isHovered}
-        /> */}
+        />
+
+        <div className={styles.sectionTitle}>
+          <span className={styles.menuText}>Rental Report</span>
+        </div>
+        <NavDropdown
+          icon={faReorder} // faTaxi icon လေးသုံးပေးထားပါတယ်
+          label="Rental"
+          subItems={[
+            {
+              icon: faCar,
+              label: "customer-invoice",
+              href: "/rental-report/customer-invoice",
+            },
+            {
+              icon: faKey,
+              label: "daily-income",
+              href: "/rental-report/daily-fleet-income",
+            },
+
+            {
+              icon: faKey,
+              label: "driver",
+              href: "/rental-report/driver",
+            },
+            {
+              icon: faKey,
+              label: "vehicle",
+              href: "/rental-report/vehicle",
+            },
+             {
+              icon: faKey,
+              label: "vehicle-log",
+              href: "/rental-report/vehicle-log",
+            }
+          ]}
+          isOpen={openDropdown === "rental-report"}
+          onToggle={() => handleToggle("rental-report")}
+          isHovered={isHovered}
+        />
 
         <div className={styles.sectionTitle}>
           <span className={styles.menuText}>Audit</span>
         </div>
+
         <NavDropdown
           icon={faClipboardList}
           label="Audit"
           subItems={[
             { icon: faGauge, label: "Dashboard", href: "/audit/dashboard" },
             { icon: faTableList, label: "Audit List", href: "/audit" },
-            // { icon: faIdCardClip, label: "Driver", href: "/driver" },
           ]}
           isOpen={openDropdown === "Audit"}
           onToggle={() => handleToggle("Audit")}
           isHovered={isHovered}
         />
-
-        {/* <div className={styles.sectionTitle}>
-          <span className={styles.menuText}>Cashflow</span>
-        </div>
-        <NavItem icon={faDollarSign} label="Cashflow" href="/cashflow" /> */}
       </div>
     </aside>
   );

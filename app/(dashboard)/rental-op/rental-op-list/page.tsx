@@ -40,7 +40,7 @@ interface AssignmentRecord {
   vehicle_id: string;
   vehicle_name: string;
   vehicle_image_url: string;
-  plate_number: string | null;
+  license_plate: string | null;
   start_odo: string;
   station_name: string;
   branch_name: string;
@@ -51,17 +51,15 @@ interface AssignmentRecord {
 }
 
 interface PaginatedResponse {
-     success: boolean;
- 
-    items: AssignmentRecord[];
-      meta: {
-      totalItems: number;
-      totalPages: number;
-      currentPage: number;
-      itemsPerPage: number;
-      };
-  
+  success: boolean;
 
+  items: AssignmentRecord[];
+  meta: {
+    totalItems: number;
+    totalPages: number;
+    currentPage: number;
+    itemsPerPage: number;
+  };
 }
 
 export default function AssignmentListPage() {
@@ -93,6 +91,8 @@ export default function AssignmentListPage() {
       setCurrentPage(1);
     },
   );
+
+  console.log("RECORDS", records)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -141,30 +141,29 @@ export default function AssignmentListPage() {
       header: "Driver Info",
       key: "driverInfo",
       render: (row: AssignmentRecord) => (
-        <div className={styles.vehicleInfo}>
+        <div className={styles.info}>
           <Image
             src={row.driver_image_url || "/placeholder.png"}
             alt={row.driver_name}
             width={40}
             height={40}
             unoptimized
-            className={styles.vehicleImg}
+            className={styles.image}
           />
           <div>
-            <div style={{ fontWeight: "600" }}>{row.driver_name}</div>
+            <div className={styles.textBold}>{row.driver_name}</div>
             <div
-              style={{
-                fontSize: "10px",
-                fontWeight: "bold",
-                color:
-                  row.trip_status === "Ongoing"
-                    ? "var(--success)"
-                    : row.trip_status === "Pending"
-                      ? "#ffc107"
-                      : "var(--danger)",
-              }}
+              className={[
+                styles.textSmall,
+                styles.textBold,
+                row.trip_status === "Ongoing"
+                  ? styles.textSuccess
+                  : row.trip_status === "Pending"
+                    ? styles.textWarning
+                    : styles.textDanger,
+              ].join(" ")}
             >
-              {row.trip_status.toUpperCase()}
+              {row.trip_status}
             </div>
           </div>
         </div>
@@ -175,12 +174,14 @@ export default function AssignmentListPage() {
       key: "vehicleDetails",
       render: (row: any) => (
         <div>
-          <div style={{ fontWeight: "500" }}>{row.vehicle_name}</div>
-          <div style={{ fontSize: "11px", color: "#666" }}>
-            <b>Plate:</b> {row.plate_number || "N/A"}
+          <div className={styles.textBold}>{row.vehicle_name}</div>
+          <div className={[styles.textSmall, styles.textMuted].join(" ")}>
+            <span className={styles.textBold}>Plate:</span>{" "}
+            {row.license_plate || "N/A"}
           </div>
-          <div style={{ fontSize: "11px", color: "var(--primary-color)" }}>
-            <b>Battery:</b> {row.start_battery}% → {row.end_battery || "--"}%
+          <div className={styles.textSmall}>
+            <span className={styles.textBold}>Battery : </span>{" "}
+            {row.start_battery}% → {row.end_battery || "--"}%
           </div>
         </div>
       ),
@@ -189,16 +190,15 @@ export default function AssignmentListPage() {
       header: "Route & Power",
       key: "routePower",
       render: (row: any) => (
-        <div>
-          <div style={{ fontSize: "12px" }}>
-            <b>Route:</b> {row.route_name}
+        <div className={styles.textSmall}>
+          <div>
+            <span className={styles.textBold}>Route:</span> {row.route_name}
           </div>
-          <div style={{ fontSize: "12px" }}>
-            <b>Station:</b> {row.power_station_name || "-"}
+          <div>
+            <span className={styles.textBold}>Station:</span>{" "}
+            {row.power_station_name || "-"}
           </div>
-          <div style={{ fontSize: "11px", fontStyle: "italic" }}>
-            {row.description || ""}
-          </div>
+          <div>{row.description || ""}</div>
         </div>
       ),
     },
@@ -206,16 +206,19 @@ export default function AssignmentListPage() {
       header: "Odometer & Stats",
       key: "odoStats",
       render: (row: any) => (
-        <div style={{ fontSize: "12px" }}>
+        <div className={styles.textSmall}>
           <div>
-            <b>Odo:</b> {isNaN(Number(row.start_odo)) ? "0" : row.start_odo} →{" "}
+            <span className={styles.textBold}>Odo : </span>{" "}
+            {isNaN(Number(row.start_odo)) ? "0" : row.start_odo} →{" "}
             {row.end_odo || "--"}
           </div>
           <div>
-            <b>Extra Hr:</b> {row.extra_hours || "0"}
+            <span className={styles.textBold}>Extra Hr : </span>{" "}
+            {row.extra_hours || "0"}
           </div>
           <div>
-            <b>Distance:</b> {row.distance || "0"} km
+            <span className={styles.textBold}>Distance : </span>{" "}
+            {row.distance || "0"} km
           </div>
         </div>
       ),
@@ -225,8 +228,8 @@ export default function AssignmentListPage() {
       key: "location",
       render: (row: AssignmentRecord) => (
         <div>
-          <div style={{ fontWeight: "500" }}>{row.station_name}</div>
-          <div style={{ fontSize: "12px", color: "gray" }}>
+          <div className={styles.textBold}>{row.station_name}</div>
+          <div className={[styles.textSmall, styles.textMuted].join(" ")}>
             {row.branch_name}
           </div>
         </div>
@@ -239,17 +242,17 @@ export default function AssignmentListPage() {
         const finance = row.trip_finances?.[0];
         return (
           <div>
-            <div style={{ fontWeight: "600" }}>
-              {finance
-                ? `${Number(finance.total).toLocaleString()} USD`
-                : "0.00"}
+            <div className={styles.textBold}>
+              {finance ? `${Number(finance.total).toLocaleString()}` : "0.00"}{" "}
+              USD
             </div>
             <div
-              style={{
-                fontSize: "11px",
-                color:
-                  finance?.payment_status === "Pending" ? "#e67e22" : "#27ae60",
-              }}
+              className={[
+                styles.textSmall,
+                finance?.payment_status === "Pending"
+                  ? styles.textWarning
+                  : styles.textSuccess,
+              ].join(" ")}
             >
               {finance?.payment_status || "No Data"}
             </div>
@@ -262,10 +265,10 @@ export default function AssignmentListPage() {
       key: "timeline",
       render: (row: AssignmentRecord) => (
         <div>
-          <div style={{ fontSize: "12px" }}>
+          <div className={styles.textSmall}>
             {row.created_at?.split("T")[0]}
           </div>
-          <div style={{ fontSize: "11px", color: "#888" }}>
+          <div className={[styles.textSmall, styles.textMuted].join(" ")}>
             {row.created_at?.split("T")[1].substring(0, 5)}
           </div>
         </div>
@@ -317,15 +320,13 @@ export default function AssignmentListPage() {
                     rightIcon={faCalendarDays}
                   />
                 </div>
-                <div style={{ alignSelf: "flex-start" }}>
-                  <ActionBtn
-                    variant="action"
-                    fullWidth={false}
-                    onClick={resetFilters}
-                  >
-                    reset
-                  </ActionBtn>
-                </div>
+                <ActionBtn
+                  variant="action"
+                  fullWidth={false}
+                  onClick={resetFilters}
+                >
+                  reset
+                </ActionBtn>
               </div>
             </div>
 
@@ -341,15 +342,15 @@ export default function AssignmentListPage() {
 
                 <div className={styles.stat}>
                   <div>
-                    <p className={styles.statLable}>Total Trips :</p>
+                    <p className={styles.statLabel}>Total Trips :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Active Routes :</p>
+                    <p className={styles.statLabel}>Active Routes :</p>
                     <p className={styles.textSuccess}>{activeRecords}</p>
                   </div>
                   <div>
-                    <p className={styles.statLable}>Inactive Routes :</p>
+                    <p className={styles.statLabel}>Inactive Routes :</p>
                     <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>
@@ -387,9 +388,9 @@ export default function AssignmentListPage() {
           <DataTable
             columns={columns}
             data={records}
-            onRowClick={(row) =>
-              router.push(`/vehicle/Assignment/Update/${row.id}`)
-            }
+            // onRowClick={(row) =>
+            //   router.push(`/vehicle/Assignment/Update/${row.id}`)
+            // }
             emptyMessage="No assignment records found."
           />
         </div>

@@ -38,25 +38,23 @@ export default function RentalOperationPage() {
     null,
   );
 
+  // Pagination States အသစ်များ
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 4; // တစ်မျက်နှာမှာ Card ဘယ်နှခု ပြမလဲ သတ်မှတ်ပါ (ဥပမာ - ၁၀ ခု)
+
   useEffect(() => {
     fetchDropdownData();
   }, []);
 
   useEffect(() => {
-    let intervalId: NodeJS.Timeout;
+    fetchAssignmentsByStation(selectedStationId, false);
 
-    if (selectedStationId) {
-      fetchAssignmentsByStation(selectedStationId, false);
-
-      intervalId = setInterval(() => {
-        fetchAssignmentsByStation(selectedStationId, true);
-      }, 3600000);
-    } else {
-      setAssignList([]);
-    }
+    const intervalId = setInterval(() => {
+      fetchAssignmentsByStation(selectedStationId, true);
+    }, 3600000);
 
     return () => {
-      if (intervalId) clearInterval(intervalId);
+      clearInterval(intervalId);
     };
   }, [selectedStationId]);
 
@@ -91,13 +89,15 @@ export default function RentalOperationPage() {
   ) => {
     try {
       if (!isBackground) setFetching(true);
+      const stationQuery = stationId ? `&station_id=${stationId}` : "";
 
       const [assignRes, opRes] = await Promise.all([
         apiClient.get(
-          `/master-vehicle/vehicle-driver-assign?station_id=${stationId}&status=Ongoing`,
+          // limit=1000 ကို ထည့်ပေးထားတယ် (ကားအားလုံးထွက်အောင်)
+          `/master-vehicle/vehicle-driver-assign?status=Ongoing${stationQuery}&limit=1000`,
         ),
         apiClient.get(
-          `/master-rental/rental-operation?station_id=${stationId}&limit=1000`,
+          `/master-rental/rental-operation?limit=1000${stationQuery}`,
         ),
       ]);
 
@@ -167,26 +167,49 @@ export default function RentalOperationPage() {
     const activeOp =
       vehicleOps.length > 0
         ? vehicleOps.sort((a, b) => {
-            const opA = a as unknown as {
+            type OpType = {
               status?: string;
+              trip_status?: string;
               updated_at?: string;
+              end_time?: string;
+              start_time?: string;
+              created_at?: string;
             };
-            const opB = b as unknown as {
-              status?: string;
-              updated_at?: string;
+            const opA = a as unknown as OpType;
+            const opB = b as unknown as OpType;
+
+            // ၁။ 💡 ၃၀ မိနစ်အတွင်း Finalize လုပ်ထားသော Completed Trip ကို ဦးစားပေးရန်
+            const isRecentCompleted = (op: OpType) => {
+              if (op.trip_status !== "Completed") return false;
+
+              const actionTime = new Date(
+                op.updated_at || op.end_time || 0,
+              ).getTime();
+
+              const diffMins = (Date.now() - actionTime) / (1000 * 60);
+
+              return diffMins <= 30;
             };
 
+            const aRecent = isRecentCompleted(opA);
+            const bRecent = isRecentCompleted(opB);
+
+            if (aRecent && !bRecent) return -1;
+            if (!aRecent && bRecent) return 1;
+
+            // ၂။ ပုံမှန်အတိုင်း Active ဖြစ်နေတာကို ဦးစားပေးရန်
             const aActive = opA.status === "Active" ? 1 : 0;
             const bActive = opB.status === "Active" ? 1 : 0;
             if (aActive !== bActive) {
               return bActive - aActive;
             }
 
+            // ၃။ အချိန်အသစ်ဆုံးကို ယူရန်
             const timeA = new Date(
-              opA.updated_at || a.start_time || a.created_at || 0,
+              opA.updated_at || opA.start_time || opA.created_at || 0,
             ).getTime();
             const timeB = new Date(
-              opB.updated_at || b.start_time || b.created_at || 0,
+              opB.updated_at || opB.start_time || opB.created_at || 0,
             ).getTime();
 
             return timeB - timeA;
@@ -203,10 +226,12 @@ export default function RentalOperationPage() {
       return time instanceof Date ? time.toISOString() : String(time);
     };
 
+
     const opSafe = activeOp as unknown as {
       vehicle_image?: string;
       driver_image?: string;
       driver_nrc?: string;
+      route_name?: string;
       route?: { route_name?: string };
       status?: string;
       rental_amount?: string;
@@ -222,6 +247,34 @@ export default function RentalOperationPage() {
       opSafe?.start_battery ??
       opSafe?.battery ??
       "-";
+
+    // 💡 Route Name အမှန်တကယ် ပါ/မပါ စစ်ထုတ်ခြင်း
+    const actualRouteName =
+      activeOp?.route_name ||
+      opSafe?.route_name ||
+      opSafe?.route?.route_name ||
+      "-";
+
+    let defaultRoute = "";
+    if (!actualRouteName || actualRouteName === "-") {
+      const carName = (
+        assign.vehicle?.vehicle_name ||
+        assign.vehicle_name ||
+        ""
+      ).toLowerCase();
+
+      // StartOpModal မှာ သုံးထားတဲ့ Logic အတိုင်း BYD ဆိုရင် City Route ကို Default အနေနဲ့ ပြပေးမယ်
+      if (carName.includes("byd")) {
+        const cityRoute = routesList.find(
+          (rt) =>
+            rt.route_name.toLowerCase().includes("city") ||
+            rt.route_name.includes("မြို့တွင်း"),
+        );
+        if (cityRoute) {
+          defaultRoute = cityRoute.route_name;
+        }
+      }
+    }
 
     return {
       id: assign.id || "-",
@@ -267,9 +320,14 @@ export default function RentalOperationPage() {
         assign.station?.branch_name ||
         assign.branch_name ||
         "-",
-      route_name: activeOp?.route_name || opSafe?.route?.route_name || "-",
+
+      route_name: actualRouteName,
+      default_route_name: defaultRoute,
+
       trip_status: activeOp?.trip_status || opSafe?.status || "No Trip",
+
       daily_count: activeOp?.daily_count || "0",
+      overnight_count: activeOp?.overnight_count || "0",
       start_time: formatTimeToString(activeOp?.start_time),
       end_time: formatTimeToString(activeOp?.end_time),
       start_odo: activeOp?.start_odo || initialOdo,
@@ -289,7 +347,6 @@ export default function RentalOperationPage() {
       total_amount: financeRecord?.total || opSafe?.total_amount || "0",
     };
   };
-
   const handleOpenStartModal = (assign: VehicleAssign) => {
     setSelectedAssign(assign);
     setShowStartModal(true);
@@ -306,6 +363,20 @@ export default function RentalOperationPage() {
     // UI ချက်ချင်းပြောင်းရန်အတွက် Background = false ဖြင့် တစ်ခေါက်ဆွဲမည်
     fetchAssignmentsByStation(selectedStationId, false);
   };
+  // --- Pagination Logic ---
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = assignList.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(assignList.length / itemsPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+  // -------------------------
 
   return (
     <div className={styles.container}>
@@ -319,7 +390,7 @@ export default function RentalOperationPage() {
               value={selectedStationId}
               onChange={(e) => setSelectedStationId(e.target.value)}
             >
-              <option value="">-- Select Station --</option>
+              <option value="">-- All Stations --</option>
               {stationsList.map((st) => (
                 <option key={st.id} value={st.id}>
                   {st.station_name}
@@ -341,19 +412,18 @@ export default function RentalOperationPage() {
           </div>
         </div>
 
-        {!selectedStationId ? (
-          <div className={styles.emptyState}>
-            အထက်ပါ Station Dropdown မှ Station ကို ရွေးချယ်ပေးပါ။
-          </div>
-        ) : fetching ? (
+        {/* JSX များကို သေချာစွာ ရှင်းလင်းထားပါသည် */}
+        {fetching ? (
           <div className={styles.emptyState}>Loading Vehicles...</div>
         ) : assignList.length === 0 ? (
           <div className={styles.emptyState}>
-            ဤ Station တွင် တာဝန်ချထားသော ကား/ဒရိုင်ဘာ မရှိသေးပါ။
+            {selectedStationId
+              ? "ဤ Station တွင် တာဝန်ချထားသော ကား/ဒရိုင်ဘာ မရှိသေးပါ။"
+              : "တာဝန်ချထားသော ကား/ဒရိုင်ဘာ မရှိသေးပါ။"}
           </div>
         ) : (
           <div className={styles.cardState}>
-            {assignList.map((assign, index) => (
+            {currentItems.map((assign, index) => (
               <div key={assign.id || index}>
                 <RentalOpCard
                   data={mapToCardData(assign)}
@@ -362,6 +432,28 @@ export default function RentalOperationPage() {
                 />
               </div>
             ))}
+          </div>
+        )}
+        {/* Pagination Controls လေး ထည့်လိုက်ပါပြီ */}
+        {totalPages > 1 && (
+          <div className={styles.paginationContainer}>
+            <button
+              className={styles.pageButton}
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+            >
+              &laquo; Previous
+            </button>
+            <span className={styles.pageInfo}>
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              className={styles.pageButton}
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+            >
+              Next &raquo;
+            </button>
           </div>
         )}
       </div>

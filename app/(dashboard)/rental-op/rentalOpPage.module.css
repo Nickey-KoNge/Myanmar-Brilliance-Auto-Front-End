@@ -3,7 +3,6 @@
   gap: 20px;
   padding: 20px;
   background-color: var(--bg-main);
-  min-height: 100vh;
   color: var(--text-main);
   transition: background-color 0.3s ease;
   border-radius: var(--radius);
@@ -14,8 +13,12 @@
   display: flex;
   flex-direction: column;
 }
-/* .cardState {
-} */
+.cardState {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 20px;
+}
 
 .pageHeader {
   display: flex;
@@ -37,7 +40,7 @@
 
 .btnPrimary {
   background-color: var(--accent);
-  color: var(--text-scuccess); /* နဂိုဖြူဖြူလေးဖြစ်အောင် */
+  color: var(--icon-main);
   border: none;
   padding: 10px 16px;
   border-radius: 6px;
@@ -58,7 +61,6 @@
 .selectBox {
   width: 100%;
   background-color: var(--bg-input);
-  color: var(--text-main);
   border: 1px solid var(--border-color);
   padding: 10px;
   border-radius: 6px;
@@ -78,12 +80,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(
-    0,
-    0,
-    0,
-    0.7
-  ); /* Overlay ကတော့ dark ပဲထားတာ ပိုကောင်းပါတယ် */
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -468,4 +465,108 @@
   align-items: center;
   gap: 16px;
   margin-top: 24px;
+}
+/* =========================================
+   Pagination Styling (Rental Op ၏ ဒီဇိုင်းအတိုင်း)
+   ========================================= */
+.paginationContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 30px;
+  padding: 10px 0;
+}
+
+.pageButton {
+  background-color: var(--color-primary);
+  color: var(--icon-main);
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.pageButton:hover:not(:disabled) {
+  background-color: var(--color-primary);
+  color: var(--text-main);
+  border-color: var(--color-primary);
+}
+
+.pageButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background-color: var(--bg-input);
+}
+
+.pageInfo {
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: bold;
+}
+/* Bulk Modal Layout Additions */
+.bulkModalContent {
+  max-width: 800px;
+}
+
+.tableContainer {
+  margin-top: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.priceTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableHeadRow {
+  background-color: #f3f4f6;
+  text-align: left;
+  color: #1f2937;
+}
+
+.tableBodyRow {
+  border-bottom: 1px solid #e5e7eb;
+  color: #1f2937;
+}
+
+.tableCell {
+  padding: 10px;
+}
+
+.tableCellCenter {
+  padding: 10px;
+  text-align: center;
+}
+
+.tableCellBold {
+  padding: 10px;
+  font-weight: bold;
+  color: var(--text-main);
+}
+
+.checkboxInput {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  color: var(--text-main);
+}
+
+.actionButtonsContainer {
+  margin-top: 20px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .tableHeadRow {
+    background-color: #374151;
+    color: #f9fafb; 
+  }
+
+  .tableBodyRow {
+    border-bottom: 1px solid #4b5563;
+    color: #f9fafb;
+  }
 }

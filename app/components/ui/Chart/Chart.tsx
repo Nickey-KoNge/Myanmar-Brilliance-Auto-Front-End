@@ -30,7 +30,7 @@ export default function ReactGoogleChart({
     },
     legend: {
       position: "bottom",
-      textStyle: { fontSize: 12, color: "#ccc" },
+      textStyle: { fontSize: 12, color: "#888888" },
     },
     tooltip: {
       trigger: "focus",
@@ -43,10 +43,10 @@ export default function ReactGoogleChart({
       colors: ["#602424", "#c24646"],
       bar: { groupWidth: "55%" },
       hAxis: {
-        textStyle: { fontSize: 11, color: "#aaa" },
+        textStyle: { fontSize: 11, color: "#888888" },
       },
       vAxis: {
-        textStyle: { fontSize: 11, color: "#aaa" },
+        textStyle: { fontSize: 11, color: "#888888" },
         gridlines: { color: "#333" },
         format: "short",
       },
@@ -59,11 +59,11 @@ export default function ReactGoogleChart({
       lineWidth: 3,
       pointSize: 4,
       hAxis: {
-        textStyle: { fontSize: 11, color: "#aaa" },
+        textStyle: { fontSize: 11, color: "#888888" },
       },
       vAxis: {
         gridlines: { color: "#333" },
-        textStyle: { color: "#aaa" },
+        textStyle: { color: "#888888" },
         format: "short",
       },
     },
@@ -123,7 +123,7 @@ export default function ReactGoogleChart({
             justifyContent: "space-between",
             alignItems: "center",
             marginBottom: "10px",
-            color: "#fff",
+            color: `var(--text-main)`,
             fontWeight: 600,
             fontSize: "14px",
           }}
@@ -137,7 +137,7 @@ export default function ReactGoogleChart({
               icon={icon}
               style={{
                 fontSize: "24px",
-                color: "#a33b3b",
+                color: `var(--color-primary)`,
               }}
             />
           )}

@@ -9,6 +9,7 @@ import {
   faClockRotateLeft,
   faPlus,
   faTrashCan,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
 // Components
@@ -226,29 +227,34 @@ export default function DriverListPage() {
 
         return (
           <div className={styles.info}>
-            <Image
-              src={src}
-              alt={driver.driver_name}
-              width={40}
-              height={40}
-              unoptimized
-              className={styles.image}
-            />
-
+            {driver.image ? (
+              <Image
+                src={driver.image}
+                alt={driver.driver_name}
+                width={40}
+                height={40}
+                className={styles.image}
+                unoptimized
+              />
+            ) : (
+              <div className={styles.defaultImage}>
+                <FontAwesomeIcon icon={faUser} />
+              </div>
+            )}
             <div>
               <div className={styles.textBold}>{driver.driver_name}</div>
-
               <div className={[styles.textSmall, styles.textMuted].join(" ")}>
                 <span className={styles.textBold}>Phone : </span>
                 {driver.phone || "-"}
               </div>
-
               <div
-                className={
+                className={[
+                  styles.textSmall,
+                  styles.textBold,
                   driver.status === "Active"
-                    ? [styles.textSmall, styles.textSuccess].join(" ")
-                    : [styles.textSmall, styles.textDanger].join(" ")
-                }
+                    ? styles.textSuccess
+                    : styles.textDanger,
+                ].join(" ")}
               >
                 {driver.status || "Unknown"}
               </div>
@@ -262,14 +268,15 @@ export default function DriverListPage() {
       key: "identity",
       render: (driver: Driver) => (
         <div>
-          <div className={styles.textBold}>NRC : {driver.nrc || "-"}</div>
-
+          <div>
+            <span className={styles.textBold}>NRC : </span>
+            {driver.nrc || "-"}
+          </div>
           <div className={[styles.textSmall, styles.textInfo].join(" ")}>
             <span className={styles.textBold}>Email : </span>
             {driver.credential_email || "-"}
           </div>
-
-          <div className={[styles.textSmall, styles.textMuted].join(" ")}>
+          <div className={styles.textMuted}>
             <span className={styles.textBold}>Gender : </span>
             {driver.gender || "-"}
           </div>
@@ -280,18 +287,16 @@ export default function DriverListPage() {
       header: "License Info",
       key: "licenseInfo",
       render: (driver: Driver) => (
-        <div>
-          <div className={styles.textSmall}>
+        <div className={styles.textSmall}>
+          <div>
             <span className={styles.textBold}>No : </span>
             {driver.license_no || "-"}
           </div>
-
-          <div className={styles.textSmall}>
+          <div>
             <span className={styles.textBold}>Type : </span>
             {driver.license_type || "-"}
           </div>
-
-          <div className={styles.textSmall}>
+          <div>
             <span className={styles.textBold}>Join Date : </span>
             {driver.join_date || "-"}
           </div>
@@ -300,15 +305,14 @@ export default function DriverListPage() {
     },
     {
       header: "Start & Deposit",
-      key: "deposit",
+      key: "licenseInfo",
       render: (driver: Driver) => (
-        <div>
-          <div className={styles.textSmall}>
+        <div className={styles.textSmall}>
+          <div>
             <span className={styles.textBold}>Join Date : </span>
             {driver.join_date || "-"}
           </div>
-
-          <div className={styles.textSmall}>
+          <div>
             <span className={styles.textBold}>Deposit : </span>
             {driver.deposits || "-"} MMK
           </div>
@@ -323,7 +327,6 @@ export default function DriverListPage() {
           <div className={styles.textBold}>
             {driver.station_name || "Unassigned"}
           </div>
-
           <div className={[styles.textSmall, styles.textMuted].join(" ")}>
             <span className={styles.textBold}>Exp : </span>
             {driver.driving_exp || "-"}
@@ -347,7 +350,7 @@ export default function DriverListPage() {
             <span className={styles.textBold}>DOB : </span>
             {driver.dob ? String(driver.dob).split("T")[0] : "-"}
           </div>
-          <div className={[styles.textDanger, styles.textSmall].join(" ")}>
+          <div>
             <span className={styles.textBold}>Exp : </span>
             {driver.license_expiry
               ? String(driver.license_expiry).split("T")[0]
@@ -438,32 +441,20 @@ export default function DriverListPage() {
                 <span>
                   <FontAwesomeIcon icon={faClockRotateLeft} />
                 </span>
-                <p className={styles.textBold}>RECENT RECORD</p>
+                <p className={styles.recentTitle}>RECENT RECORD</p>
                 <span />
 
                 <div className={styles.stat}>
                   <div>
-                    <p
-                      className={[styles.textBold, styles.textMuted].join(" ")}
-                    >
-                      Total Driver :
-                    </p>
+                    <p className={styles.statLabel}>Total Driver :</p>
                     <p className={styles.textDanger}>{totalRecords}</p>
                   </div>
                   <div>
-                    <p
-                      className={[styles.textBold, styles.textMuted].join(" ")}
-                    >
-                      Active Driver :
-                    </p>
+                    <p className={styles.statLabel}>Active Driver :</p>
                     <p className={styles.textSuccess}>{activeRecords}</p>
                   </div>
                   <div>
-                    <p
-                      className={[styles.textBold, styles.textMuted].join(" ")}
-                    >
-                      Inactive Driver :
-                    </p>
+                    <p className={styles.statLabel}>Inactive Driver :</p>
                     <p className={styles.textDanger}>{inactiveRecords}</p>
                   </div>
                 </div>
@@ -471,7 +462,8 @@ export default function DriverListPage() {
 
               <hr className={styles.cuttingLine} />
               <p className={styles.lastEdited}>
-                Last Edited : <span>{lastEditedBy}</span>
+                Last Edited :{" "}
+                <span className={styles.spanText}>{lastEditedBy}</span>
               </p>
             </div>
           </div>
