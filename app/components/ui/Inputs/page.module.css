@@ -17,7 +17,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  background: var(--bg-input);
+  background: var(--bg-secondary);
   border-radius: var(--radius);
   transition: all ease 0.2s;
   overflow: hidden;
@@ -86,7 +86,7 @@
 }
 
 .inputWrapper select option {
-  background: var(--bg-input);
+  background: var(--bg-secondary);
   color: var(--text-main);
 }
 
@@ -130,8 +130,8 @@
 .inputWrapper textarea:-webkit-autofill,
 .inputWrapper textarea:-webkit-autofill:hover,
 .inputWrapper textarea:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0px 9999px var(--bg-input) inset !important;
-  box-shadow: 0 0 0px 9999px var(--bg-input) inset !important;
+  -webkit-box-shadow: 0 0 0px 9999px var(--bg-secondary) inset !important;
+  box-shadow: 0 0 0px 9999px var(--bg-secondary) inset !important;
   -webkit-text-fill-color: var(--text-main) !important;
   caret-color: var(--text-main);
   transition: background-color 0s 99999s !important;

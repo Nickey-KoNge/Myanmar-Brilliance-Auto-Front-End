@@ -1,6 +1,6 @@
 .card {
   position: relative;
-  background-color: var(--bg-card);
+  background-color: var(--bg-primary);
   width: 100%;
   max-width: 420px;
   padding: 2.5rem 2rem;

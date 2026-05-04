@@ -1,12 +1,11 @@
-
 .sidebar {
   width: 70px;
-  background-color: var(--bg-card);
+  background-color: var(--bg-primary);
   color: var(--text-main);
   height: 100vh;
   position: relative;
-  border-right: 1px solid var(--border-nav-color);
-  box-shadow: 1px 0 20px var(--nav-shadow-color);
+  border-right: 1px solid var(--decent-hover);
+  box-shadow: 1px 0 20px var(--bg-secondary);
   display: flex;
   flex-direction: column;
   overflow-y: hidden;
@@ -62,7 +61,6 @@
   visibility: visible;
 }
 
-
 .sectionTitle {
   font-size: 0.65rem;
   color: var(--text-main);
@@ -95,12 +93,12 @@
 .menuItem:hover,
 .menuItem.active {
   color: var(--text-main);
-  background-color: var(--bg-main);
+  background-color: var(--bg-primary);
 }
 
 .menuItem.active {
-  border-right-color: var(--active-right-link-color);
-  background-color: var(--active-link-color);
+  border-right-color: var(--accent);
+  background-color: var(--decent);
 }
 
 .icon {
@@ -141,13 +139,13 @@
 
 .subMenuItem:hover {
   color: var(--nav-main);
-  border-right-color: var(--active-right-link-color);
-  background-color: var(--active-link-color);
+  border-right-color: var(--accent);
+  background-color: var(--decent);
 }
 
 .subActive {
-  border-right-color: var(--active-right-link-color);
-  background-color: var(--active-link-color);
+  border-right-color: var(--accent);
+  background-color: var(--decent);
   color: var(--nav-main);
 }
 

@@ -86,7 +86,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: var(--bg-input);
+  background-color: var(--bg-secondary);
   display: flex;
   align-items: center;
   justify-content: center;

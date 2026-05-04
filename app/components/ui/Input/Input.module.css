@@ -19,7 +19,7 @@
 .input:-webkit-autofill:hover,
 .input:-webkit-autofill:focus,
 .input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px var(--bg-input) inset !important;
+  -webkit-box-shadow: 0 0 0 1000px var(--bg-secondary) inset !important;
 
   -webkit-text-fill-color: var(--text-main) !important;
 
@@ -28,7 +28,7 @@
 
 .input {
   width: 100%;
-  background-color: var(--bg-input);
+  background-color: var(--bg-secondary);
   color: var(--text-main);
   padding: 1rem 3rem 1rem 1rem;
   border-radius: 8px;
@@ -45,7 +45,7 @@
   outline: none;
 }
 .input:autofill {
-  background-color: var(--bg-input) !important;
+  background-color: var(--bg-secondary) !important;
   color: var(--text-main) !important;
 }
 .iconWrapper {

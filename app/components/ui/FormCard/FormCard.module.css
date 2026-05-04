@@ -1,6 +1,6 @@
 /* FormCard.module.css */
 .card {
-  background: var(--bg-card);
+  background: var(--bg-primary);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 24px;
@@ -50,5 +50,5 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  flex:1;
+  flex: 1;
 }

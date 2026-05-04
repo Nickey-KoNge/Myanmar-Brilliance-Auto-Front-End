@@ -1,8 +1,8 @@
 .topbar {
   height: 60px;
-  background-color: var(--bg-card);
-  border-bottom: 1px solid var(--border-nav-color);
-  box-shadow: 0 1px 20px var(--nav-shadow-color);
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--decent-hover);
+  box-shadow: 0 1px 20px var(--bg-secondary);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -35,7 +35,7 @@
 .logoIcon {
   width: 40px;
   height: 40px;
-  background-color: var(--bg-input);
+  background-color: var(--bg-secondary);
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -68,12 +68,12 @@
 .navItem:hover,
 .navItem.active {
   color: var(--text-main);
-  background-color: var(--bg-main);
+  background-color: var(--bg-primary);
 }
 
 .navItem.active {
-  border-bottom-color: var(--active-right-link-color);
-  background-color: var(--active-link-color);
+  border-bottom-color: var(--accent);
+  background-color: var(--decent);
 }
 
 .navIcon {
@@ -101,8 +101,8 @@
 }
 
 .themeToggle {
-  background: var(--bg-input);
-  border: 1px solid var(--border-nav-color);
+  background: var(--bg-secondary);
+  border: 1px solid var(--decent-hover);
   border-radius: 8px;
   width: 35px;
   height: 35px;
@@ -135,7 +135,7 @@
   justify-content: center;
   align-items: center;
   font-weight: bold;
-  border: 2px solid var(--bg-card);
+  border: 2px solid var(--bg-primary);
 }
 
 .userSection {
@@ -143,7 +143,7 @@
   align-items: center;
   gap: 1rem;
   padding-left: 1rem;
-  border-left: 1px solid var(--border-nav-color);
+  border-left: 1px solid var(--decent-hover);
 }
 
 .userProfile {

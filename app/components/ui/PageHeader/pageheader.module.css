@@ -4,7 +4,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
-  background-color: var(--bg-main);
+  background-color: var(--bg-primary);
   padding: var(--padding);
   border-radius: 0.75rem;
 }
