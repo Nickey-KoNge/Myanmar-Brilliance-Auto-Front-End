@@ -9,7 +9,6 @@
   gap: var(--gap);
 }
 
-
 .imageUploadWrapper {
   position: relative;
   width: 234px;
@@ -22,7 +21,7 @@
   height: 100%;
   border-radius: 8px;
   border: 1px solid var(--color-primary, #c0392b);
-  background: var(--bg-input, #2a2a2a);
+  background: var(--bg-secondary, #2a2a2a);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -51,11 +50,10 @@
   border-radius: 4px;
 }
 
-
 .row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-   gap: var(--gap);
+  gap: var(--gap);
 }
 
 .error {

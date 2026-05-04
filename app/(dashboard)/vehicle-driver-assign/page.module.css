@@ -2,19 +2,19 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: var(--bg-main);
+  background-color: var(--bg-primary);
   color: var(--text-main);
   overflow: hidden;
 }
 
 .header {
-  background-color: var(--bg-card);
+  background-color: var(--bg-primary);
   padding: 1rem 1.5rem;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 1px 2px 0 var(--nav-shadow-color);
+  box-shadow: 0 1px 2px 0 var(--bg-secondary);
   border-bottom: 1px solid var(--border-color);
   z-index: 10;
   flex-shrink: 0;
@@ -76,10 +76,11 @@
   display: flex;
   justify-content: end;
   gap: 10px;
-  background-color: var(--bg-card);
+  background-color: var(--bg-primary);
   padding: 12px 16px;
   border-radius: 8px;
-  border: 1px solid var(--border-nav-color);
+  border: 1px solid var(--decent-hover);
+  border: 1px solid var(--decent-hover);
   width: 100%;
   max-width: 70%;
 }
@@ -174,7 +175,7 @@
 .searchWrapper {
   display: flex;
   align-items: center;
-  background-color: var(--bg-input);
+  background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: 6px;
   padding: 6px 12px;
@@ -217,9 +218,9 @@
   flex: 0.65;
   display: flex;
   flex-direction: column;
-  background-color: var(--bg-card);
+  background-color: var(--bg-primary);
   border-radius: var(--radius);
-  box-shadow: 0 1px 2px 0 var(--nav-shadow-color);
+  box-shadow: 0 1px 2px 0 var(--bg-secondary);
   border: 1px solid var(--border-color);
   overflow: hidden;
 }
@@ -231,7 +232,7 @@
   border-radius: var(--radius);
   background-color: var(--bg-table);
   border: 2px solid var(--border-color);
-  box-shadow: 0 4px 6px -1px var(--nav-shadow-color);
+  box-shadow: 0 4px 6px -1px var(--bg-secondary);
   overflow: hidden;
   position: relative;
   transition: all 0.2s;
@@ -288,7 +289,7 @@
 }
 
 .badgeCount {
-  background-color: var(--bg-input);
+  background-color: var(--bg-secondary);
   color: var(--text-main);
   border: 1px solid var(--border-color);
   font-size: var(--font-size-s);
@@ -333,7 +334,7 @@
   padding: 0.5rem 0.25rem;
   border-radius: var(--radius);
   border: 2px solid var(--border-color);
-  background-color: var(--bg-card);
+  background-color: var(--bg-primary);
   color: var(--text-main);
   cursor: pointer;
   display: flex;
@@ -365,7 +366,7 @@
 .cardImageWrapper {
   width: 2.2rem;
   height: 2.2rem;
-  background-color: var(--bg-input);
+  background-color: var(--bg-secondary);
   color: var(--text-muted);
   display: flex;
   align-items: center;
@@ -417,7 +418,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 90%;
-  background: var(--bg-input);
+  background: var(--bg-secondary);
   color: var(--text-muted);
 }
 
@@ -463,12 +464,12 @@
 }
 
 .slotFilled {
-  background-color: var(--bg-card);
+  background-color: var(--bg-primary);
   border: 1px solid var(--border-color);
 }
 
 .slotEmpty {
-  background-color: var(--bg-input);
+  background-color: var(--bg-secondary);
   border: 1px dashed var(--border-color);
   animation: pulse 2s infinite;
 }
@@ -481,7 +482,7 @@
 .slotImage {
   width: 2.5rem;
   height: 2.5rem;
-  background-color: var(--bg-input);
+  background-color: var(--bg-secondary);
   color: var(--text-muted);
   display: flex;
   align-items: center;
@@ -534,7 +535,7 @@
   transform: translateY(-50%);
   width: 1.5rem;
   height: 1.5rem;
-  background: var(--bg-btn);
+  background: var(--bg-secondary);
   color: var(--text-main);
   border: 1px solid var(--border-color);
   border-radius: 50%;
@@ -592,7 +593,7 @@
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
-  background-color: var(--bg-input);
+  background-color: var(--bg-secondary);
   color: var(--text-muted);
   display: flex;
   align-items: center;
@@ -628,7 +629,7 @@
 }
 
 .assignAllBtn {
-  background-color: var(--selected);
+  background-color: var(--warning);
   color: var(--color-primary);
   border: none;
   padding: 0.4rem 0.75rem;
@@ -648,7 +649,7 @@
 }
 
 .ongoingCard {
-  background-color: var(--bg-card);
+  background-color: var(--bg-primary);
   border: 1px solid var(--border-color);
   border-left: 4px solid var(--color-primary);
   border-radius: var(--radius);
@@ -686,7 +687,7 @@
 
 .completeBtn:hover {
   background: var(--color-primary-hover);
-  border-color: var(--border-nav-color);
+  border-color: var(--decent-hover);
   /* color: var(--text-main); */
 }
 
@@ -712,7 +713,7 @@
 .ongoingImg {
   border-radius: 50%;
   object-fit: cover;
-  background-color: var(--bg-input);
+  background-color: var(--bg-secondary);
 }
 .ongoingContent > .ongoingItem:last-child {
   justify-content: flex-end;
@@ -730,7 +731,7 @@
 /* --- Floating Modal Styles --- */
 .floatingModal {
   position: fixed;
-  background: var(--bg-card);
+  background: var(--bg-primary);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 1rem;
@@ -783,7 +784,7 @@
 
 .modalImg {
   border-radius: 50%;
-  background-color: var(--bg-input);
+  background-color: var(--bg-secondary);
   object-fit: cover;
 }
 
@@ -806,7 +807,7 @@
 }
 
 .modalHighlight {
-  background: var(--bg-input);
+  background: var(--bg-secondary);
   padding: 2px 6px;
   border-radius: 4px;
   font-family: monospace;
@@ -826,7 +827,7 @@
 
 .modalImg {
   border-radius: 50%;
-  background-color: var(--bg-input);
+  background-color: var(--bg-secondary);
 }
 
 .modalRow {
@@ -931,7 +932,7 @@
 /* Sidebar ကို Mainboard ထဲမှာ flex item အနေနဲ့ သုံးပါမယ် */
 .sideFilterCard {
   width: 250px;
-  background-color: var(--bg-card);
+  background-color: var(--bg-primary);
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
   padding: 1rem;
@@ -998,13 +999,13 @@
   gap: 15px;
   padding: 15px 0 5px 0;
   margin-top: auto;
-  border-top: 1px solid var(--bg-main);
+  border-top: 1px solid var(--bg-primary);
 }
 
 .pageBtn {
   padding: 6px 12px;
   border: 1px solid var(--border-color);
-  background-color: var(--bg-card);
+  background-color: var(--bg-primary);
   color: var(--text-main);
   border-radius: 6px;
   cursor: pointer;
@@ -1022,7 +1023,7 @@
 .pageBtn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  background-color: var(--bg-input);
+  background-color: var(--bg-secondary);
 }
 
 .pageInfo {
@@ -1096,7 +1097,7 @@
   padding: 8px 12px;
   font-size: 13px;
   color: var(--text-main);
-  background-color: var(--bg-input);
+  background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: 6px;
   outline: none;
@@ -1113,13 +1114,13 @@
 .filterInput:focus {
   border-color: var(--color-primary);
   box-shadow: 0 0 0 2px rgba(43, 122, 44, 0.15); /* var(--color-primary) ၏ အရောင်ကို မှီငြမ်းပါ */
-  background-color: var(--bg-card);
+  background-color: var(--bg-primary);
 }
 
 /* Dropdown (Select) ထဲမှ Option များအတွက် (အနည်းငယ်မျှသာ ပြင်နိုင်သည်) */
 .filterSelect option {
   color: var(--text-main);
-  background-color: var(--bg-card);
+  background-color: var(--bg-primary);
 }
 
 /* Date Range ကြားရှိ '- မှ -' စာသားအတွက် */

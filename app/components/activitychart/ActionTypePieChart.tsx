@@ -107,7 +107,7 @@ export function ActionTypePieChart({
               </Pie>
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "var(--bg-card)",
+                  backgroundColor: "var(--bg-primary)",
                   color: "var(--text-main)",
                   borderColor: "var(--border-color)",
                 }}

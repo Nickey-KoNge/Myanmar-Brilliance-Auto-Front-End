@@ -14,7 +14,7 @@
 
 /* Each card panel */
 .card {
-  background: var(--bg-card);
+  background: var(--bg-primary);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 24px;
@@ -79,13 +79,13 @@
 .row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-   gap: var(--gap);
+  gap: var(--gap);
 }
 
 /* SELECT */
 .select {
   width: 100%;
-  background: var(--bg-input, #2a2a2a);
+  background: var(--bg-secondary, #2a2a2a);
   border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 10px 36px 10px 14px;
@@ -107,7 +107,7 @@
 /* TEXTAREA */
 .textarea {
   width: 100%;
-  background: var(--bg-input);
+  background: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 12px 14px;

@@ -3,7 +3,7 @@
 .column {
   border: 1px solid var(--border-color, #e2e8f0);
   border-radius: var(--radius, 12px);
-  background-color: var(--bg-main, #ffffff);
+  background-color: var(--bg-primary, #ffffff);
   display: flex;
   flex-direction: column;
   overflow: hidden;

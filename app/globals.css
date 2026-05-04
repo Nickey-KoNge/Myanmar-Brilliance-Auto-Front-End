@@ -13,7 +13,7 @@ body {
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
     Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  background-color: var(--bg-main);
+  background-color: var(--bg-primary);
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
   transition:
@@ -39,18 +39,62 @@ button {
 
 /* Color Variables based on your UI */
 :root {
-  --bg-layout: #1b1b1c;
-  --bg-main: #252526;
-  --bg-card: #252526;
-  --bg-input: #121212;
-  --btn-cancel: #333333;
-  --color-primary: #a33b3b; /* The red color */
-  --color-primary-hover: #962e32;
-  --text-main: #d1d1d1;
-  --icon-main: #d1d1d1;
-  --text-success: #eeecec;
-  --text-muted: #888888;
-  --border-color: #333333;
+  /* --bg-layout: #1b1b1c; */
+  /* --bg-main: #252526; */
+  /* --bg-card: #252526; */
+  /* --bg-input: #121212; */
+  /* --btn-cancel: #333333; */
+  /* --color-primary: #a33b3b; */
+  /* --color-primary-hover: #962e32; */
+  /* --text-main: #d1d1d1; */
+  /* --icon-main: #d1d1d1; */
+  /* --text-success: #eeecec; */
+  /* --text-muted: #888888; */
+  /* --border-color: #333333; */
+  /* --font-size-xl: 1.5rem;
+  --font-size-l: 1.25rem;
+  --font-size-m: 1rem;
+  --font-size-s: 0.75rem;
+  --font-weight-normal: 400;
+  --font-weight-bold: 700;
+  --font-weight-bolder: 900; */
+  /* --togglediv-color: #0b0b0e; */
+  /* --border-right-color: #402626; */
+  /* --border-nav-color: #402626; */
+  /* --nav-shadow-color: #201717; */
+  /* --active-link-color: #6f2f2f; */
+  /* --active-right-link-color: #b25151; */
+  /* --radius: 8px;
+  --gap: 1rem;
+  --img-border-radius: 50%; */
+
+  /* table css */
+  /* --bg-table: #2d2d30; */
+  /* --bg-head: #3b3b41; */
+  /* --bg-row-alt: #29292d; */
+  /* --bg-row-hover: #404047; */
+  /* --bg-btn: #0d0d0d; */
+  /* --border-input: #402626; */
+  /* Btn colors */
+  /* --bg-delete: #602424; */
+  /* --bg-delete-card: #343434; */
+  /* --accent: #a33b3b; */
+  /* --accent-hover: #c24646; */
+  /* --danger: #ff4d4f; */
+  /* --success: #27ae60; */
+  /* --warning: #d1a500; */
+  /* --success-hover: #338f35; */
+  /* --info: #007bff; */
+  /* --selected: rgb(216, 202, 77); */
+  /* --padding: 1rem; */
+  /* --padding-inside: 0.75rem; */
+  /* --margin: 1rem; */
+  /* --old-data: #eb9494; */
+  /* --new-data: #c4e9c4; */
+  /* --bg-black: #0d0d0d; */
+
+  /* ================================================================== */
+  /* --- Global --- */
   --font-size-xl: 1.5rem;
   --font-size-l: 1.25rem;
   --font-size-m: 1rem;
@@ -58,48 +102,53 @@ button {
   --font-weight-normal: 400;
   --font-weight-bold: 700;
   --font-weight-bolder: 900;
-  --togglediv-color: #0b0b0e;
-  --border-right-color: #402626;
-  --border-nav-color: #402626;
-  --nav-shadow-color: #201717;
-  --active-link-color: #6f2f2f;
-  --active-right-link-color: #b25151;
-  --radius: 8px;
-  --gap: 1rem;
-  --img-border-radius: 50%;
 
-  /* table css */
+  --radius: 8px;
+  --img-border-radius: 50%;
+  --gap: 1rem;
+  --padding: 1rem;
+  --padding-inside: 0.75rem;
+  --margin: 1rem;
+
+  /* Brand Colors */
+  --color-primary: #a33b3b;
+  --color-primary-hover: #962e32;
+  --accent: #d14d4d;
+  --accent-hover: #e05e5e;
+  --decent: #7c2f2f;
+  --decent-hover: #662626;
+
+  /* --- Dark Mode (Default) --- */
+  --bg-layout: #1b1b1c;
+  --bg-primary: #252526;
+  --bg-secondary: #121212;
+
+  --text-main: #eeecec;
+  --text-muted: #888888;
+
+  --border-color: #333333;
+  --border: 1px solid var(--border-color);
+
+  /* Table Specific (Dark) */
   --bg-table: #2d2d30;
   --bg-head: #3b3b41;
   --bg-row-alt: #29292d;
   --bg-row-hover: #404047;
-  --bg-btn: #0d0d0d;
-  --border-input: #402626;
-  /* Btn colors */
-  --bg-delete: #602424;
-  --bg-delete-card: #343434;
-  --accent: #a33b3b;
-  --accent-hover: #c24646;
+
+  /* Status Colors */
   --danger: #ff4d4f;
   --success: #27ae60;
   --warning: #d1a500;
-  --success-hover: #338f35;
   --info: #007bff;
-  --selected: rgb(216, 202, 77);
-  --padding: 1rem;
-  --padding-inside: 0.75rem;
-  --margin: 1rem;
-  --old-data: #eb9494;
-  --new-data: #c4e9c4;
-  --bg-black: #0d0d0d;
 }
+
 .light-mode {
   --bg-layout: #ffffff;
-  --bg-main: #eeecec;
-  --bg-card: #f5f5f5;
-  --bg-input: #ffffff;
+  --bg-primary: #eeecec;
+  --bg-primary: #f5f5f5;
+  --bg-secondary: #ffffff;
   --bg-black: #dfdfdf;
-  /* --bg-btn: #1a1a1b; */
+  /* --bg-secondary: #1a1a1b; */
   --btn-text: #eeecec;
   --color-primary: #a33b3b;
   --color-primary-hover: #962e32;
@@ -110,11 +159,11 @@ button {
   --text-muted: #131313;
   --border-color: #cccccc;
   --togglediv-color: #c4c4c4;
-  --border-right-color: #402626;
-  --border-nav-color: #e1e1e1;
-  --nav-shadow-color: #d1d1d1;
-  --active-right-link-color: #b25151;
-  --active-link-color: #e2e2e2;
+  --decent-hover: #402626;
+  --decent-hover: #e1e1e1;
+  --bg-secondary: #d1d1d1;
+  --accent: #b25151;
+  --decent: #e2e2e2;
   --accent: #a33b3b;
   --bg-delete-card: #ffffff;
   /* table css */

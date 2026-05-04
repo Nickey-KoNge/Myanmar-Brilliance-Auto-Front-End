@@ -11,7 +11,6 @@
   cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
-  
 }
 
 .fitContent {
@@ -31,14 +30,14 @@
   text-transform: uppercase;
 }
 .successBtn {
-   min-height: 52px;
+  min-height: 52px;
   background: var(--success);
   color: var(--btn-text);
   text-transform: uppercase;
 }
 .cancelBtn {
-   min-height: 52px;
-  background: var(--bg-btn);
+  min-height: 52px;
+  background: var(--bg-secondary);
   color: var(--btn-text);
   text-transform: uppercase;
 }

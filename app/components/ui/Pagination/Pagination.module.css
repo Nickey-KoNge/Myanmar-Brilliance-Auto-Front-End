@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   gap: 1.5rem;
-  background-color: var(--bg-main);
+  background-color: var(--bg-primary);
   color: var(--text-muted);
   font-size: var(--font-size-s);
   font-weight: var(--font-weight-bold);
@@ -21,7 +21,7 @@
 .spanText {
   color: var(--accent);
   font-weight: bold;
-   font-size: var(--font-size-m);
+  font-size: var(--font-size-m);
 }
 
 .actionsContainer {
@@ -35,7 +35,7 @@
   align-items: center;
   gap: 0.3rem;
   color: var(--text-muted);
-   font-size: var(--font-size-s);
+  font-size: var(--font-size-s);
 }
 
 .btnGroup {
@@ -51,7 +51,6 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: var(--radius);
-  border: 1px solid var(--border-input);
   background-color: var(--accent);
   color: var(--icon-main);
   cursor: pointer;

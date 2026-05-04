@@ -110,7 +110,7 @@
 }
 
 .chartWrapper {
-  background: var(--bg-card, #ffffff);
+  background: var(--bg-primary, #ffffff);
   border-radius: var(--radius);
   padding: 1rem;
   /* box-shadow: 0 1px 3px rgba(0,0,0,0.1); */
@@ -185,13 +185,13 @@
 
 .oldValue {
   background-color: rgba(101, 101, 101, 0.3);
-  color: var(--old-data);
+  color: var(--accent-hover);
   border-left: 2px solid var(--danger);
 }
 
 .newValue {
   background-color: rgba(101, 101, 101, 0.3);
-  color: var(--new-data);
+  color: var(--success);
   border-left: 2px solid var(--success);
 }
 .oldValue::-webkit-scrollbar,

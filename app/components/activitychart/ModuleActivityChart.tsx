@@ -102,7 +102,7 @@ export function ModuleActivityChart({
               <Tooltip
                 cursor={{ fill: "var(--bg-row-hover)" }}
                 contentStyle={{
-                  backgroundColor: "var(--bg-card)",
+                  backgroundColor: "var(--bg-primary)",
                   color: "var(--text-main)",
                   borderColor: "var(--border-color)",
                 }}

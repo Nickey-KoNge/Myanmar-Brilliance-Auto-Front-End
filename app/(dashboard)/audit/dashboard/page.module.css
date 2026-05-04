@@ -1,6 +1,6 @@
 .dashboardContainer {
   padding: 1.5rem;
-  background-color: var(--bg-main);
+  background-color: var(--bg-primary);
   border-radius: var(--radius);
   min-height: max-content;
   flex-grow: 1;
@@ -68,7 +68,7 @@
 }
 
 .summaryCard {
-  background-color: var(--bg-card, #fff);
+  background-color: var(--bg-primary, #fff);
   padding: 1.5rem;
   border-radius: 8px;
   border: 1px solid var(--border-color, #e5e7eb);
@@ -85,10 +85,10 @@
   border-left-color: var(--danger);
 }
 .cardUsers {
-  border-left-color: var(--infor);
+  border-left-color: var(--info);
 }
 .cardModule {
-  border-left-color: var(--selected);
+  border-left-color: var(--warning);
 }
 
 .cardLabel {
@@ -120,7 +120,7 @@
 
 .chartWrapper,
 .recentLogsWrapper {
-  background-color: var(--bg-card, #fff);
+  background-color: var(--bg-primary, #fff);
   border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 1.5rem;
@@ -175,8 +175,7 @@
   display: block;
   font-size: 0.75rem;
   color: var(--text-muted);
-  padding-top: .3rem;
-
+  padding-top: 0.3rem;
 }
 
 .btnViewAll {
@@ -273,7 +272,7 @@
 }
 
 .exportModal {
-  background-color: var(--bg-card); /* Card Background ယူမည် */
+  background-color: var(--bg-primary); /* Card Background ယူမည် */
   color: var(--text-main);
   padding: 1.5rem 2rem;
   border-radius: var(--radius);
@@ -348,7 +347,7 @@
 .customSelect {
   width: 100%;
   padding: 0.75rem 1rem;
-  background-color: var(--bg-input); /* Input background ယူမည် */
+  background-color: var(--bg-secondary); /* Input background ယူမည် */
   color: var(--text-main);
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
