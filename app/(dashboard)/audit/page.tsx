@@ -159,6 +159,10 @@ export default function AuditLogPage() {
         url = `/master-vehicle/vehicle-brands/restore/${auditId}`;
       } else if (entityName === "rental_operation") {
         url = `/master-rental/rental-operation/restore/${auditId}`;
+      } else if(entityName === "routes"){
+        url = `/master-trips/routes/restore/${auditId}`;
+      } else if (entityName === "trip_prices") {
+        url = `/master-trips/trip-prices/restore/${auditId}`;
       } else {
         toast.error("Restore not supported for this module yet.");
         return;
