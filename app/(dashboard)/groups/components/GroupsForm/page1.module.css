@@ -69,15 +69,18 @@
 .imageUploadSection {
   display: flex;
   justify-content: center;
-  height: 100%;
+  align-items: center;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
 }
 
 .imageUploadWrapper {
   position: relative;
-  margin: 0 auto;
-  height: inherit;
+  height: 100%;
+  max-height: 200px;
   width: auto;
-  aspect-ratio: 1/1;
+  aspect-ratio: 1 / 1;
 }
 
 .imageUploadBox {
