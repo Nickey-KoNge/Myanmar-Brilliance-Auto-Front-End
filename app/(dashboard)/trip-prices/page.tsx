@@ -44,6 +44,7 @@ interface PaginatedResponse {
   data?: TripPrice[];
   total?: number;
   totalPages?: number;
+  lastEditedBy?: string;
 }
 
 // Dropdown များအတွက် အတိအကျ Type သတ်မှတ်ခြင်း
@@ -102,6 +103,8 @@ export default function TripPricePage() {
   const [stations, setStations] = useState<StationItem[]>([]);
   const [vehicleModels, setVehicleModels] = useState<VehicleModelItem[]>([]);
 
+  const [lastEditedBy, setLastEditedBy] = useState("");
+
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
     id: null as string | null,
@@ -154,6 +157,7 @@ export default function TripPricePage() {
         res.data?.filter((trip) => trip.status === "Inactive").length || 0;
       setActiveTripCount(activeCount);
       setInactiveTripCount(inactiveCount);
+      setLastEditedBy(res?.lastEditedBy || "Unknown");
     } catch (err) {
       console.error(err);
       setVehicles([]);
@@ -421,7 +425,7 @@ export default function TripPricePage() {
 
               <hr className={styles.cuttingLine} />
               <p className={styles.lastEdited}>
-                Last Edited : <span className={styles.spanText}>Unknown</span>
+                Last Edited : <span className={styles.spanText}>{lastEditedBy}</span>
               </p>
             </div>
           </div>
