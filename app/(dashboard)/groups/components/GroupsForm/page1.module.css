@@ -39,7 +39,7 @@
 .cuttingLine {
   border: none;
   height: 0.5px;
-  background: var(--accent);
+  background: var(--color-primary);
 }
 
 .pill {

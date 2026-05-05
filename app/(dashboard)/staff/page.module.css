@@ -102,7 +102,7 @@
 }
 
 .recentRecord span:nth-of-type(1) {
-  background: var(--accent);
+  background: var(--color-primary);
   padding: calc(var(--padding) / 2);
   border-radius: var(--radius);
 }
@@ -149,7 +149,7 @@
 .cuttingLine {
   border: none;
   height: 0.5px;
-  background: var(--accent);
+  background: var(--color-primary);
   margin: calc(var(--margin) / 2) 0;
 }
 

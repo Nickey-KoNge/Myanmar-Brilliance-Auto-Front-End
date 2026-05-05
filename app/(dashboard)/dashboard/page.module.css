@@ -4,6 +4,7 @@
   align-items: center;
   margin-bottom: 1.5rem;
 }
+
 .liveBtn {
   background-color: var(--bg-primary);
   border: 1px solid #2a2a2a;
@@ -16,6 +17,7 @@
   gap: 0.5rem;
   cursor: pointer;
 }
+
 .liveBtn::before {
   content: "";
   width: 6px;
@@ -23,12 +25,14 @@
   background-color: #4ade80;
   border-radius: 50%;
 }
+
 .topRow {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   margin-bottom: 1.5rem;
 }
+
 .middleRow {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -120,7 +124,7 @@
 }
 
 .statusBarOuter {
-  background-color: var(--bg-head);
+  background-color: var(--bg-primary);
   border-radius: 10px;
   height: 16px;
   width: 100%;

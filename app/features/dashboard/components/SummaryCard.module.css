@@ -1,46 +1,54 @@
 .card {
   background-color: var(--bg-primary);
-  padding: 1.5rem;
-  border-radius: 12px;
-  /* border: 1px solid var(--border-color); */
+  padding: var(--padding);
+  border-radius: var(--radius);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+.card div:nth-of-type(1) {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap) / 2);
+}
+
 .title {
-  font-size: 0.75rem;
+  font-size: var(--font-size-s);
   color: var(--text-muted);
-  margin-bottom: 0.5rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
 }
+
 .value {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #fff;
-  color: var(--text-success);
-  margin-bottom: 0.5rem;
+  font-size: var(--font-size-xxl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-main);
 }
+
 .subtitle {
-  font-size: 0.75rem;
+  font-size: var(--font-size-s);
 }
+
 .subtitle.success {
-  color: #4ade80;
+  color: var(--success);
 }
+
 .subtitle.danger {
-  color: #f87171;
+  color: var(--accent);
 }
+
 .subtitle.neutral {
-  color: #aaa;
+  color: var(--text-muted);
 }
 
 .iconBox {
   width: 50px;
   height: 50px;
-  border-radius: 50%;
-  background-color: #310d0d;
-  color: #b03a3e;
+  border-radius: var(--img-border-radius);
+  background-color: var(--color-primary);
+  color: var(--icon-main);
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: var(--font-size-l);
 }

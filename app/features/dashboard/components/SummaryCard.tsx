@@ -23,7 +23,7 @@ export const SummaryCard = ({
       <div className={`${styles.subtitle} ${styles[status]}`}>{subtitle}</div>
     </div>
     <div className={styles.iconBox}>
-      <FontAwesomeIcon icon={icon} style={{ width: "20px", height: "20px" }} />
+      <FontAwesomeIcon icon={icon} />
     </div>
   </div>
 );
