@@ -2,21 +2,21 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: var(--gap);
+  gap: var(--spacing-m);
 }
 
 /* GRID: 2 columns */
 .grid {
   display: grid;
   grid-template-columns: 1.25fr 2fr;
-  gap: var(--gap);
+  gap: var(--spacing-m);
 }
 
 /* FIELD GROUP */
 .fieldGroup {
   display: flex;
   flex-direction: column;
-  gap: var(--gap);
+  gap: var(--spacing-m);
 }
 
 .textareaLabel {
@@ -31,7 +31,7 @@
 .row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--gap);
+  gap: var(--spacing-m);
 }
 
 /* TEXTAREA */

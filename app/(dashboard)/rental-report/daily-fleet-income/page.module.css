@@ -15,21 +15,21 @@
   color: var(--text-main);
   text-align: center;
   font-weight: 600;
-  padding: var(--padding) 0;
+  padding: var(--spacing-m) 0;
   font-size: 1.1rem;
 }
 
 .searchContainer {
   display: flex;
   flex-direction: column;
-  gap: var(--gap);
+  gap: var(--spacing-m);
   padding: 0.5rem 0;
 }
 
 .filterRow {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: calc(var(--gap) / 1.5);
+  gap: calc(var(--spacing-m) / 1.5);
   margin-top: 1rem;
 }
 
@@ -37,7 +37,7 @@
   margin-top: auto;
   display: flex;
   flex-direction: column;
-  gap: var(--gap);
+  gap: var(--spacing-m);
 }
 
 /* Utilities for Lines */
@@ -45,14 +45,14 @@
   border: none;
   height: 1px;
   background: var(--accent);
-  margin: calc(var(--margin) / 2) 0;
+  margin: calc(var(--spacing-m) / 2) 0;
 }
 
 /* Recent Records / Summary Box */
 .recentRecord {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: var(--gap);
+  gap: var(--spacing-m);
   align-items: center;
   padding: 0.5rem 0;
 }
@@ -100,7 +100,7 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  margin-bottom: var(--padding-inside);
+  margin-bottom: var(--spacing-s);
   min-height: 50px;
 }
 
@@ -124,7 +124,7 @@
 .info {
   display: flex;
   align-items: center;
-  gap: calc(var(--gap) / 1.5);
+  gap: calc(var(--spacing-m) / 1.5);
 }
 
 .defaultImage {

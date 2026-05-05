@@ -1,13 +1,13 @@
 .formActionArea {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
 .filterContainer {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--gap);
+  gap: var(--spacing-m);
   row-gap: unset;
   gap: 1rem;
 }
@@ -20,7 +20,6 @@
   cursor: pointer;
 
 }  */
-
 
 /* .RouteFormHeader {
   display: flex;

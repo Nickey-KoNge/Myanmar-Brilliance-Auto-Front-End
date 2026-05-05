@@ -10,7 +10,7 @@
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-bottom: var(--margin);
+  margin-bottom: var(--spacing-m);
 }
 
 .inputWrapper {
@@ -33,7 +33,7 @@
 .inputWrapper select {
   width: 100%;
   min-height: 50px;
-  padding: calc(var(--padding) / 1.15) var(--padding);
+  padding: calc(var(--spacing-m) / 1.15) var(--spacing-m);
   border: none;
   background: transparent;
   color: var(--text-main);

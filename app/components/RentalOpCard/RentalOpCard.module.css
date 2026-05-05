@@ -10,7 +10,7 @@
   /* margin-bottom: 12px; */
   gap: 10px;
   overflow-x: auto;
-  padding: var(--padding-inside);
+  padding: var(--spacing-s);
   background-color: var(--bg-layout);
   border-radius: var(--radius);
 }

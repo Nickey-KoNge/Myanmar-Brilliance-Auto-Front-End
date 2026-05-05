@@ -5,7 +5,7 @@
   align-items: center;
   margin-bottom: 1.5rem;
   background-color: var(--bg-primary);
-  padding: var(--padding);
+  padding: var(--spacing-m);
   border-radius: 0.75rem;
 }
 

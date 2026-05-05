@@ -63,7 +63,7 @@
 .cardsContainer {
   display: flex;
   justify-content: space-between;
-  gap: var(--gap);
+  gap: var(--spacing-m);
 }
 
 .card {
@@ -71,7 +71,7 @@
   background-color: var(--bg-secondary);
   border-radius: 10px;
   flex: 1;
-  padding: calc(var(--padding) * 2);
+  padding: calc(var(--spacing-m) * 2);
   display: flex;
   flex-direction: column;
   justify-content: space-between;

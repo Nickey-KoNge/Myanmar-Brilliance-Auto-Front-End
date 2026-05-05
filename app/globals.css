@@ -107,10 +107,12 @@ button {
 
   --radius: 8px;
   --img-border-radius: 50%;
-  --gap: 1rem;
-  --padding: 1rem;
-  --padding-inside: 0.75rem;
-  --margin: 1rem;
+
+  --spacing-xl: 1.5rem;
+  --spacing-l: 1.25rem;
+  --spacing-m: 1rem;
+  --spacing-s: 0.75rem;
+  --spacing-xs: 0.5rem;
 
   /* Brand Colors */
   --color-primary: #d64545;
