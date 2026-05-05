@@ -18,12 +18,12 @@
 .companyInfo {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--spacing-m);
 }
 
 .logobrand {
   font-weight: 900;
-  font-size: 1.1rem;
+  font-size: var(--font-size-l);
   letter-spacing: 1px;
   color: var(--text-main);
 }
@@ -36,7 +36,7 @@
   width: 40px;
   height: 40px;
   background-color: var(--bg-secondary);
-  border-radius: 50%;
+  border-radius: var(--img-border-radius);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -56,13 +56,13 @@
   padding: 0.6rem 1.2rem;
   color: var(--text-main);
   cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 0.9rem;
+  transition: var(--transition);
+  font-size: var(--font-size-s);
   font-weight: 500;
   border-bottom: 3px solid transparent;
   background-color: transparent;
   gap: 10px;
-  border-radius: 8px;
+  border-radius: var(--radius-m);
 }
 
 .navItem:hover,
@@ -103,7 +103,7 @@
 .themeToggle {
   background: var(--bg-secondary);
   border: 1px solid var(--decent-hover);
-  border-radius: 8px;
+  border-radius: var(--radius-m);
   width: 35px;
   height: 35px;
   display: flex;
@@ -111,7 +111,7 @@
   justify-content: center;
   cursor: pointer;
   color: var(--text-main);
-  transition: all 0.3s ease;
+  transition: var(--transition);
 }
 
 .alertBtn {
@@ -130,7 +130,7 @@
   font-size: 0.7rem;
   width: 18px;
   height: 18px;
-  border-radius: 50%;
+  border-radius: var(--img-border-radius);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -141,7 +141,7 @@
 .userSection {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--spacing-m);
   padding-left: 1rem;
   border-left: 1px solid var(--decent-hover);
 }
@@ -153,14 +153,14 @@
 }
 
 .avatar {
-  border-radius: 50%;
+  border-radius: var(--img-border-radius);
   overflow: hidden;
   border: 1.5px solid var(--color-primary);
 }
 
 .userName {
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: var(--font-size-s);
+  font-weight: var(--font-weight-bold);
   color: var(--text-main);
 }
 
@@ -169,12 +169,12 @@
   border: none;
   color: #fff;
   padding: 6px 8px;
-  border-radius: 8px;
+  border-radius: var(--radius-m);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.3s;
+  transition: var(--transition);
 }
 
 .logoutBtn:hover {

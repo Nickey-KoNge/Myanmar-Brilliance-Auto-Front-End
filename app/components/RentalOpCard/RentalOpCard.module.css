@@ -10,9 +10,9 @@
   /* margin-bottom: 12px; */
   gap: 10px;
   overflow-x: auto;
-  padding: var(--padding-inside);
+  padding: var(--spacing-s);
   background-color: var(--bg-layout);
-  border-radius: var(--radius);
+  border-radius: var(--radius-m);
 }
 
 /* Scrollbar ဒီဇိုင်း */
@@ -21,11 +21,9 @@
 }
 .singleRowCard::-webkit-scrollbar-track {
   background: var(--bg-primary);
-  /* border-radius: 4px; */
 }
 .singleRowCard::-webkit-scrollbar-thumb {
   background: var(--border-color);
-  /* border-radius: 4px; */
 }
 .singleRowCard::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
@@ -37,7 +35,7 @@
 .cell,
 .cellActors {
   background-color: var(--bg-primary);
-  /* border-radius: var(--radius, 8px); */
+  /* border-radius: var(--radius-m); */
   padding: 10px 14px;
   display: flex;
   flex-direction: column;
@@ -172,7 +170,7 @@
 }
 
 .actorImage {
-  border-radius: var(--radius, 8px);
+  border-radius: var(--radius-m);
   object-fit: cover;
   background-color: var(--bg-primary);
   border: 1px solid var(--border-color);

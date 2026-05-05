@@ -385,7 +385,7 @@ export default function StaffPage() {
           </div>
         }
       >
-        <div>
+        <div className={styles.tableArea}>
           <div className={styles.tableHeaderArea}>
             <div className={styles.paginationInfoWrapper}>
               <Pagination

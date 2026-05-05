@@ -12,13 +12,13 @@
 .DeleteModal {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--spacing-m);
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: var(--bg-primary);
-  border-radius: 8px;
+  border-radius: var(--radius-m);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 20px;
   width: 462px;
@@ -43,7 +43,7 @@
   align-items: center;
   justify-content: center;
   background-color: var(--decent-hover);
-  border-radius: 50%;
+  border-radius: var(--img-border-radius);
 }
 
 .iconTwo {
@@ -51,17 +51,17 @@
   justify-content: end;
   align-content: center;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition);
 }
 
 .iconTwo:hover {
-  font-size: 1.1rem;
+  font-size: var(--font-size-l);
 }
 
 .btnContainer {
   display: flex;
   flex-direction: row;
-  gap: 1rem;
+  gap: var(--spacing-m);
   margin-top: 0.5rem;
 }
 
@@ -73,7 +73,7 @@
 .textContainer {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--spacing-m);
   color: var(--text-main);
 }
 @keyframes fadeIn {

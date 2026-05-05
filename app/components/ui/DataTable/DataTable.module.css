@@ -1,7 +1,7 @@
 .tableWrapper {
   width: 100%;
   overflow-x: auto;
-  border-radius: var(--radius);
+  border-radius: var(--radius-m);
 }
 
 .table {
@@ -14,7 +14,7 @@
 
 .table th,
 .table td {
-  padding: .70rem;
+  padding: 0.7rem;
   text-align: start;
   color: var(--text-main);
 }
@@ -44,6 +44,6 @@
 }
 
 .staffImg {
-  border-radius: var(--radius);
+  border-radius: var(--radius-m);
   object-fit: cover;
 }

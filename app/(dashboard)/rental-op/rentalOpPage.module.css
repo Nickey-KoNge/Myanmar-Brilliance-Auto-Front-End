@@ -4,8 +4,8 @@
   padding: 20px;
   background-color: var(--bg-primary);
   color: var(--text-main);
-  transition: background-color 0.3s ease;
-  border-radius: var(--radius);
+  transition: var(--transition);
+  border-radius: var(--radius-m);
 }
 
 .mainContent {
@@ -43,10 +43,10 @@
   color: var(--icon-main);
   border: none;
   padding: 10px 16px;
-  border-radius: 6px;
+  border-radius: var(--radius-s);
   cursor: pointer;
   font-weight: var(--font-weight-bold);
-  transition: background-color 0.2s;
+  transition: var(--transition);
 }
 
 .btnPrimary:hover {
@@ -63,7 +63,7 @@
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
   padding: 10px;
-  border-radius: 6px;
+  border-radius: var(--radius-s);
   outline: none;
 }
 
@@ -91,7 +91,7 @@
 .largeModalContent {
   background-color: var(--bg-primary);
   padding: 30px;
-  border-radius: 12px;
+  border-radius: var(--radius-xxl);
   width: 1100px;
   max-width: 95vw;
   max-height: 95vh;
@@ -104,7 +104,7 @@
 .panel {
   background-color: var(--bg-primary);
   padding: 20px;
-  border-radius: 10px;
+  border-radius: var(--radius-xl);
   border: 1px solid var(--border-color);
 }
 
@@ -130,7 +130,7 @@
   border: 1px solid var(--border-color);
   color: var(--text-main);
   padding: 10px 20px;
-  border-radius: 8px;
+  border-radius: var(--radius-m);
   cursor: pointer;
   font-weight: bold;
 }
@@ -141,9 +141,9 @@
   color: var(--text-scuccess);
   font-weight: var(--font-weight-bold);
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-s);
   padding: 10px 16px;
-  transition: background-color 0.2s;
+  transition: var(--transition);
 }
 
 .btnFinalize {
@@ -151,7 +151,7 @@
   border: none;
   color: #fff;
   padding: 10px 20px;
-  border-radius: 8px;
+  border-radius: var(--radius-m);
   cursor: pointer;
   font-weight: bold;
 }
@@ -167,7 +167,7 @@
 }
 
 .imgBox {
-  border-radius: 8px;
+  border-radius: var(--radius-m);
   object-fit: cover;
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
@@ -181,7 +181,7 @@
 .smallModalContent {
   background-color: var(--bg-color);
   padding: 24px;
-  border-radius: 12px;
+  border-radius: var(--radius-xxl);
   width: 90%;
   max-width: 600px; /* အကျယ်ကို လျှော့ထားပါတယ် */
   max-height: 90vh;
@@ -209,7 +209,7 @@
 .smallModalContent {
   background-color: var(--bg-primary);
   color: var(--text-main);
-  border-radius: var(--radius);
+  border-radius: var(--radius-m);
   padding: 24px;
   width: 100%;
   max-height: 90vh;
@@ -271,7 +271,7 @@
   background-color: var(--bg-table);
   border: 1px solid var(--border-color);
   padding: 16px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-m);
 }
 
 .panelHeader {
@@ -286,7 +286,7 @@
 
 /* Images */
 .imgBox {
-  border-radius: 8px;
+  border-radius: var(--radius-m);
   object-fit: cover;
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
@@ -306,9 +306,9 @@
   background-color: var(--bg-secondary);
   color: var(--text-main);
   border: 1px solid var(--border-color);
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   font-size: 14px;
-  transition: border-color 0.2s;
+  transition: var(--transition);
 }
 
 .selectBox:focus {
@@ -326,7 +326,7 @@
   background-color: var(--btn-cancel);
   color: var(--text-cancel);
   padding: 10px 20px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-m);
   font-weight: bold;
   font-size: 12px;
 }
@@ -338,9 +338,9 @@
   color: var(--text-scuccess);
   font-weight: var(--font-weight-bold);
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-s);
   padding: 10px 16px;
-  transition: background-color 0.2s;
+  transition: var(--transition);
 }
 
 .btnFinalize:hover,
@@ -363,7 +363,7 @@
 .largeModalContent::-webkit-scrollbar-thumb,
 .smallModalContent::-webkit-scrollbar-thumb {
   background: var(--border-color);
-  border-radius: 10px;
+  border-radius: var(--radius-xl);
 }
 /* --- New utility classes to replace inline styles --- */
 
@@ -374,7 +374,7 @@
 .iconBox {
   background-color: var(--accent);
   padding: 8px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-m);
 }
 
 .modalTitle {
@@ -422,7 +422,7 @@
 .iconBoxEnd {
   background-color: var(--accent);
   padding: 8px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-m);
 }
 
 .modalTitleLarge {
@@ -483,10 +483,10 @@
   color: var(--icon-main);
   border: 1px solid var(--border-color);
   padding: 8px 16px;
-  border-radius: 6px;
+  border-radius: var(--radius-s);
   cursor: pointer;
   font-weight: bold;
-  transition: all 0.2s;
+  transition: var(--transition);
 }
 
 .pageButton:hover:not(:disabled) {

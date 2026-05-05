@@ -1,63 +1,52 @@
 .btn {
-  padding: 0.775rem 1rem;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 1rem;
+  padding: var(--spacing-m);
+  border-radius: var(--radius-m);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-m);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: calc(var(--gap) / 2);
-  border: none;
+  gap: calc(var(--spacing-m) / 2);
+  border: 1px solid transparent;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition);
   white-space: nowrap;
 }
 
-.fitContent {
-  width: auto;
-  min-width: 145px;
-}
-
-.fullWidth {
-  width: 100%;
-}
-
-/* Variants */
 .actionBtn {
-  min-height: 52px;
-  background: var(--accent);
-  color: var(--btn-text);
+  background: var(--color-primary);
+  color: var(--btn-text-on-solid);
   text-transform: uppercase;
 }
+
 .successBtn {
-  min-height: 52px;
   background: var(--success);
-  color: var(--btn-text);
+  color: var(--btn-text-on-solid);
   text-transform: uppercase;
 }
+
 .cancelBtn {
-  min-height: 52px;
   background: var(--bg-secondary);
-  color: var(--btn-text);
+  color: var(--btn-text-on-neutral);
+  border: 1px solid transparent;
   text-transform: uppercase;
 }
 
 .btn:hover:not(:disabled) {
-  filter: brightness(1.2);
+  filter: brightness(1.1);
+}
+
+.cancelBtn:hover:not(:disabled) {
+  background: var(--border-color);
+  filter: none;
 }
 
 .btn:active:not(:disabled) {
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
 
 .disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
-}
-
-.icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }

@@ -10,7 +10,7 @@
   flex-direction: column;
   overflow-y: hidden;
   overflow-x: hidden;
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: var(--transition);
   white-space: nowrap;
   flex-shrink: 0;
   z-index: 1;
@@ -45,14 +45,14 @@
 }
 
 .menu {
-  padding: 1rem 0 1rem 0;
+  padding: var(--spacing-m) 0 1rem 0;
 }
 
 .menuText,
 .arrow {
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s ease;
+  transition: var(--transition);
 }
 
 .sidebar:hover .menuText,
@@ -65,7 +65,7 @@
   font-size: 0.65rem;
   color: var(--text-main);
   text-transform: uppercase;
-  padding: 1rem 1.5rem 1rem;
+  padding: var(--spacing-m) 1.5rem 1rem;
   letter-spacing: 1px;
   height: 25px;
 }
@@ -83,7 +83,7 @@
   padding: 0.8rem 1.5rem;
   color: var(--text-main);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition);
   font-size: 0.95rem;
   font-weight: 500;
   border-right: 3px solid transparent;
@@ -131,8 +131,8 @@
   padding: 0.8rem 1.5rem 0.8rem 3.5rem;
   color: var(--text-main);
   cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 0.9rem;
+  transition: var(--transition);
+  font-size: var(--font-size-s);
   font-weight: 500;
   border-right: 3px solid transparent;
 }

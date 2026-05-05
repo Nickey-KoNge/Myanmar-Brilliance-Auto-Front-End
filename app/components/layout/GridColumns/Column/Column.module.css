@@ -3,6 +3,7 @@
 .column {
   border: 1px solid var(--border-color, #e2e8f0);
   border-radius: var(--radius, 12px);
+  border-radius: var(--radius-xs);
   background-color: var(--bg-primary, #ffffff);
   display: flex;
   flex-direction: column;
@@ -18,7 +19,7 @@
 .columnHeader {
   display: flex;
   align-items: center;
-  padding: 1rem;
+  padding: var(--spacing-m);
   flex-shrink: 0;
   gap: 10px;
   border-bottom: 1px solid var(--border-color, #f1f5f9);
@@ -41,13 +42,13 @@
   background-color: var(--success, #10b981);
   color: #ffffff;
   padding: 2px 10px;
-  border-radius: 20px;
+  border-radius: var(--radius-m);
   font-size: 0.75rem;
   margin-left: auto;
 }
 
 .columnSearch {
-  padding: 1rem 1rem;
+  padding: var(--spacing-m) 1rem;
   padding-bottom: 0;
   flex-shrink: 0;
 }
@@ -58,7 +59,7 @@
 }
 
 .columnBody {
-  padding: 1rem;
+  padding: var(--spacing-m);
   padding-top: 0.5rem;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 31%), 1fr));
@@ -87,7 +88,7 @@
 }
 .columnBody::-webkit-scrollbar-thumb {
   background-color: var(--accent, #3b82f6);
-  border-radius: 10px;
+  border-radius: var(--radius-xl);
 }
 
 @media (max-width: 1200px) {

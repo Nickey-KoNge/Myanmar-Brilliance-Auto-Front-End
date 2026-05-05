@@ -1,7 +1,7 @@
 .dashboardContainer {
-  padding: 1.5rem;
+  padding: var(--spacing-xl);
   background-color: var(--bg-primary);
-  border-radius: var(--radius);
+  border-radius: var(--radius-m);
   min-height: max-content;
   flex-grow: 1;
   display: flex;
@@ -15,7 +15,7 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: var(--spacing-m);
 }
 
 .pageTitle {
@@ -69,8 +69,8 @@
 
 .summaryCard {
   background-color: var(--bg-primary, #fff);
-  padding: 1.5rem;
-  border-radius: 8px;
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-m);
   border: 1px solid var(--border-color, #e5e7eb);
   border-left-width: 4px;
   display: flex;
@@ -94,7 +94,7 @@
 .cardLabel {
   font-size: 0.875rem;
   color: var(--text-muted);
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
   margin-bottom: 0.5rem;
 }
 
@@ -122,13 +122,13 @@
 .recentLogsWrapper {
   background-color: var(--bg-primary, #fff);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 1.5rem;
+  border-radius: var(--radius-m);
+  padding: var(--spacing-xl);
 }
 
 .sectionTitle {
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
   color: var(--text-main);
   margin-bottom: 1rem;
 }
@@ -149,8 +149,8 @@
 .logBadge {
   font-size: 0.7rem;
   padding: 0.2rem 0.4rem;
-  border-radius: 4px;
-  font-weight: 600;
+  border-radius: var(--radius-xs);
+  font-weight: var(--font-weight-bold);
   margin-right: 0.5rem;
 }
 
@@ -181,7 +181,7 @@
 .btnViewAll {
   margin-top: 1rem;
   padding: 0.75rem;
-  border-radius: 6px;
+  border-radius: var(--radius-s);
   background-color: var(--color-primary);
   color: #fff;
   font-weight: 500;
@@ -213,7 +213,7 @@
 .exportModal {
   background: white;
   padding: 2rem;
-  border-radius: 12px;
+  border-radius: var(--radius-xxl);
   width: 400px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
@@ -221,25 +221,25 @@
 .modalBody {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--spacing-m);
   margin: 1.5rem 0;
 }
 
 .modalBody label {
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: var(--font-size-m);
+  font-weight: var(--font-weight-bold);
 }
 
 .modalBody select {
   padding: 0.6rem;
-  border-radius: 6px;
+  border-radius: var(--radius-s);
   border: 1px solid #ddd;
 }
 
 .modalFooter {
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
+  gap: var(--spacing-m);
 }
 
 .btnDownload {
@@ -247,7 +247,7 @@
   color: white;
   border: none;
   padding: 0.6rem 1rem;
-  border-radius: 6px;
+  border-radius: var(--radius-s);
   cursor: pointer;
 }
 
@@ -275,7 +275,7 @@
   background-color: var(--bg-primary); /* Card Background ယူမည် */
   color: var(--text-main);
   padding: 1.5rem 2rem;
-  border-radius: var(--radius);
+  border-radius: var(--radius-m);
   width: 100%;
   max-width: 450px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
@@ -304,7 +304,7 @@
   line-height: 1;
   color: var(--text-muted);
   cursor: pointer;
-  transition: color 0.2s;
+  transition: var(--transition);
 }
 
 .btnCloseIcon:hover {
@@ -350,7 +350,7 @@
   background-color: var(--bg-secondary); /* Input background ယူမည် */
   color: var(--text-main);
   border: 1px solid var(--border-color);
-  border-radius: var(--radius);
+  border-radius: var(--radius-m);
   font-size: var(--font-size-m);
   outline: none;
   transition:
@@ -371,7 +371,7 @@
 .modalFooter {
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
+  gap: var(--spacing-m);
 }
 
 /* Cancel Button */
@@ -379,7 +379,7 @@
   background-color: var(--btn-cancel);
   color: var(--text-cancel, #fff); /* Light mode မှာစာသားအဖြူရောင်ဖြစ်ရန် */
   padding: 0.6rem 1.25rem;
-  border-radius: var(--radius);
+  border-radius: var(--radius-m);
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-m);
   transition:
@@ -396,7 +396,7 @@
   background-color: var(--accent);
   color: #ffffff;
   padding: 0.6rem 1.25rem;
-  border-radius: var(--radius);
+  border-radius: var(--radius-m);
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-m);
   transition:

@@ -4,31 +4,35 @@
   align-items: center;
   margin-bottom: 1.5rem;
 }
+
 .liveBtn {
   background-color: var(--bg-primary);
   border: 1px solid #2a2a2a;
   color: var(--text-main);
   padding: 0.6rem 1rem;
-  border-radius: 8px;
+  border-radius: var(--radius-m);
   font-size: 0.8rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
 }
+
 .liveBtn::before {
   content: "";
   width: 6px;
   height: 6px;
   background-color: #4ade80;
-  border-radius: 50%;
+  border-radius: var(--img-border-radius);
 }
+
 .topRow {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   margin-bottom: 1.5rem;
 }
+
 .middleRow {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -39,9 +43,9 @@
 .chartPlaceholder {
   background-color: var(--bg-primary);
   /* min-height: 500px; */
-  border-radius: 12px;
+  border-radius: var(--radius-xxl);
   /* border: 1px solid var(--border-color); */
-  padding: 1.5rem;
+  padding: var(--spacing-xl);
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -53,21 +57,21 @@
   display: flex;
   justify-content: space-between;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
 }
 
 .cardsContainer {
   display: flex;
   justify-content: space-between;
-  gap: var(--gap);
+  gap: var(--spacing-m);
 }
 
 .card {
   background-color: #17171e;
   background-color: var(--bg-secondary);
-  border-radius: 10px;
+  border-radius: var(--radius-xl);
   flex: 1;
-  padding: calc(var(--padding) * 2);
+  padding: calc(var(--spacing-m) * 2);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -120,8 +124,8 @@
 }
 
 .statusBarOuter {
-  background-color: var(--bg-head);
-  border-radius: 10px;
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-xl);
   height: 16px;
   width: 100%;
   overflow: hidden;
@@ -133,7 +137,7 @@
   height: 100%;
   border: none;
   display: block;
-  transition: width 0.3s ease;
+  transition: var(--transition);
   border-radius: inherit;
 }
 
@@ -155,7 +159,7 @@
 
 .togglediv {
   background-color: #050505;
-  border-radius: 10px;
+  border-radius: var(--radius-xl);
   height: 50px;
   display: flex;
   align-items: center;
@@ -168,7 +172,7 @@
 .headerActionArea {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--spacing-m);
 }
 
 .calendarIconBtn {
@@ -177,12 +181,12 @@
   padding: 0;
   width: 45px;
   height: 45px;
-  border-radius: 10px;
+  border-radius: var(--radius-xl);
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: all 0.3s ease;
+  transition: var(--transition);
 }
 
 /* .calendarIconBtn:hover {
@@ -201,15 +205,15 @@
   color: var(--text-main);
   height: 45px;
   padding: 0 1.5rem;
-  border-radius: 10px;
+  border-radius: var(--radius-xl);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
   letter-spacing: 0.5px;
   display: flex;
   align-items: center;
   gap: 0.6rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition);
 }
 
 /* .liveBtn:hover {
@@ -223,5 +227,5 @@
   width: 6px;
   height: 6px;
   background-color: var(--color-primary);
-  border-radius: 50%;
+  border-radius: var(--img-border-radius);
 }

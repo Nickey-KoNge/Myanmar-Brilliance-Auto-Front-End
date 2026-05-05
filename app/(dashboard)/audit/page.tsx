@@ -501,7 +501,8 @@ export default function AuditLogPage() {
         </div>
       }
     >
-      <div className={styles.mainContentArea}>
+      {/* <div className={styles.mainContentArea}> */}
+      <div className={styles.tableArea}>
         <div className={styles.tableHeaderArea}>
           <div className={styles.paginationInfoWrapper}>
             <Pagination
@@ -516,15 +517,16 @@ export default function AuditLogPage() {
           <p className={styles.tableTitle}>SYSTEM AUDIT LOGS</p>
         </div>
 
-        <div className={styles.tableContainer}>
+        {/* <div className={styles.tableContainer}> */}
           <DataTable
             data={auditData}
             columns={columns}
             emptyMessage="No audit logs found."
           />
-        </div>
+        {/* </div> */}
 
-        <div className={styles.paginationFooter}>
+        </div>
+        {/* <div className={styles.paginationFooter}> */}
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
@@ -533,8 +535,7 @@ export default function AuditLogPage() {
             onPageChange={setCurrentPage}
             showOnlyActions={true}
           />
-        </div>
-      </div>
+        {/* </div> */}
     </PageGridLayout>
   );
 }
