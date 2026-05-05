@@ -8,8 +8,8 @@
   color: var(--text-muted);
   font-size: var(--font-size-s);
   font-weight: var(--font-weight-bold);
-  border-bottom-left-radius: var(--radius);
-  border-bottom-right-radius: var(--radius);
+  border-bottom-left-radius: var(--radius-m);
+  border-bottom-right-radius: var(--radius-m);
 }
 
 .infoText {
@@ -50,11 +50,11 @@
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
-  border-radius: var(--radius);
+  border-radius: var(--radius-m);
   background-color: var(--accent);
   color: var(--icon-main);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition);
   font-size: 1.2rem;
 }
 
@@ -72,6 +72,6 @@
 @media (max-width: 640px) {
   .paginationContainer {
     padding: 1.5rem 1rem;
-    gap: 1rem;
+    gap: var(--spacing-m);
   }
 }

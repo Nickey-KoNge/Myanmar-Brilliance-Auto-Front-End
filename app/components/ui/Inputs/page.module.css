@@ -6,7 +6,7 @@
 
 .label {
   font-size: calc(1rem / 1.35);
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -18,8 +18,8 @@
   display: flex;
   align-items: center;
   background: var(--bg-secondary);
-  border-radius: var(--radius);
-  transition: all ease 0.2s;
+  border-radius: var(--radius-m);
+  transition: var(--transition);
   overflow: hidden;
 }
 

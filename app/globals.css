@@ -65,8 +65,8 @@ button {
   /* --active-link-color: #6f2f2f; */
   /* --active-right-link-color: #b25151; */
   /* --radius: 8px;
-  --gap: 1rem;
-  --img-border-radius: 50%; */
+  --gap: var(--spacing-m);
+  --img-border-radius: var(--img-border-radius); */
 
   /* table css */
   /* --bg-table: #2d2d30; */
@@ -86,9 +86,9 @@ button {
   /* --success-hover: #338f35; */
   /* --info: #007bff; */
   /* --selected: rgb(216, 202, 77); */
-  /* --padding: 1rem; */
+  /* --padding: var(--spacing-m); */
   /* --padding-inside: 0.75rem; */
-  /* --margin: 1rem; */
+  /* --margin: var(--spaceing-m); */
   /* --old-data: #eb9494; */
   /* --new-data: #c4e9c4; */
   /* --bg-black: #0d0d0d; */
@@ -101,18 +101,27 @@ button {
   --font-size-m: 1rem;
   --font-size-s: 0.75rem;
   --font-size-xs: 0.5rem;
+
   --font-weight-normal: 400;
   --font-weight-bold: 700;
   --font-weight-bolder: 900;
 
-  --radius: 8px;
+  --radius-xxl: 12px;
+  --radius-xl: 10px;
+  --radius-l: 10px;
+  --radius-m: 8px;
+  --radius-s: 6px;
+  --radius-xs: 4px;
+
   --img-border-radius: 50%;
+  --transition: all 0.25s ease;
 
   --spacing-xl: 1.5rem;
   --spacing-l: 1.25rem;
   --spacing-m: 1rem;
   --spacing-s: 0.75rem;
   --spacing-xs: 0.5rem;
+  --spacing-xxs: 0.25rem;
 
   /* Brand Colors */
   --color-primary: #d64545;

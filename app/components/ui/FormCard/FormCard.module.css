@@ -2,7 +2,7 @@
 .card {
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: var(--radius-xxl);
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -22,7 +22,7 @@
   width: 3px;
   height: 18px;
   background: var(--color-primary);
-  border-radius: 2px;
+  border-radius: var(--radius-xs);
   flex-shrink: 0;
 }
 
@@ -30,7 +30,7 @@
   width: 28px;
   height: 28px;
   background: transparent;
-  border-radius: 6px;
+  border-radius: var(--radius-s);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -40,7 +40,7 @@
 
 .sectionTitle {
   font-size: var(--font-size-s);
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   letter-spacing: 1px;
   color: var(--text-primary);

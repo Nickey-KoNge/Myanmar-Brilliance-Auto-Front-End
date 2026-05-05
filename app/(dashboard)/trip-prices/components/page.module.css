@@ -1,7 +1,7 @@
 .formActionArea {
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
+  gap: var(--spacing-m);
   margin-top: 1.5rem;
 }
 
@@ -10,5 +10,5 @@
   grid-template-columns: 1fr;
   gap: var(--spacing-m);
   row-gap: unset;
-  gap: 1rem;
+  gap: var(--spacing-m);
 }

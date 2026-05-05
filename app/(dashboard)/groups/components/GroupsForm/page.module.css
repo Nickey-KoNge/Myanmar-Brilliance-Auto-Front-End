@@ -16,7 +16,7 @@
 .card {
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: var(--radius-xxl);
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -36,7 +36,7 @@
   width: 3px;
   height: 18px;
   background: var(--color-primary);
-  border-radius: 2px;
+  border-radius: var(--radius-xs);
   flex-shrink: 0;
 }
 
@@ -44,7 +44,7 @@
   width: 28px;
   height: 28px;
   background: rgba(192, 57, 43, 0.12);
-  border-radius: 6px;
+  border-radius: var(--radius-s);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,7 +54,7 @@
 
 .sectionTitle {
   font-size: var(--font-size-s);
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   letter-spacing: 1px;
   color: var(--text-primary);
@@ -87,14 +87,14 @@
   width: 100%;
   background: var(--bg-secondary, #2a2a2a);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border-radius: var(--radius-m);
   padding: 10px 36px 10px 14px;
   font-size: var(--font-size-s);
   color: var(--text-main);
   appearance: none;
 
   cursor: pointer;
-  transition: border-color 0.2s;
+  transition: var(--transition);
   margin-top: 1.5rem;
   height: 52.8px;
 }
@@ -109,14 +109,14 @@
   width: 100%;
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border-radius: var(--radius-m);
   padding: 12px 14px;
   font-size: var(--font-size-s);
   color: var(--text-main);
   resize: vertical;
   min-height: 90px;
   font-family: inherit;
-  transition: border-color 0.2s;
+  transition: var(--transition);
   margin-top: 1rem;
 }
 
@@ -131,7 +131,7 @@
   height: 100%;
   min-height: 250px;
   background: #1a1a1a;
-  border-radius: 8px;
+  border-radius: var(--radius-m);
   border: 1px solid var(--border-color);
   display: flex;
   align-items: center;

@@ -3,9 +3,9 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 1rem;
+  padding: var(--spacing-m);
   background-color: #f8fafc; /* Light gray background for sidebar */
-  border-radius: 8px;
+  border-radius: var(--radius-m);
 }
 
 .topSection {
@@ -18,18 +18,18 @@
 
 /* Typography & Titles */
 .gridBoxTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: var(--font-size-l);
+  font-weight: var(--font-weight-bold);
   color: #334155;
   margin-bottom: 0.5rem;
 }
 
 .recentTitle {
-  font-size: 0.9rem;
+  font-size: var(--font-size-s);
   font-weight: 700;
   color: #64748b;
   letter-spacing: 0.05em;
-  margin: 1rem 0;
+  margin: var(--spaceing-m) 0;
 }
 
 .tableTitle {
@@ -44,14 +44,14 @@
   border: 0;
   height: 1px;
   background-color: #e2e8f0;
-  margin: 1rem 0;
+  margin: var(--spaceing-m) 0;
 }
 
 /* Containers */
 .searchContainer {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--spacing-m);
 }
 
 .filterRow {
@@ -61,8 +61,8 @@
 
 .recentRecord {
   background-color: #ffffff;
-  padding: 1rem;
-  border-radius: 6px;
+  padding: var(--spacing-m);
+  border-radius: var(--radius-s);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   border-left: 4px solid #3b82f6; /* Blue left border */
 }
@@ -74,7 +74,7 @@
 }
 
 .statLabel {
-  font-size: 0.85rem;
+  font-size: var(--font-size-m);
   color: #64748b;
   margin-bottom: 0.2rem;
 }
@@ -91,23 +91,23 @@
 
 .headerActionArea {
   display: flex;
-  gap: 1rem;
+  gap: var(--spacing-m);
 }
 
 /* Text Utilities */
 .textBold {
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
   color: #1e293b;
 }
 
 .textSuccess {
   color: #10b981; /* Green color for income/profit */
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
 }
 
 .textDanger {
   color: #ef4444; /* Red color for expenses */
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
 }
 
 .textSmall {
@@ -133,8 +133,8 @@
   height: 32px;
   background-color: #e2e8f0;
   color: #475569;
-  border-radius: 50%;
-  font-size: 0.9rem;
+  border-radius: var(--img-border-radius);
+  font-size: var(--font-size-s);
 }
 
 /* =========================================
@@ -144,10 +144,10 @@
 .searchInput {
   width: 100%;
   padding: 8px 12px;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   border: 1px solid #cbd5e1;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: var(--transition);
 }
 
 .searchInput:focus {
@@ -157,10 +157,10 @@
 .tableSearchInput {
   width: 250px;
   padding: 8px 12px;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   border: 1px solid #cbd5e1;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: var(--transition);
 }
 
 .tableSearchInput:focus {
@@ -174,7 +174,7 @@
 .invoiceCard {
   padding: 24px;
   border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  border-radius: var(--radius-m);
   margin-top: 20px;
   background-color: #ffffff;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
@@ -185,14 +185,14 @@
   padding-bottom: 12px;
   margin-bottom: 16px;
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
   color: #1e293b;
 }
 
 .financeBox {
   background-color: #f8fafc;
   padding: 16px;
-  border-radius: 6px;
+  border-radius: var(--radius-s);
   margin-top: 16px;
   border: 1px solid #e2e8f0;
 }
@@ -213,5 +213,5 @@
   text-align: center;
   color: #64748b;
   font-weight: 500;
-  font-size: 1.1rem;
+  font-size: var(--font-size-l);
 }

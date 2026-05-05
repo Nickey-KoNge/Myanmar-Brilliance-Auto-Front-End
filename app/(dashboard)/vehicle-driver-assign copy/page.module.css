@@ -12,24 +12,24 @@
 .selectedBlue {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-m);
   cursor: pointer;
-  transition: outline 0.2s ease;
+  transition: var(--transition);
 }
 
 .selectedGreen {
   outline: 2px solid #16a34a;
   outline-offset: 2px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-m);
   cursor: pointer;
-  transition: outline 0.2s ease;
+  transition: var(--transition);
 }
 
 /* Assigned Card Styling */
 .assignedCard {
   border: 1px solid var(--border-color);
   padding: var(--spacing-m);
-  border-radius: var(--radius);
+  border-radius: var(--radius-m);
   display: grid;
   gap: calc(var(--spacing-m) / 2);
   grid-column: 1 / -1;
@@ -50,14 +50,14 @@
   gap: var(--spacing-m);
   border: 1px solid var(--border-color);
   padding: 8px 12px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-m);
   color: var(--text-muted);
 }
 
 .assignedCardHeaderImage {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: var(--img-border-radius);
   overflow: hidden;
   position: relative;
   border: 2px solid var(--accent);
@@ -71,9 +71,9 @@
   background-color: var(--accent);
   color: #ffffff;
   padding: 6px 12px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-m);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -95,7 +95,7 @@
 
 .assignedCardCar {
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: var(--font-size-l);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -108,8 +108,8 @@
   background-color: var(--accent);
   color: #ffffff;
   padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 0.85rem;
+  border-radius: var(--radius-xs);
+  font-size: var(--font-size-m);
   font-family: monospace;
   gap: calc(var(--spacing-m) / 4);
 }
@@ -120,8 +120,8 @@
   color: #ffffff;
   width: 100%;
   padding: 12px;
-  border-radius: var(--radius);
-  transition: all 0.2s ease;
+  border-radius: var(--radius-m);
+  transition: var(--transition);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -186,7 +186,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: all 0.2s ease;
+  transition: var(--transition);
 }
 
 .confirmBtn {
@@ -225,7 +225,7 @@
   color: white;
   width: 24px;
   height: 24px;
-  border-radius: 50%;
+  border-radius: var(--img-border-radius);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -238,7 +238,7 @@
 
 .activeSelection {
   transform: translateY(-2px);
-  transition: transform 0.2s ease;
+  transition: var(--transition);
 }
 
 .dragging {
@@ -250,7 +250,7 @@
   transform: scale(1.02);
   border: 2px solid var(--success) !important;
   background-color: rgba(43, 122, 44, 0.05);
-  transition: transform 0.1s ease;
+  transition: var(--transition);
 }
 
 .dropOverlay {
@@ -265,7 +265,7 @@
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  border-radius: 8px;
+  border-radius: var(--radius-m);
   z-index: 10;
   pointer-events: none;
 }
@@ -276,12 +276,12 @@
   z-index: 10000;
   background-color: var(--bg-primary);
   padding: 15px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-m);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   border: 1px solid var(--border-color);
   min-width: 220px;
   pointer-events: none;
-  transition: background-color 0.3s ease;
+  transition: var(--transition);
 }
 
 .modalTitle {
@@ -299,7 +299,7 @@
 .modalTitle img {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: var(--img-border-radius);
   object-fit: cover;
   border: 2px solid var(--accent);
 }
@@ -319,7 +319,7 @@
 
 .modalRow:last-of-type .modalLabel {
   border: 1px solid var(--accent);
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   background-color: var(--accent);
   text-align: center;
   color: #ffffff;
@@ -353,10 +353,10 @@
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
   color: var(--text-main);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition);
 }
 
 .filterChip:hover {

@@ -1,8 +1,8 @@
 .card {
   /* background-color: #1e1e1e; */
   background-color: var(--bg-primary);
-  border-radius: 12px;
-  padding: 1.5rem;
+  border-radius: var(--radius-xxl);
+  padding: var(--spacing-xl);
   /* border: 1px solid #2a2a2a; */
   flex: 1;
 }
@@ -12,7 +12,7 @@
   align-items: center;
   margin-bottom: 1rem;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: var(--font-size-s);
   color: var(--text-main);
 }
 .table {
@@ -27,7 +27,7 @@
   color: var(--text-main);
   /* border-bottom: 1px solid #2a2a2a; */
   border-bottom: 1px solid var(--text-muted);
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
 }
 .table td {
   padding: 0.8rem 0;

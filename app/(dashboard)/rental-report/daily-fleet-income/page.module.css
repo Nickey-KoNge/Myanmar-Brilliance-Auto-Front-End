@@ -14,9 +14,9 @@
 .gridBoxTitle {
   color: var(--text-main);
   text-align: center;
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
   padding: var(--spacing-m) 0;
-  font-size: 1.1rem;
+  font-size: var(--font-size-l);
 }
 
 .searchContainer {
@@ -60,7 +60,7 @@
 .recentRecord span:nth-of-type(1) {
   background: var(--accent, #3b82f6);
   padding: 0.75rem;
-  border-radius: var(--radius);
+  border-radius: var(--radius-m);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -80,7 +80,7 @@
   display: grid;
   align-items: center;
   gap: 0.75rem;
-  font-size: 0.9rem;
+  font-size: var(--font-size-s);
 }
 
 .stat div {
@@ -106,7 +106,7 @@
 
 .tableTitle {
   color: var(--text-main);
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
   margin: 0;
   font-size: 1.15rem;
   text-transform: uppercase;
@@ -130,7 +130,7 @@
 .defaultImage {
   width: 35px;
   height: 35px;
-  border-radius: 50%;
+  border-radius: var(--img-border-radius);
   background-color: var(--bg-secondary, #333);
   display: flex;
   align-items: center;
@@ -144,7 +144,7 @@
 }
 
 .textBold {
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
 }
 
 .textDanger {

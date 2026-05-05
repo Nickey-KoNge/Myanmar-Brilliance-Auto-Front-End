@@ -1,6 +1,6 @@
 .btn {
   padding: var(--spacing-m);
-  border-radius: var(--radius);
+  border-radius: var(--radius-m);
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-m);
   display: inline-flex;
@@ -9,7 +9,7 @@
   gap: calc(var(--spacing-m) / 2);
   border: 1px solid transparent;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition);
   white-space: nowrap;
 }
 

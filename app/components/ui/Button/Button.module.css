@@ -1,22 +1,22 @@
 .btn {
   width: 100%;
   background-color: var(--color-primary);
-  color: var(--btn-text);
-  padding: 1rem;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.9rem;
+  color: var(--btn-text-on-solid);
+  padding: var(--spacing-m);
+  border-radius: var(--radius-m);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-s);
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
-  transition: background-color 0.3s ease;
+  transition: var(--transition);
   border: none;
   cursor: pointer;
 }
 
 .btn:hover {
-  background-color: var(--color-primary-hover);
+  filter: brightness(1.1);
 }
 
 .iconWrapper {

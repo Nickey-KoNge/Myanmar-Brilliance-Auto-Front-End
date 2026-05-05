@@ -1,7 +1,7 @@
 .card {
   background-color: var(--bg-primary);
   padding: var(--spacing-m);
-  border-radius: var(--radius);
+  border-radius: var(--radius-m);
   display: flex;
   justify-content: space-between;
   align-items: center;

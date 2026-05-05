@@ -15,7 +15,7 @@
 .gridBoxTitle {
   color: var(--text-main);
   text-align: center;
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
   padding: var(--spacing-m) 0;
 }
 
@@ -59,14 +59,14 @@
   left: 0;
   display: flex;
   align-items: center;
-  font-size: 0.9rem;
+  font-size: var(--font-size-s);
 }
 
 .tableTitle {
   color: var(--text-main);
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
   margin: 0;
-  font-size: 1.1rem;
+  font-size: var(--font-size-l);
   text-transform: uppercase;
   text-align: center;
 }
@@ -81,18 +81,18 @@
 .info {
   display: flex;
   align-items: center;
-  gap: calc(var(--spacing-m) / 2.5);
+  gap: var(--spacing-xs);
 }
 
 .image {
-  border-radius: 50%;
+  border-radius: var(--img-border-radius);
   object-fit: cover;
 }
 
 .defaultImage {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: var(--img-border-radius);
   background-color: var(--bg-secondary);
   display: flex;
   align-items: center;
@@ -111,7 +111,7 @@
 .recentRecord span:nth-of-type(1) {
   background: var(--color-primary);
   padding: calc(var(--spacing-m) / 2);
-  border-radius: var(--radius);
+  border-radius: var(--radius-m);
 }
 
 /* States */
@@ -119,7 +119,7 @@
   display: grid;
   align-items: center;
   gap: calc(var(--spacing-m) / 2);
-  font-size: 0.85rem;
+  font-size: var(--font-size-m);
 }
 
 .stat div {
@@ -133,7 +133,7 @@
   background: none;
   color: var(--danger);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition);
 }
 
 .deleteBtn:hover {
@@ -143,7 +143,7 @@
 /* Last Edited */
 .lastEdited {
   text-align: center;
-  font-size: 0.9rem;
+  font-size: var(--font-size-s);
   color: var(--text-muted);
   font-weight: bold;
 }
@@ -165,7 +165,7 @@
 }
 
 .textBold {
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
 }
 
 .textDanger {
@@ -209,7 +209,7 @@
 .modalContent {
   background: rgb(27, 27, 28);
   padding: 2rem;
-  border-radius: 0.75rem;
+  border-radius: var(--radius-xxl);
   min-width: 350px;
   position: relative;
 }
