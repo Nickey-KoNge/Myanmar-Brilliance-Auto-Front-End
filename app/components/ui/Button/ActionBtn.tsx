@@ -62,17 +62,15 @@ const ActionBtn = forwardRef<HTMLButtonElement, ButtonProps>(
         aria-busy={loading}
         {...props}
       >
-        {/* Spinner overlay */}
         {loading && (
-          <FontAwesomeIcon
-            icon={faCircleNotch}
-            spin
-            className={styles.spinner}
-          />
+          <span className={styles.spinner}>
+            <FontAwesomeIcon icon={faCircleNotch} spin />
+          </span>
         )}
 
-        {/* Content (keeps width, hidden during loading) */}
-        <span className={loading ? styles.contentHidden : styles.content}>
+        <span
+          className={`${styles.content} ${loading ? styles.contentHidden : ""}`}
+        >
           {leftIcon && (
             <span className={styles.icon}>
               <FontAwesomeIcon icon={leftIcon} />

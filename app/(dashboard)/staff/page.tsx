@@ -62,6 +62,7 @@ interface Role {
 
 export default function StaffPage() {
   const router = useRouter();
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [staffs, setStaffs] = useState<Staff[]>([]);
   const [branches, setBranches] = useState<Branch[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
@@ -285,6 +286,7 @@ export default function StaffPage() {
   return (
     <>
       <PageGridLayout
+        isSidebarOpen={isFilterOpen}
         sidebar={
           <div className={styles.sidebarWrapper}>
             <div className={styles.topSection}>
@@ -399,34 +401,44 @@ export default function StaffPage() {
                 showOnlyInfo={true}
               />
             </div>
+
             <p className={styles.tableTitle}>EMPLOYEE MASTER RECORDS</p>
 
             <div className={styles.headerActionArea}>
-              <ActionBtn leftIcon={faFilter} variant="info" ></ActionBtn>
+              <ActionBtn
+                leftIcon={isFilterOpen ? faFilterCircleXmark : faFilter}
+                variant="info"
+                onClick={() => setIsFilterOpen((prev) => !prev)}
+              />
               <NavigationBtn href="/staff/Addstaff" leftIcon={faPlus}>
                 add staff
               </NavigationBtn>
             </div>
           </div>
 
-          <DataTable
-            columns={columns}
-            data={staffs}
-            onRowClick={(staff) =>
-              router.push(`/staff/Updatestaff/${staff.id}`)
-            }
-            emptyMessage="No staff records found."
-          />
-        </div>
+          {/* FLEX CONTENT AREA */}
+          <div className={styles.tableBody}>
+            <DataTable
+              columns={columns}
+              data={staffs}
+              onRowClick={(staff) =>
+                router.push(`/staff/Updatestaff/${staff.id}`)
+              }
+              emptyMessage="No staff records found."
+            />
 
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalRecords={totalRecords}
-          pageSize={PAGE_SIZE}
-          onPageChange={setCurrentPage}
-          showOnlyActions={true}
-        />
+            <div className={styles.paginationBottom}>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalRecords={totalRecords}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCurrentPage}
+                showOnlyActions={true}
+              />
+            </div>
+          </div>
+        </div>
       </PageGridLayout>
 
       {deleteModal.isOpen && deleteModal.id && (

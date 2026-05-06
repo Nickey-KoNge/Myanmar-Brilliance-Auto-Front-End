@@ -1,31 +1,25 @@
 .btn {
   position: relative;
-  padding: var(--spacing-m);
+  height: 45px;
+  padding: 0 var(--spacing-m);
+  font-size: var(--font-size-m);
+  line-height: 1;
   border-radius: var(--radius-m);
   font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-m);
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: var(--spacing-xxs);
   border: 1px solid transparent;
   cursor: pointer;
   transition: var(--transition);
   white-space: nowrap;
+  text-decoration: none;
+  overflow: hidden;
 }
 
-.content {
-  display: inline-flex;
-  align-items: center;
-}
-
-.contentHidden {
-  visibility: hidden;
-  display: inline-flex;
-  align-items: center;
-}
-
-.withText .content {
-  gap: calc(var(--spacing-m) / 2);
+.btn:not(:disabled):hover {
+  filter: brightness(1.3);
 }
 
 .fullWidth {
@@ -36,16 +30,19 @@
   width: fit-content;
 }
 
-.icon {
-  display: inline-flex;
-  align-items: center;
+.contentHidden {
+  visibility: hidden;
 }
 
+.content,
+.icon,
 .label {
   display: inline-flex;
   align-items: center;
+  gap: var(--spacing-xxs);
 }
 
+/* variants */
 .actionBtn {
   background: var(--color-primary);
   color: var(--btn-text-on-solid);
@@ -70,30 +67,16 @@
   text-transform: uppercase;
 }
 
-.btn:hover:not(:disabled) {
-  filter: brightness(1.1);
-}
-
-.cancelBtn:hover:not(:disabled) {
-  background: var(--border-color);
-  filter: none;
-}
-
-.btn:active:not(:disabled) {
-  transform: scale(0.97);
-}
-
 .disabled {
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .spinner {
   position: absolute;
-  top: 35%;
-  left: 43%;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
