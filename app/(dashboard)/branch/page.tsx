@@ -3,6 +3,8 @@
 import {
   faCalendarDays,
   faClockRotateLeft,
+  faFilter,
+  faFilterCircleXmark,
   faPlus,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
@@ -38,6 +40,7 @@ interface Branch {
 
 export default function BranchPage() {
   const router = useRouter();
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [branchData, setBranchData] = React.useState<Branch[]>([]);
 
   const [activeRecords, setActiveRecords] = useState(0);
@@ -186,6 +189,7 @@ export default function BranchPage() {
   return (
     <>
       <PageGridLayout
+        isSidebarOpen={isFilterOpen}
         sidebar={
           <div className={styles.sidebarWrapper}>
             <div className={styles.topSection}>
@@ -223,7 +227,7 @@ export default function BranchPage() {
                 <ActionBtn
                   type="reset"
                   variant="action"
-                  fullWidth={false}
+                  fullWidth={true}
                   onClick={resetFilters}
                 >
                   reset
@@ -280,29 +284,38 @@ export default function BranchPage() {
             <p className={styles.tableTitle}>BRANCHES MASTER RECORDS</p>
 
             <div className={styles.headerActionArea}>
+              <ActionBtn
+                leftIcon={isFilterOpen ? faFilterCircleXmark : faFilter}
+                variant="info"
+                onClick={() => setIsFilterOpen((prev) => !prev)}
+              />
               <NavigationBtn href="/branch/Addbranch" leftIcon={faPlus}>
                 add Branch
               </NavigationBtn>
             </div>
           </div>
 
-          <DataTable
-            data={branchData}
-            columns={columns}
-            onRowClick={(branch) =>
-              router.push(`/branch/Updatebranch/${branch.id}`)
-            }
-          />
-        </div>
+          <div className={styles.tableBody}>
+            <DataTable
+              data={branchData}
+              columns={columns}
+              onRowClick={(branch) =>
+                router.push(`/branch/Updatebranch/${branch.id}`)
+              }
+            />
 
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalRecords={totalRecords}
-          pageSize={PAGE_SIZE}
-          onPageChange={setCurrentPage}
-          showOnlyActions={true}
-        />
+            <div className={styles.paginationBottom}>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalRecords={totalRecords}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCurrentPage}
+                showOnlyActions={true}
+              />
+            </div>
+          </div>
+        </div>
       </PageGridLayout>
       {isDeleteOpen && selectedBranch && (
         <DeleteModal

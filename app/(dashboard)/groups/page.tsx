@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarDays,
   faClockRotateLeft,
+  faFilter,
+  faFilterCircleXmark,
   faPlus,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
@@ -53,6 +55,7 @@ interface PaginatedGroupResponse {
 }
 export default function GroupPage() {
   const router = useRouter();
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const [groupsData, setGroupsData] = useState<Group[]>([]);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -175,6 +178,7 @@ export default function GroupPage() {
   return (
     <>
       <PageGridLayout
+        isSidebarOpen={isFilterOpen}
         sidebar={
           <div className={styles.sidebarWrapper}>
             <div className={styles.topSection}>
@@ -204,7 +208,7 @@ export default function GroupPage() {
                 <ActionBtn
                   type="reset"
                   variant="action"
-                  fullWidth={false}
+                  fullWidth={true}
                   onClick={resetFilters}
                 >
                   reset
@@ -257,28 +261,39 @@ export default function GroupPage() {
               />
             </div>
             <p className={styles.tableTitle}>GROUPS MASTER RECORDS</p>
+
             <div className={styles.headerActionArea}>
+              <ActionBtn
+                leftIcon={isFilterOpen ? faFilterCircleXmark : faFilter}
+                variant="info"
+                onClick={() => setIsFilterOpen((prev) => !prev)}
+              />
               <NavigationBtn href="/groups/Addgroup" leftIcon={faPlus}>
                 add group
               </NavigationBtn>
             </div>
           </div>
-          <DataTable
-            data={groupsData}
-            columns={columns}
-            onRowClick={(group) =>
-              router.push(`/groups/Updategroup/${group.id}`)
-            }
-          />
+
+          <div className={styles.tableBody}>
+            <DataTable
+              data={groupsData}
+              columns={columns}
+              onRowClick={(group) =>
+                router.push(`/groups/Updategroup/${group.id}`)
+              }
+            />
+            <div className={styles.paginationBottom}>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalRecords={totalRecords}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCurrentPage}
+                showOnlyActions={true}
+              />
+            </div>
+          </div>
         </div>
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalRecords={totalRecords}
-          pageSize={PAGE_SIZE}
-          onPageChange={setCurrentPage}
-          showOnlyActions={true}
-        />
       </PageGridLayout>
       {isDeleteOpen && selectedGroup && (
         <DeleteModal

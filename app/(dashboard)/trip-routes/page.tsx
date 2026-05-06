@@ -9,7 +9,8 @@ import { FilterState, useFilters } from "@/app/hooks/userFilters";
 import {
   faCalendarDays,
   faClockRotateLeft,
-  faL,
+  faFilter,
+  faFilterCircleXmark,
   faPlus,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
@@ -40,6 +41,7 @@ export interface RouteFormData {
 
 export default function TripRoutesPage() {
   const router = useRouter();
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const [routeData, setRouteData] = useState<Route[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -203,6 +205,7 @@ export default function TripRoutesPage() {
   return (
     <>
       <PageGridLayout
+        isSidebarOpen={isFilterOpen}
         sidebar={
           <div className={styles.sidebarWrapper}>
             <div className={styles.topSection}>
@@ -232,7 +235,12 @@ export default function TripRoutesPage() {
                   />
                 </div>
 
-                <ActionBtn type="reset" variant="action" onClick={resetFilters}>
+                <ActionBtn
+                  type="reset"
+                  variant="action"
+                  fullWidth={true}
+                  onClick={resetFilters}
+                >
                   reset
                 </ActionBtn>
               </div>
@@ -289,6 +297,11 @@ export default function TripRoutesPage() {
             <p className={styles.tableTitle}>ROUTES MASTER RECORDS</p>
 
             <div className={styles.headerActionArea}>
+              <ActionBtn
+                leftIcon={isFilterOpen ? faFilterCircleXmark : faFilter}
+                variant="info"
+                onClick={() => setIsFilterOpen((prev) => !prev)}
+              />
               <NavigationBtn
                 href="#"
                 leftIcon={faPlus}
@@ -299,25 +312,29 @@ export default function TripRoutesPage() {
             </div>
           </div>
 
-          <DataTable
-            data={routeData}
-            columns={columns}
-            onRowClick={(row) => {
-              setModalMode("update");
-              setSelectedRoute(row);
-              setModalOpen(true);
-            }}
-          />
-        </div>
+          <div className={styles.tableBody}>
+            <DataTable
+              data={routeData}
+              columns={columns}
+              onRowClick={(row) => {
+                setModalMode("update");
+                setSelectedRoute(row);
+                setModalOpen(true);
+              }}
+            />
 
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalRecords={totalRecords}
-          pageSize={PAGE_SIZE}
-          onPageChange={setCurrentPage}
-          showOnlyActions={true}
-        />
+            <div className={styles.paginationBottom}>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalRecords={totalRecords}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCurrentPage}
+                showOnlyActions={true}
+              />
+            </div>
+          </div>
+        </div>
       </PageGridLayout>
 
       {deleteModal.isOpen && deleteModal.id && (

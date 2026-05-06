@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarDays,
   faClockRotateLeft,
+  faFilter,
+  faFilterCircleXmark,
   faPlus,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
@@ -41,6 +43,7 @@ interface VehicleBrand {
 
 export default function VehicleBrandsPage() {
   const router = useRouter();
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const [vehicleBrands, setVehicleBrands] = useState<VehicleBrand[]>([]);
 
@@ -217,6 +220,7 @@ export default function VehicleBrandsPage() {
   return (
     <>
       <PageGridLayout
+        isSidebarOpen={isFilterOpen}
         sidebar={
           <div className={styles.sidebarWrapper}>
             <div className={styles.topSection}>
@@ -249,7 +253,7 @@ export default function VehicleBrandsPage() {
                 <ActionBtn
                   type="reset"
                   variant="action"
-                  fullWidth={false}
+                  fullWidth={true}
                   onClick={resetFilters}
                 >
                   reset
@@ -307,6 +311,11 @@ export default function VehicleBrandsPage() {
             <p className={styles.tableTitle}>VEHICLE BRANDS MASTER RECORDS</p>
 
             <div className={styles.headerActionArea}>
+              <ActionBtn
+                leftIcon={isFilterOpen ? faFilterCircleXmark : faFilter}
+                variant="info"
+                onClick={() => setIsFilterOpen((prev) => !prev)}
+              />
               <NavigationBtn
                 href="/vehicle-brands/Addvehiclebrands"
                 leftIcon={faPlus}
@@ -316,26 +325,30 @@ export default function VehicleBrandsPage() {
             </div>
           </div>
 
-          <DataTable
-            columns={columns}
-            data={vehicleBrands}
-            onRowClick={(vehicleBrand) =>
-              router.push(
-                `/vehicle-brands/Updatevehiclebrands/${vehicleBrand.id}`,
-              )
-            }
-            emptyMessage="No vehicle brands record records found."
-          />
-        </div>
+          <div className={styles.tableBody}>
+            <DataTable
+              columns={columns}
+              data={vehicleBrands}
+              onRowClick={(vehicleBrand) =>
+                router.push(
+                  `/vehicle-brands/Updatevehiclebrands/${vehicleBrand.id}`,
+                )
+              }
+              emptyMessage="No vehicle brands record records found."
+            />
 
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalRecords={totalRecords}
-          pageSize={PAGE_SIZE}
-          onPageChange={setCurrentPage}
-          showOnlyActions={true}
-        />
+            <div className={styles.paginationBottom}>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalRecords={totalRecords}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCurrentPage}
+                showOnlyActions={true}
+              />
+            </div>
+          </div>
+        </div>
       </PageGridLayout>
 
       {deleteModal.isOpen && deleteModal.id && (

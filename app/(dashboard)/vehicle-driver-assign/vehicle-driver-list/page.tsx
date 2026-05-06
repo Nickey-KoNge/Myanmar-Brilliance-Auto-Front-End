@@ -8,7 +8,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarDays,
   faClockRotateLeft,
-  faPlus,
   faTrashCan,
   faUserTie,
 } from "@fortawesome/free-solid-svg-icons";
@@ -18,14 +17,11 @@ import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridL
 import styles from "./page.module.css";
 import TextInput from "@/app/components/ui/Inputs/TextInput";
 import DateInput from "@/app/components/ui/Inputs/DateInput";
-import DropdownInput from "@/app/components/ui/Inputs/DropdownInput";
 
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 import { Pagination } from "@/app/components/ui/Pagination/Pagination";
-import NavigationBtn from "@/app/components/ui/Button/NavigationBtn";
 import { DataTable } from "@/app/components/ui/DataTable/DataTable";
 import DeleteModal from "@/app/components/ui/Delete/DeleteModal";
-import { set } from "react-hook-form";
 
 interface AssignmentRecord {
   id: string;
@@ -352,21 +348,25 @@ export default function AssignmentListPage() {
             </div>
           </div>
 
-          <DataTable
-            columns={columns}
-            data={records}
-            
-            emptyMessage="No assignment records found."
-          />
+          <div className={styles.tableBody}>
+            <DataTable
+              columns={columns}
+              data={records}
+              emptyMessage="No assignment records found."
+            />
+
+            <div className={styles.paginationBottom}>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalRecords={totalRecords}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCurrentPage}
+                showOnlyActions={true}
+              />
+            </div>
+          </div>
         </div>
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalRecords={totalRecords}
-          pageSize={PAGE_SIZE}
-          onPageChange={setCurrentPage}
-          showOnlyActions={true}
-        />
       </PageGridLayout>
 
       {deleteModal.isOpen && deleteModal.id && (

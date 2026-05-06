@@ -8,6 +8,8 @@ import {
   faBuilding,
   faCalendarDays,
   faClockRotateLeft,
+  faFilter,
+  faFilterCircleXmark,
   faPlus,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
@@ -46,6 +48,7 @@ interface Company {
 
 export default function CompanyPage() {
   const router = useRouter();
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   // Data States
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -275,6 +278,7 @@ export default function CompanyPage() {
   return (
     <>
       <PageGridLayout
+        isSidebarOpen={isFilterOpen}
         sidebar={
           <div className={styles.sidebarWrapper}>
             <div className={styles.topSection}>
@@ -322,7 +326,7 @@ export default function CompanyPage() {
                 <ActionBtn
                   type="reset"
                   variant="action"
-                  fullWidth={false}
+                  fullWidth={true}
                   onClick={resetFilters}
                 >
                   reset
@@ -365,7 +369,6 @@ export default function CompanyPage() {
           </div>
         }
       >
-        {/* Main Content Area (Table & Pagination) */}
         <div className={styles.tableArea}>
           <div className={styles.tableHeaderArea}>
             <div className={styles.paginationInfoWrapper}>
@@ -381,28 +384,37 @@ export default function CompanyPage() {
             <p className={styles.tableTitle}>COMPANY MASTER RECORDS</p>
 
             <div className={styles.headerActionArea}>
+              <ActionBtn
+                leftIcon={isFilterOpen ? faFilterCircleXmark : faFilter}
+                variant="info"
+                onClick={() => setIsFilterOpen((prev) => !prev)}
+              />
               <NavigationBtn href="/company/Addcompany" leftIcon={faPlus}>
                 add company
               </NavigationBtn>
             </div>
           </div>
-          <DataTable
-            data={companies}
-            columns={columns}
-            onRowClick={(company) =>
-              router.push(`/company/Updatecompany/${company.id}`)
-            }
-          />
-        </div>
+          <div className={styles.tableBody}>
+            <DataTable
+              data={companies}
+              columns={columns}
+              onRowClick={(company) =>
+                router.push(`/company/Updatecompany/${company.id}`)
+              }
+            />
 
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalRecords={totalRecords}
-          pageSize={PAGE_SIZE}
-          onPageChange={setCurrentPage}
-          showOnlyActions={true}
-        />
+            <div className={styles.paginationBottom}>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalRecords={totalRecords}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCurrentPage}
+                showOnlyActions={true}
+              />
+            </div>
+          </div>
+        </div>
       </PageGridLayout>
 
       {/* Delete Modal */}

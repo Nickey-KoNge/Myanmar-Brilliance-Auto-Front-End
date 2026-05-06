@@ -10,6 +10,8 @@ import { FilterState, useFilters } from "@/app/hooks/userFilters";
 import {
   faCalendarDays,
   faClockRotateLeft,
+  faFilter,
+  faFilterCircleXmark,
   faPlus,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
@@ -34,6 +36,7 @@ interface Station {
 
 export default function StationPage() {
   const router = useRouter();
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [stationData, setStationData] = useState<Station[]>([]);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
@@ -167,6 +170,7 @@ export default function StationPage() {
   return (
     <>
       <PageGridLayout
+        isSidebarOpen={isFilterOpen}
         sidebar={
           <div className={styles.sidebarWrapper}>
             <div className={styles.topSection}>
@@ -199,7 +203,7 @@ export default function StationPage() {
                 <ActionBtn
                   type="reset"
                   variant="action"
-                  fullWidth={false}
+                  fullWidth={true}
                   onClick={resetFilters}
                 >
                   reset
@@ -256,27 +260,38 @@ export default function StationPage() {
             <p className={styles.tableTitle}>STATIONS MASTER RECORDS</p>
 
             <div className={styles.headerActionArea}>
+              <ActionBtn
+                leftIcon={isFilterOpen ? faFilterCircleXmark : faFilter}
+                variant="info"
+                onClick={() => setIsFilterOpen((prev) => !prev)}
+              />
               <NavigationBtn href="/station/Addstation" leftIcon={faPlus}>
                 add station
               </NavigationBtn>
             </div>
           </div>
-          <DataTable
-            data={stationData}
-            columns={columns}
-            onRowClick={(station) =>
-              router.push(`/station/Updatestation/${station.id}`)
-            }
-          />
+
+          <div className={styles.tableBody}>
+            <DataTable
+              data={stationData}
+              columns={columns}
+              onRowClick={(station) =>
+                router.push(`/station/Updatestation/${station.id}`)
+              }
+            />
+
+            <div className={styles.paginationBottom}>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalRecords={totalRecords}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCurrentPage}
+                showOnlyActions={true}
+              />
+            </div>
+          </div>
         </div>
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalRecords={totalRecords}
-          pageSize={PAGE_SIZE}
-          onPageChange={setCurrentPage}
-          showOnlyActions={true}
-        />
       </PageGridLayout>
       {isDeleteOpen && selectedStation && (
         <DeleteModal

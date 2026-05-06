@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarDays,
   faClockRotateLeft,
+  faFilter,
+  faFilterCircleXmark,
   faPlus,
   faTrashCan,
   faUser,
@@ -86,6 +88,7 @@ const PAGE_SIZE = 10;
 
 export default function DriverListPage() {
   const router = useRouter();
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [stations, setStations] = useState<StationOption[]>([]);
 
@@ -379,6 +382,7 @@ export default function DriverListPage() {
   return (
     <>
       <PageGridLayout
+        isSidebarOpen={isFilterOpen}
         sidebar={
           <div className={styles.sidebarWrapper}>
             <div className={styles.topSection}>
@@ -426,7 +430,7 @@ export default function DriverListPage() {
                 <ActionBtn
                   type="reset"
                   variant="action"
-                  fullWidth={false}
+                  fullWidth={true}
                   onClick={resetFilters}
                 >
                   reset
@@ -484,30 +488,39 @@ export default function DriverListPage() {
             <p className={styles.tableTitle}>DRIVER MASTER RECORDS</p>
 
             <div className={styles.headerActionArea}>
+              <ActionBtn
+                leftIcon={isFilterOpen ? faFilterCircleXmark : faFilter}
+                variant="info"
+                onClick={() => setIsFilterOpen((prev) => !prev)}
+              />
               <NavigationBtn href="/driver/Adddriver" leftIcon={faPlus}>
                 Add Driver
               </NavigationBtn>
             </div>
           </div>
 
-          <DataTable
-            columns={columns}
-            data={drivers}
-            onRowClick={(driver) =>
-              router.push(`/driver/Updatedriver/${driver.id}`)
-            }
-            emptyMessage="No driver records found."
-          />
-        </div>
+          <div className={styles.tableBody}>
+            <DataTable
+              columns={columns}
+              data={drivers}
+              onRowClick={(driver) =>
+                router.push(`/driver/Updatedriver/${driver.id}`)
+              }
+              emptyMessage="No driver records found."
+            />
 
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalRecords={totalRecords}
-          pageSize={PAGE_SIZE}
-          onPageChange={setCurrentPage}
-          showOnlyActions={true}
-        />
+            <div className={styles.paginationBottom}>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalRecords={totalRecords}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCurrentPage}
+                showOnlyActions={true}
+              />
+            </div>
+          </div>
+        </div>
       </PageGridLayout>
 
       {deleteModal.isOpen && deleteModal.id && (

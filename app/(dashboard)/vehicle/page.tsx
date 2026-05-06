@@ -8,6 +8,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarDays,
   faClockRotateLeft,
+  faFilter,
+  faFilterCircleXmark,
   faPlus,
   faTrashCan,
   faCar,
@@ -87,6 +89,7 @@ interface PaginatedVehicleResponse {
 
 export default function VehicleListPage() {
   const router = useRouter();
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -435,6 +438,7 @@ export default function VehicleListPage() {
   return (
     <>
       <PageGridLayout
+        isSidebarOpen={isFilterOpen}
         sidebar={
           <div className={styles.sidebarWrapper}>
             <div className={styles.topSection}>
@@ -511,7 +515,7 @@ export default function VehicleListPage() {
                 <ActionBtn
                   type="reset"
                   variant="action"
-                  fullWidth={false}
+                  fullWidth={true}
                   onClick={resetFilters}
                 >
                   reset
@@ -569,29 +573,39 @@ export default function VehicleListPage() {
             <p className={styles.tableTitle}>Vehicle MASTER RECORDS</p>
 
             <div className={styles.headerActionArea}>
+              <ActionBtn
+                leftIcon={isFilterOpen ? faFilterCircleXmark : faFilter}
+                variant="info"
+                onClick={() => setIsFilterOpen((prev) => !prev)}
+              />
               <NavigationBtn href="/vehicle/Addvehicle" leftIcon={faPlus}>
                 Add Vehicle
               </NavigationBtn>
             </div>
           </div>
 
-          <DataTable
-            columns={columns}
-            data={vehicles}
-            onRowClick={(vehicle) =>
-              router.push(`/vehicle/Updatevehicle/${vehicle.id}`)
-            }
-            emptyMessage="No vehicle records found."
-          />
+          <div className={styles.tableBody}>
+            <DataTable
+              columns={columns}
+              data={vehicles}
+              onRowClick={(vehicle) =>
+                router.push(`/vehicle/Updatevehicle/${vehicle.id}`)
+              }
+              emptyMessage="No vehicle records found."
+            />
+
+            <div className={styles.paginationBottom}>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalRecords={totalRecords}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCurrentPage}
+                showOnlyActions={true}
+              />
+            </div>
+          </div>
         </div>
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalRecords={totalRecords}
-          pageSize={PAGE_SIZE}
-          onPageChange={setCurrentPage}
-          showOnlyActions={true}
-        />
       </PageGridLayout>
 
       {deleteModal.isOpen && deleteModal.id && (

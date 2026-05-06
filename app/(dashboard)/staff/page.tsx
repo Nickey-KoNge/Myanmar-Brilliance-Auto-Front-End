@@ -416,7 +416,6 @@ export default function StaffPage() {
             </div>
           </div>
 
-          {/* FLEX CONTENT AREA */}
           <div className={styles.tableBody}>
             <DataTable
               columns={columns}

@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarDays,
   faClockRotateLeft,
+  faFilter,
+  faFilterCircleXmark,
   faPlus,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
@@ -67,6 +69,7 @@ interface PaginatedModelResponse {
 
 export default function VehicleModelListPage() {
   const router = useRouter();
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const [modelsData, setModelsData] = useState<VehicleModel[]>([]);
 
@@ -237,6 +240,7 @@ export default function VehicleModelListPage() {
   return (
     <>
       <PageGridLayout
+        isSidebarOpen={isFilterOpen}
         sidebar={
           <div className={styles.sidebarWrapper}>
             <div className={styles.topSection}>
@@ -266,7 +270,7 @@ export default function VehicleModelListPage() {
                 <ActionBtn
                   type="reset"
                   variant="action"
-                  fullWidth={false}
+                  fullWidth={true}
                   onClick={resetFilters}
                 >
                   reset
@@ -319,7 +323,13 @@ export default function VehicleModelListPage() {
               />
             </div>
             <p className={styles.tableTitle}>VEHICLE MODELs MASTER RECORDS</p>
+
             <div className={styles.headerActionArea}>
+              <ActionBtn
+                leftIcon={isFilterOpen ? faFilterCircleXmark : faFilter}
+                variant="info"
+                onClick={() => setIsFilterOpen((prev) => !prev)}
+              />
               <NavigationBtn
                 href="/vehicle-model/Addvehiclemodel"
                 leftIcon={faPlus}
@@ -328,22 +338,28 @@ export default function VehicleModelListPage() {
               </NavigationBtn>
             </div>
           </div>
-          <DataTable
-            data={modelsData}
-            columns={columns}
-            onRowClick={(model) =>
-              router.push(`/vehicle-model/Updatevehiclemodel/${model.id}`)
-            }
-          />
+
+          <div className={styles.tableBody}>
+            <DataTable
+              data={modelsData}
+              columns={columns}
+              onRowClick={(model) =>
+                router.push(`/vehicle-model/Updatevehiclemodel/${model.id}`)
+              }
+            />
+
+            <div className={styles.paginationBottom}>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalRecords={totalRecords}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCurrentPage}
+                showOnlyActions={true}
+              />
+            </div>
+          </div>
         </div>
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalRecords={totalRecords}
-          pageSize={PAGE_SIZE}
-          onPageChange={setCurrentPage}
-          showOnlyActions={true}
-        />
       </PageGridLayout>
 
       {deleteModal.isOpen && deleteModal.id && (

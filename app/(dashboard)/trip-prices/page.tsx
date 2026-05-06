@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarDays,
   faClockRotateLeft,
+  faFilter,
+  faFilterCircleXmark,
   faPlus,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
@@ -84,6 +86,7 @@ interface RawVehicleModel {
 }
 
 export default function TripPricePage() {
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [vehicles, setVehicles] = useState<TripPrice[]>([]);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -357,6 +360,7 @@ export default function TripPricePage() {
   return (
     <>
       <PageGridLayout
+        isSidebarOpen={isFilterOpen}
         sidebar={
           <div className={styles.sidebarWrapper}>
             <div className={styles.topSection}>
@@ -389,7 +393,7 @@ export default function TripPricePage() {
                 <ActionBtn
                   type="reset"
                   variant="action"
-                  fullWidth={false}
+                  fullWidth={true}
                   onClick={resetFilters}
                 >
                   reset
@@ -425,7 +429,8 @@ export default function TripPricePage() {
 
               <hr className={styles.cuttingLine} />
               <p className={styles.lastEdited}>
-                Last Edited : <span className={styles.spanText}>{lastEditedBy}</span>
+                Last Edited :{" "}
+                <span className={styles.spanText}>{lastEditedBy}</span>
               </p>
             </div>
           </div>
@@ -447,27 +452,36 @@ export default function TripPricePage() {
             <p className={styles.tableTitle}>TRIP PRICE RECORDS</p>
 
             <div className={styles.headerActionArea}>
+              <ActionBtn
+                leftIcon={isFilterOpen ? faFilterCircleXmark : faFilter}
+                variant="info"
+                onClick={() => setIsFilterOpen((prev) => !prev)}
+              />
               <NavigationBtn href="#" leftIcon={faPlus} onClick={handleAddTrip}>
                 Add Trip Prices
               </NavigationBtn>
             </div>
           </div>
 
-          <DataTable
-            columns={columns}
-            data={vehicles}
-            onRowClick={handleRowClick}
-          />
-        </div>
+          <div className={styles.tableBody}>
+            <DataTable
+              columns={columns}
+              data={vehicles}
+              onRowClick={handleRowClick}
+            />
 
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalRecords={totalRecords}
-          pageSize={PAGE_SIZE}
-          onPageChange={setCurrentPage}
-          showOnlyActions
-        />
+            <div className={styles.paginationBottom}>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalRecords={totalRecords}
+                pageSize={PAGE_SIZE}
+                onPageChange={setCurrentPage}
+                showOnlyActions
+              />
+            </div>
+          </div>
+        </div>
       </PageGridLayout>
 
       {deleteModal.isOpen && deleteModal.id && (
