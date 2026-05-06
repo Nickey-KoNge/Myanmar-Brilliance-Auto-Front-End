@@ -8,6 +8,8 @@ import {
   faWallet,
   faCalendarDays,
   faClockRotateLeft,
+  faFilterCircleXmark,
+  faFilter,
 } from "@fortawesome/free-solid-svg-icons";
 
 // Components
@@ -42,15 +44,7 @@ interface ApiFinancialResponse {
 }
 
 export default function CompanyFinancialReportPage() {
-  const todayDate = new Date();
-  const firstDayOfMonth = new Date(
-    todayDate.getFullYear(),
-    todayDate.getMonth(),
-    1,
-  )
-    .toISOString()
-    .split("T")[0];
-  const todayStr = todayDate.toISOString().split("T")[0];
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   // Data States
   const [records, setRecords] = useState<FinancialBreakdownRecord[]>([]);
@@ -243,6 +237,7 @@ export default function CompanyFinancialReportPage() {
 
   return (
     <PageGridLayout
+      isSidebarOpen={isFilterOpen}
       sidebar={
         <div className={styles.sidebarWrapper}>
           <div className={styles.topSection}>
@@ -388,6 +383,13 @@ export default function CompanyFinancialReportPage() {
               />
             </div>
             <p className={styles.tableTitle}>FINANCIAL P&L RECORDS</p>
+            <div className={styles.filterBtnWrapper}>
+              <ActionBtn
+                leftIcon={isFilterOpen ? faFilterCircleXmark : faFilter}
+                variant="info"
+                onClick={() => setIsFilterOpen((prev) => !prev)}
+              />
+            </div>
           </div>
 
           {isLoading ? (

@@ -39,7 +39,6 @@
   gap: var(--spacing-m);
 }
 
-
 .textSmall {
   font-size: calc(12 / 16 * 1rem);
 }
@@ -121,6 +120,13 @@
   margin-top: var(--spacing-m);
 }
 
+.filterBtnWrapper {
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: center;
+}
+
 .paginationInfoWrapper {
   position: absolute;
   left: 0;
@@ -137,8 +143,6 @@
   text-transform: uppercase;
   text-align: center;
 }
-
-
 
 /* Loading State */
 .loadingText {
@@ -212,7 +216,7 @@
   margin: 0;
 }
 .cuttingLine {
-   border: none;
+  border: none;
   height: 0.5px;
   background: var(--color-primary);
   margin: 0;

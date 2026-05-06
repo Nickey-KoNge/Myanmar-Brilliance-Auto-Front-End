@@ -10,6 +10,8 @@ import {
   faWallet,
   faCalendarDays,
   faClockRotateLeft,
+  faFilterCircleXmark,
+  faFilter,
 } from "@fortawesome/free-solid-svg-icons";
 
 // Components
@@ -101,6 +103,8 @@ export default function TripInvoicePage() {
     startDate: "",
     endDate: "",
   });
+
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   // Custom Hook for Filters
   const { filters, updateFilter, resetFilters } = useFilters(
@@ -301,6 +305,7 @@ export default function TripInvoicePage() {
   return (
     <>
       <PageGridLayout
+        isSidebarOpen={isFilterOpen}
         sidebar={
           <div className={styles.sidebarWrapper}>
             <div className={styles.topSection}>
@@ -391,6 +396,13 @@ export default function TripInvoicePage() {
               />
             </div>
             <p className={styles.tableTitle}>TRIP INVOICE RECORDS</p>
+            <div className={styles.filterBtnWrapper}>
+              <ActionBtn
+                leftIcon={isFilterOpen ? faFilterCircleXmark : faFilter}
+                variant="info"
+                onClick={() => setIsFilterOpen((prev) => !prev)}
+              />
+            </div>
           </div>
 
           <DataTable
