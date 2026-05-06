@@ -99,6 +99,7 @@
 .menuItem.active {
   border-right-color: var(--accent);
   background-color: var(--decent);
+  color: var(--icon-main);
 }
 
 .icon {
@@ -141,12 +142,13 @@
   color: var(--nav-main);
   border-right-color: var(--accent);
   background-color: var(--decent);
+  color: var(--icon-main);
 }
 
 .subActive {
   border-right-color: var(--accent);
   background-color: var(--decent);
-  color: var(--nav-main);
+  color: var(--icon-main);
 }
 
 .subIcon {

@@ -8,6 +8,7 @@ const VARIANT_MAP = {
   action: styles.actionBtn,
   success: styles.successBtn,
   cancel: styles.cancelBtn,
+  info: styles.infoBtn,
 };
 
 type BaseProps = {
@@ -31,15 +32,22 @@ const ActionBtn = forwardRef<HTMLButtonElement, ButtonProps>(
       fullWidth = false,
       className = "",
       disabled,
+      type,
       ...props
     },
     ref,
   ) => {
+    const hasText =
+      typeof children === "string"
+        ? children.trim().length > 0
+        : Boolean(children);
+
     const buttonClasses = [
       styles.btn,
       VARIANT_MAP[variant],
       fullWidth ? styles.fullWidth : styles.fitContent,
       (disabled || loading) && styles.disabled,
+      hasText && styles.withText,
       className,
     ]
       .filter(Boolean)
@@ -48,34 +56,37 @@ const ActionBtn = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
+        type={type ?? "button"}
         className={buttonClasses}
         disabled={disabled || loading}
         aria-busy={loading}
         {...props}
       >
-        {loading ? (
+        {/* Spinner overlay */}
+        {loading && (
           <FontAwesomeIcon
             icon={faCircleNotch}
             spin
             className={styles.spinner}
           />
-        ) : (
-          <>
-            {leftIcon && (
-              <span className={styles.icon}>
-                <FontAwesomeIcon icon={leftIcon} />
-              </span>
-            )}
-
-            <span className={styles.label}>{children}</span>
-
-            {rightIcon && (
-              <span className={styles.icon}>
-                <FontAwesomeIcon icon={rightIcon} />
-              </span>
-            )}
-          </>
         )}
+
+        {/* Content (keeps width, hidden during loading) */}
+        <span className={loading ? styles.contentHidden : styles.content}>
+          {leftIcon && (
+            <span className={styles.icon}>
+              <FontAwesomeIcon icon={leftIcon} />
+            </span>
+          )}
+
+          {hasText && <span className={styles.label}>{children}</span>}
+
+          {rightIcon && (
+            <span className={styles.icon}>
+              <FontAwesomeIcon icon={rightIcon} />
+            </span>
+          )}
+        </span>
       </button>
     );
   },

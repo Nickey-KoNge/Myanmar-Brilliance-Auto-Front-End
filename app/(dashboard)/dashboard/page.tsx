@@ -201,6 +201,13 @@ export default function DashboardPage() {
           status="neutral"
           icon={faTags}
         />
+        <SummaryCard
+          title="SALES REVENUE"
+          value="MMK 158,483"
+          subtitle="3 UNITS SOLD"
+          status="neutral"
+          icon={faTags}
+        />
       </div>
 
       <div className={styles.middleRow}>

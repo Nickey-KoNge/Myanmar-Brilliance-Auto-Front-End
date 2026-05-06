@@ -157,8 +157,8 @@ button {
   --info: #3498db;
 
   /* Buttons */
+  --btn-cancel: var(--bg-secondary);
   --btn-text-on-solid: #ffffff;
-  --btn-text-on-neutral: #eeeeee;
 }
 
 .light-mode {
@@ -226,8 +226,4 @@ button {
   --success: #1e7e34;
   --warning: #c09000;
   --info: #0069d9;
-
-  /* Buttons */
-  --btn-text-on-solid: #ffffff;
-  --btn-text-on-neutral: #1a1a1b;
 }

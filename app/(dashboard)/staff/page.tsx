@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarDays,
   faClockRotateLeft,
+  faFilter,
+  faFilterCircleXmark,
   faPlus,
   faTrashCan,
   faUser,
@@ -343,7 +345,7 @@ export default function StaffPage() {
                 <ActionBtn
                   type="reset"
                   variant="action"
-                  fullWidth={false}
+                  fullWidth={true}
                   onClick={resetFilters}
                 >
                   reset
@@ -400,6 +402,7 @@ export default function StaffPage() {
             <p className={styles.tableTitle}>EMPLOYEE MASTER RECORDS</p>
 
             <div className={styles.headerActionArea}>
+              <ActionBtn leftIcon={faFilter} variant="info" ></ActionBtn>
               <NavigationBtn href="/staff/Addstaff" leftIcon={faPlus}>
                 add staff
               </NavigationBtn>
