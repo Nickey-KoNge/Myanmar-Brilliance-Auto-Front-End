@@ -1,53 +1,25 @@
-/* Sidebar Layouts */
+/* Sidebar Setup */
 .sidebarWrapper {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   height: 100%;
-  padding: var(--spacing-m);
-  background-color: #f8fafc; /* Light gray background for sidebar */
-  border-radius: var(--radius-m);
 }
 
 .topSection {
-  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing-m) / 2);
 }
 
-.bottomSection {
-  margin-top: auto; /* Push to bottom if space is available */
-}
-
-/* Typography & Titles */
 .gridBoxTitle {
-  font-size: var(--font-size-l);
+  color: var(--text-main);
+  text-align: center;
   font-weight: var(--font-weight-bold);
-  color: #334155;
-  margin-bottom: 0.5rem;
-}
-
-.recentTitle {
-  font-size: var(--font-size-s);
-  font-weight: 700;
-  color: #64748b;
-  letter-spacing: 0.05em;
-  margin: var(--spaceing-m) 0;
-}
-
-.tableTitle {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #1e293b;
+  padding: var(--spacing-m) 0;
   margin: 0;
 }
 
-/* Lines */
-.cuttingLine {
-  border: 0;
-  height: 1px;
-  background-color: #e2e8f0;
-  margin: var(--spaceing-m) 0;
-}
-
-/* Containers */
 .searchContainer {
   display: flex;
   flex-direction: column;
@@ -55,163 +27,212 @@
 }
 
 .filterRow {
-  display: flex;
-  gap: 0.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: calc(var(--spacing-m) / 2);
 }
 
-.recentRecord {
-  background-color: #ffffff;
-  padding: var(--spacing-m);
-  border-radius: var(--radius-s);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border-left: 4px solid #3b82f6; /* Blue left border */
-}
-
-.stat {
+.bottomSection {
+  margin-top: auto;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-}
-
-.statLabel {
-  font-size: var(--font-size-m);
-  color: #64748b;
-  margin-bottom: 0.2rem;
-}
-
-/* Header Area for Table */
-.tableHeaderArea {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.headerActionArea {
-  display: flex;
   gap: var(--spacing-m);
 }
 
-/* Text Utilities */
-.textBold {
-  font-weight: var(--font-weight-bold);
-  color: #1e293b;
+
+.textSmall {
+  font-size: calc(12 / 16 * 1rem);
 }
 
-.textSuccess {
-  color: #10b981; /* Green color for income/profit */
+.textBold {
   font-weight: var(--font-weight-bold);
+  color: var(--text-main);
 }
 
 .textDanger {
-  color: #ef4444; /* Red color for expenses */
-  font-weight: var(--font-weight-bold);
+  color: var(--danger);
 }
 
-.textSmall {
-  font-size: 0.875rem;
+.textWarning {
+  color: var(--warning);
+}
+
+.textSuccess {
+  color: var(--success);
 }
 
 .textMuted {
-  color: #64748b;
+  color: var(--text-muted);
 }
 
-/* Table Specific Icons/Info */
-.info {
-  display: flex;
+.textInfo {
+  color: var(--info);
+}
+
+/* Recent Records / Stats (From Trip Invoice) */
+.recentRecord {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--spacing-m);
   align-items: center;
-  gap: 0.75rem;
 }
 
-.defaultImage {
+.recentRecord span:nth-of-type(1) {
+  background: var(--color-primary);
+  padding: calc(var(--spacing-m) / 2);
+  border-radius: var(--radius-m);
+}
+
+.recentTitle,
+.statLabel {
+  color: var(--text-main);
+  margin: 0;
+}
+
+.stat {
+  display: grid;
+  align-items: center;
+  gap: calc(var(--spacing-m) / 2);
+  font-size: var(--font-size-m);
+}
+
+.stat div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.stat p {
+  margin: 0;
+}
+
+/* Table Area */
+.tableArea {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-s);
+}
+
+.tableHeaderArea {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 32px;
-  height: 32px;
-  background-color: #e2e8f0;
-  color: #475569;
-  border-radius: var(--img-border-radius);
+  position: relative;
+  min-height: 50px;
+  margin-top: var(--spacing-m);
+}
+
+.paginationInfoWrapper {
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
   font-size: var(--font-size-s);
 }
 
-/* =========================================
-   🌟 NEW: Inputs & Forms Styles
-   ========================================= */
+.tableTitle {
+  color: var(--text-main);
+  font-weight: var(--font-weight-bold);
+  margin: 0;
+  font-size: var(--font-size-l);
+  text-transform: uppercase;
+  text-align: center;
+}
 
+
+
+/* Loading State */
+.loadingText {
+  padding: 40px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--font-size-m);
+}
+
+/* Badges */
+.badgeLabel {
+  padding: 4px 10px;
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-s);
+  font-weight: var(--font-weight-bold);
+  background-color: transparent;
+}
+
+/* =========================================
+   Summary Cards (From Original Code)
+   ========================================= */
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.summaryCard {
+  padding: 20px;
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: var(--border);
+  transition: var(--transition);
+}
+
+.summaryCardLabel {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--font-size-s);
+  font-weight: var(--font-weight-bold);
+}
+
+.summaryCardValue {
+  margin: 10px 0 0 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Text Colors linked to your Global CSS */
+.textSuccess {
+  color: var(--success);
+}
+.textWarning {
+  color: var(--warning);
+}
+.textDanger {
+  color: var(--danger);
+}
+.textBold {
+  font-weight: var(--font-weight-bold);
+}
+/* --- Sidebar Filters --- */
+
+.gridBoxTitle {
+  color: var(--text-main);
+  text-align: center;
+  font-weight: var(--font-weight-bold);
+  padding: var(--spacing-m) 0;
+  margin: 0;
+}
+.cuttingLine {
+   border: none;
+  height: 0.5px;
+  background: var(--color-primary);
+  margin: 0;
+}
+.searchContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-m);
+}
 .searchInput {
   width: 100%;
-  padding: 8px 12px;
-  border-radius: var(--radius-xs);
-  border: 1px solid #cbd5e1;
-  outline: none;
-  transition: var(--transition);
-}
-
-.searchInput:focus {
-  border-color: #3b82f6; /* Blue border on focus */
-}
-
-.tableSearchInput {
-  width: 250px;
-  padding: 8px 12px;
-  border-radius: var(--radius-xs);
-  border: 1px solid #cbd5e1;
-  outline: none;
-  transition: var(--transition);
-}
-
-.tableSearchInput:focus {
-  border-color: #3b82f6;
-}
-
-/* =========================================
-   🌟 NEW: Invoice Specific Styles
-   ========================================= */
-
-.invoiceCard {
-  padding: 24px;
-  border: 1px solid #e2e8f0;
-  border-radius: var(--radius-m);
-  margin-top: 20px;
-  background-color: #ffffff;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-.invoiceHeader {
-  border-bottom: 1px solid #e2e8f0;
-  padding-bottom: 12px;
-  margin-bottom: 16px;
-  font-size: 1.25rem;
-  font-weight: var(--font-weight-bold);
-  color: #1e293b;
-}
-
-.financeBox {
-  background-color: #f8fafc;
-  padding: 16px;
+  padding: 10px 14px;
+  border: var(--border);
   border-radius: var(--radius-s);
-  margin-top: 16px;
-  border: 1px solid #e2e8f0;
+  background-color: var(--bg-secondary);
+  color: var(--text-main);
+  font-size: var(--font-size-m);
+  transition: var(--transition);
 }
-
-.totalAmount {
-  color: #10b981;
-  margin-top: 10px;
-  font-size: 1.25rem;
-  font-weight: bold;
-}
-
-/* =========================================
-   🌟 NEW: Loading State
-   ========================================= */
-
-.loadingText {
-  padding: 2rem;
-  text-align: center;
-  color: #64748b;
-  font-weight: 500;
-  font-size: var(--font-size-l);
+.searchInput:focus {
+  border-color: var(--color-primary);
+  outline: none;
 }

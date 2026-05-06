@@ -8,7 +8,6 @@ import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 import { DataTable } from "@/app/components/ui/DataTable/DataTable";
 import styles from "../page.module.css";
 
-// 🌟 Backend မှလာသော မူရင်း Data ပုံစံ
 interface BackendTripDetail {
   trip_id: string;
   date: string;
@@ -18,9 +17,8 @@ interface BackendTripDetail {
   income_generated: number;
 }
 
-// 🌟 DataTable တွင်သုံးရန် 'id' ပါဝင်သော Frontend Data ပုံစံ
 interface TripDetail extends BackendTripDetail {
-  id: string | number; // DataTable အတွက် မဖြစ်မနေလိုအပ်ပါသည်
+  id: string | number;
 }
 
 interface DriverSummary {
@@ -48,20 +46,20 @@ export default function DriverReportPage() {
     if (!driverId) return alert("Please enter Driver ID");
     setIsLoading(true);
     try {
-      const response = (await apiClient.get(
+      const response = await apiClient.get(
         `/reports/driver/${driverId}?startDate=${startDate}&endDate=${endDate}`,
-      )) as DriverReportResponse;
+      );
+      const res = response as unknown as DriverReportResponse;
 
-      // 🌟 Backend ကလာတဲ့ trip_id ကို DataTable လိုချင်တဲ့ id အဖြစ် Map ဖြင့်တွဲပေးခြင်း
-      const dataWithIds: TripDetail[] = (response.trip_details || []).map(
+      const dataWithIds: TripDetail[] = (res.trip_details || []).map(
         (item, index) => ({
           ...item,
-          id: item.trip_id || `trip-${index}`, // trip_id ကို id ထဲသို့ ထည့်ပေးပါသည်
+          id: item.trip_id || `trip-${index}`,
         }),
       );
 
       setRecords(dataWithIds);
-      setSummary(response.summary);
+      setSummary(res.summary);
     } catch (error) {
       console.error("Failed to fetch driver report:", error);
       setRecords([]);
@@ -112,7 +110,6 @@ export default function DriverReportPage() {
             <p className={styles.gridBoxTitle}>Driver Filter</p>
             <hr className={styles.cuttingLine} />
             <div className={styles.searchContainer}>
-              {/* 🌟 Inline Style အစား CSS Class ကို ပြောင်းသုံးထားပါသည် */}
               <input
                 type="text"
                 placeholder="Enter Driver ID"
@@ -130,14 +127,11 @@ export default function DriverReportPage() {
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
               />
-              <ActionBtn
-                variant="action"
-                fullWidth
-                onClick={fetchReport}
-                style={{ marginTop: "10px" }}
-              >
-                Generate
-              </ActionBtn>
+              <div className={styles.btnMarginTop}>
+                <ActionBtn variant="action" fullWidth onClick={fetchReport}>
+                  Generate
+                </ActionBtn>
+              </div>
             </div>
           </div>
 
@@ -146,26 +140,25 @@ export default function DriverReportPage() {
               <hr className={styles.cuttingLine} />
               <p className={styles.recentTitle}>DRIVER SUMMARY</p>
               <div className={styles.stat}>
-                <div>
+                <div className={styles.statRow}>
                   <p className={styles.statLabel}>Total Trips:</p>
                   <p className={styles.textBold}>
                     {summary.total_trips_driven}
                   </p>
                 </div>
-                <div>
+                <div className={styles.statRow}>
                   <p className={styles.statLabel}>Total Distance:</p>
                   <p className={styles.textBold}>
                     {summary.total_distance_km} KM
                   </p>
                 </div>
-                <div>
+                <div className={styles.statRow}>
                   <p
                     className={styles.statLabel}
                     style={{ fontWeight: "bold" }}
                   >
                     Total Income:
                   </p>
-                  {/* 🌟 Inline Style အစား totalAmount Class ကို ပြောင်းသုံးထားပါသည် */}
                   <p className={styles.totalAmount}>
                     {summary.total_income_generated.toLocaleString()} Ks
                   </p>
@@ -179,7 +172,6 @@ export default function DriverReportPage() {
       <div>
         <div className={styles.tableHeaderArea}>
           <p className={styles.tableTitle}>Driver Performance</p>
-          {/* 🌟 Inline Style အစား CSS Class ကို ပြောင်းသုံးထားပါသည် */}
           <input
             type="text"
             placeholder="Search Route, Plate..."
@@ -190,7 +182,6 @@ export default function DriverReportPage() {
         </div>
 
         {isLoading ? (
-          // 🌟 Loading Text အတွက် CSS Class ကို ပြောင်းသုံးထားပါသည်
           <div className={styles.loadingText}>Loading...</div>
         ) : (
           <DataTable

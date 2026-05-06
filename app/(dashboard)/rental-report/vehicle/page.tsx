@@ -8,7 +8,6 @@ import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 import { DataTable } from "@/app/components/ui/DataTable/DataTable";
 import styles from "../page.module.css";
 
-// 🌟 Backend မှ ပြန်ပို့မည့် မူရင်း Data ပုံစံ
 interface BackendVehicleTripDetail {
   trip_id: string;
   date: string;
@@ -19,9 +18,8 @@ interface BackendVehicleTripDetail {
   income: number;
 }
 
-// 🌟 DataTable တွင် အသုံးပြုရန် id ပါဝင်သော Frontend Data ပုံစံ
 interface VehicleTripDetail extends BackendVehicleTripDetail {
-  id: string | number; // DataTable အတွက် မဖြစ်မနေလိုအပ်ပါသည်
+  id: string | number;
 }
 
 interface VehicleFinancials {
@@ -53,20 +51,20 @@ export default function VehicleReportPage() {
     if (!vehicleId) return alert("Please enter Vehicle ID");
     setIsLoading(true);
     try {
-      const response = (await apiClient.get(
+      const response = await apiClient.get(
         `/reports/vehicle/${vehicleId}?startDate=${startDate}&endDate=${endDate}`,
-      )) as VehicleReportResponse;
+      );
+      const res = response as unknown as VehicleReportResponse;
 
-      // 🌟 Backend ကလာတဲ့ trip_id ကို DataTable လိုချင်တဲ့ id အဖြစ် တွဲပေးခြင်း
-      const dataWithIds: VehicleTripDetail[] = (
-        response.trip_details || []
-      ).map((item, index) => ({
-        ...item,
-        id: item.trip_id || `vehicle-trip-${index}`, // trip_id ကို id ထဲသို့ ထည့်ပေးပါသည်
-      }));
+      const dataWithIds: VehicleTripDetail[] = (res.trip_details || []).map(
+        (item, index) => ({
+          ...item,
+          id: item.trip_id || `vehicle-trip-${index}`,
+        }),
+      );
 
       setRecords(dataWithIds);
-      setSummary(response.summary);
+      setSummary(res.summary);
     } catch (error) {
       console.error("Failed to fetch vehicle report:", error);
       setRecords([]);
@@ -119,7 +117,6 @@ export default function VehicleReportPage() {
             <p className={styles.gridBoxTitle}>Vehicle Filter</p>
             <hr className={styles.cuttingLine} />
             <div className={styles.searchContainer}>
-              {/* 🌟 Inline Style အစား CSS Class ကို ပြောင်းသုံးထားပါသည် */}
               <input
                 type="text"
                 placeholder="Enter Vehicle ID"
@@ -137,14 +134,11 @@ export default function VehicleReportPage() {
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
               />
-              <ActionBtn
-                variant="action"
-                fullWidth
-                onClick={fetchReport}
-                style={{ marginTop: "10px" }}
-              >
-                Generate Report
-              </ActionBtn>
+              <div className={styles.btnMarginTop}>
+                <ActionBtn variant="action" fullWidth onClick={fetchReport}>
+                  Generate Report
+                </ActionBtn>
+              </div>
             </div>
           </div>
 
@@ -153,21 +147,23 @@ export default function VehicleReportPage() {
               <hr className={styles.cuttingLine} />
               <p className={styles.recentTitle}>VEHICLE SUMMARY</p>
               <div className={styles.stat}>
-                <div>
+                <div className={styles.statRow}>
                   <p className={styles.statLabel}>Total Trips:</p>
                   <p className={styles.textBold}>{summary.total_trips}</p>
                 </div>
-                <div>
+                <div className={styles.statRow}>
                   <p className={styles.statLabel}>Gross Revenue:</p>
                   <p className={styles.textBold}>
                     {summary.financials.gross_revenue.toLocaleString()} Ks
                   </p>
                 </div>
-                <div>
-                  <p className={styles.statLabel} style={{ fontWeight: "bold" }}>
+                <div className={styles.statRow}>
+                  <p
+                    className={styles.statLabel}
+                    style={{ fontWeight: "bold" }}
+                  >
                     Net Profit:
                   </p>
-                  {/* 🌟 Inline Style အစား totalAmount Class ကို ပြောင်းသုံးထားပါသည် */}
                   <p className={styles.totalAmount}>
                     {summary.financials.net_profit.toLocaleString()} Ks
                   </p>
@@ -181,7 +177,6 @@ export default function VehicleReportPage() {
       <div>
         <div className={styles.tableHeaderArea}>
           <p className={styles.tableTitle}>Vehicle Performance</p>
-          {/* 🌟 Inline Style အစား CSS Class ကို ပြောင်းသုံးထားပါသည် */}
           <input
             type="text"
             placeholder="Search Route, Driver..."
@@ -192,7 +187,6 @@ export default function VehicleReportPage() {
         </div>
 
         {isLoading ? (
-          // 🌟 Loading Text အတွက် CSS Class ကို ပြောင်းသုံးထားပါသည်
           <div className={styles.loadingText}>Loading...</div>
         ) : (
           <DataTable

@@ -10,13 +10,11 @@ import {
   faCarSide,
 } from "@fortawesome/free-solid-svg-icons";
 import { PageGridLayout } from "@/app/components/layout/PageGridLayout/PageGridLayout";
-
-import styles from "./page.module.css";
+import styles from "../page.module.css";
 import DateInput from "@/app/components/ui/Inputs/DateInput";
 import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 import { DataTable } from "@/app/components/ui/DataTable/DataTable";
 
-// Backend မှ ပြန်ပို့ပေးမည့် Report Data Interface များ
 interface FleetIncomeRecord {
   id: string | number;
   no: number;
@@ -39,7 +37,6 @@ export default function DailyFleetIncomePage() {
   const [totalVehicles, setTotalVehicles] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // ယနေ့ရက်စွဲကို Default အဖြစ်ထားရှိရန်
   const today = new Date().toISOString().split("T")[0];
   const [selectedDate, setSelectedDate] = useState<string>(today);
   const [fetchDate, setFetchDate] = useState<string>(today);
@@ -54,7 +51,7 @@ export default function DailyFleetIncomePage() {
         const res = response as unknown as FleetIncomeResponse;
         const dataWithIds = (res.details || []).map((item, index) => ({
           ...item,
-          id: item.plate_number + index, // plate_number ကို id အဖြစ်သုံးသည်
+          id: item.plate_number + index.toString(),
         }));
 
         setRecords(dataWithIds);
@@ -84,7 +81,6 @@ export default function DailyFleetIncomePage() {
     setFetchDate(today);
   };
 
-  // Table Columns Setup
   const columns = [
     {
       header: "No.",
@@ -108,10 +104,10 @@ export default function DailyFleetIncomePage() {
       ),
     },
     {
-      header: "Owner Fee / Amount (MMK)",
+      header: "Owner Fee (MMK)",
       key: "owner_fee",
       render: (row: FleetIncomeRecord) => (
-        <div className={[styles.textBold, styles.textSuccess].join(" ")}>
+        <div className={`${styles.textBold} ${styles.textSuccess}`}>
           {Number(row.owner_fee).toLocaleString()} Ks
         </div>
       ),
@@ -120,7 +116,7 @@ export default function DailyFleetIncomePage() {
       header: "Remark",
       key: "remark",
       render: (row: FleetIncomeRecord) => (
-        <div className={[styles.textSmall, styles.textMuted].join(" ")}>
+        <div className={`${styles.textSmall} ${styles.textMuted}`}>
           {row.remark || "-"}
         </div>
       ),
@@ -141,8 +137,7 @@ export default function DailyFleetIncomePage() {
                 onChange={(e) => setSelectedDate(e.target.value)}
                 rightIcon={faCalendarDays}
               />
-
-              <div className={styles.filterRow} style={{ marginTop: "1rem" }}>
+              <div className={styles.filterRow}>
                 <ActionBtn
                   variant="action"
                   fullWidth={true}
@@ -151,7 +146,7 @@ export default function DailyFleetIncomePage() {
                   Generate
                 </ActionBtn>
                 <ActionBtn
-                  variant="cancel" // သင့်လျော်သော variant ပြောင်းသုံးနိုင်ပါသည်
+                  variant="cancel"
                   fullWidth={true}
                   onClick={handleReset}
                 >
@@ -163,43 +158,41 @@ export default function DailyFleetIncomePage() {
 
           <div className={styles.bottomSection}>
             <hr className={styles.cuttingLine} />
-
             <div className={styles.recentRecord}>
-              <span>
-                <FontAwesomeIcon
-                  icon={faChartLine}
-                  style={{ color: "white" }}
-                />
-              </span>
-              <p className={styles.recentTitle}>FINANCIAL SUMMARY</p>
-              <span />
-
-              <div className={styles.stat}>
-                <div>
-                  <p className={styles.statLabel}>Target Date :</p>
-                  <p className={styles.textBold}>{fetchDate}</p>
-                </div>
-                <div>
-                  <p className={styles.statLabel}>Total Vehicles :</p>
-                  <p className={styles.textSuccess}>{totalVehicles} Units</p>
-                </div>
-                <div style={{ marginTop: "0.5rem" }}>
-                  <p
-                    className={styles.statLabel}
-                    style={{ fontWeight: "bold" }}
+              <div className={styles.recentRecordIcon}>
+                <FontAwesomeIcon icon={faChartLine} />
+              </div>
+              <div>
+                <p className={styles.recentTitle}>FINANCIAL SUMMARY</p>
+                <div className={styles.stat}>
+                  <div className={styles.statRow}>
+                    <p className={styles.statLabel}>Target Date :</p>
+                    <p className={styles.textBold}>{fetchDate}</p>
+                  </div>
+                  <div className={styles.statRow}>
+                    <p className={styles.statLabel}>Total Vehicles :</p>
+                    <p className={styles.textSuccess}>{totalVehicles} Units</p>
+                  </div>
+                  <div
+                    className={styles.statRow}
+                    style={{ marginTop: "0.5rem" }}
                   >
-                    Grand Total :
-                  </p>
-                  <p
-                    className={[styles.textBold, styles.textSuccess].join(" ")}
-                    style={{ fontSize: "1.1rem" }}
-                  >
-                    {totalIncome.toLocaleString()} Ks
-                  </p>
+                    <p
+                      className={styles.statLabel}
+                      style={{ fontWeight: "bold" }}
+                    >
+                      Grand Total :
+                    </p>
+                    <p
+                      className={`${styles.textBold} ${styles.textSuccess}`}
+                      style={{ fontSize: "1.1rem" }}
+                    >
+                      {totalIncome.toLocaleString()} Ks
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-
             <hr className={styles.cuttingLine} />
           </div>
         </div>
@@ -226,9 +219,7 @@ export default function DailyFleetIncomePage() {
         </div>
 
         {isLoading ? (
-          <div style={{ textAlign: "center", padding: "2rem" }}>
-            Loading Report...
-          </div>
+          <div className={styles.loadingText}>Loading Report...</div>
         ) : (
           <DataTable
             columns={columns}

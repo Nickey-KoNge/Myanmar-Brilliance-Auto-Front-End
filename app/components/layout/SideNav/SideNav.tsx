@@ -119,7 +119,11 @@ export const SideNav = () => {
     // Trip နဲ့ Rental အတွက် အသစ်ထည့်ထားပါတယ်
     if (path.match(/^\/(trip-routes|trip-prices)/)) return "Trip";
     if (path.match(/^\/(vehicle-driver-assign|rental-op)/)) return "Rental";
-    if (path.match(/^\/(customer-invoice|daily-fleet-income | driver | vehicle | vehicle-log )/))
+    if (
+      path.match(
+        /^\/(Trips Invoice |Financial Report|daily-fleet-income | driver | vehicle | vehicle-log )/,
+      )
+    )
       return "rental-report";
     if (path.match(/^\/audit/)) return "Audit";
     return null;
@@ -262,12 +266,17 @@ export const SideNav = () => {
         </div>
         <NavDropdown
           icon={faReorder} // faTaxi icon လေးသုံးပေးထားပါတယ်
-          label="Rental"
+          label="Rental Report"
           subItems={[
             {
               icon: faCar,
-              label: "customer-invoice",
-              href: "/rental-report/customer-invoice",
+              label: "Trips Invoice",
+              href: "/rental-report/trips-invoice",
+            },
+            {
+              icon: faCar,
+              label: "Financial Report",
+              href: "/rental-report/financial-report",
             },
             {
               icon: faKey,
@@ -285,11 +294,11 @@ export const SideNav = () => {
               label: "vehicle",
               href: "/rental-report/vehicle",
             },
-             {
+            {
               icon: faKey,
               label: "vehicle-log",
               href: "/rental-report/vehicle-log",
-            }
+            },
           ]}
           isOpen={openDropdown === "rental-report"}
           onToggle={() => handleToggle("rental-report")}

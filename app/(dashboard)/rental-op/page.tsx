@@ -174,6 +174,7 @@ export default function RentalOperationPage() {
               end_time?: string;
               start_time?: string;
               created_at?: string;
+              extra_hours?: string;
             };
             const opA = a as unknown as OpType;
             const opB = b as unknown as OpType;
@@ -226,7 +227,6 @@ export default function RentalOperationPage() {
       return time instanceof Date ? time.toISOString() : String(time);
     };
 
-
     const opSafe = activeOp as unknown as {
       vehicle_image?: string;
       driver_image?: string;
@@ -240,6 +240,7 @@ export default function RentalOperationPage() {
       total_amount?: string;
       battery?: string | number;
       start_battery?: string | number;
+      extra_hours?: string | number;
     };
 
     const startBatteryValue =

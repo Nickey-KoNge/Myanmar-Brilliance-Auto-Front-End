@@ -267,7 +267,12 @@ export default function RentalOpCard({
         <div className={styles.row}>
           <span className={styles.textLabel}>OT Hours :</span>{" "}
           <span className={styles.textYellow}>
-            {data?.extra_hours ? `${data.extra_hours} ` : "0 Hr"}
+            {/* {data?.extra_hours ? `${data.extra_hours} ` : "0 Hr"} */}
+            {data?.extra_hours && data.extra_hours !== "0" && data.extra_hours !== "-"
+              ? data.extra_hours.includes("Hr")
+                ? data.extra_hours
+                : `${data.extra_hours} Hr`
+              : "0 Hr"}
           </span>
         </div>
         <div className={styles.row}>

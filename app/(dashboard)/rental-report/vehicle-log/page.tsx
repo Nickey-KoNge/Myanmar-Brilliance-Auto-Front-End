@@ -8,9 +8,8 @@ import ActionBtn from "@/app/components/ui/Button/ActionBtn";
 import { DataTable } from "@/app/components/ui/DataTable/DataTable";
 import styles from "../page.module.css";
 
-// 🌟 Backend မှ ပြန်ပို့မည့် မူရင်း Data ပုံစံ
 interface BackendVehicleLogRecord {
-  trip_id?: string; // Backend တွင် trip_id ပါရှိပါသည်
+  trip_id?: string;
   date: string;
   start_km: string | number;
   end_km: string | number;
@@ -21,9 +20,8 @@ interface BackendVehicleLogRecord {
   remark: string;
 }
 
-// 🌟 DataTable တွင် အသုံးပြုရန် id ပါဝင်သော Frontend Data ပုံစံ
 interface VehicleLogRecord extends BackendVehicleLogRecord {
-  id: string | number; // DataTable အတွက် မဖြစ်မနေလိုအပ်ပါသည်
+  id: string | number;
 }
 
 interface VehicleLogResponse {
@@ -43,15 +41,15 @@ export default function VehicleLogPage() {
     if (!vehicleId) return alert("Please enter Vehicle ID");
     setIsLoading(true);
     try {
-      const response = (await apiClient.get(
+      const response = await apiClient.get(
         `/reports/vehicle-log/${vehicleId}?startDate=${startDate}&endDate=${endDate}`,
-      )) as VehicleLogResponse;
+      );
+      const res = response as unknown as VehicleLogResponse;
 
-      // 🌟 Backend ကလာတဲ့ Data ထဲသို့ DataTable လိုချင်တဲ့ id ကို map ဖြင့် တွဲပေးခြင်း
-      const dataWithIds: VehicleLogRecord[] = (response.logs || []).map(
+      const dataWithIds: VehicleLogRecord[] = (res.logs || []).map(
         (item, index) => ({
           ...item,
-          id: item.trip_id || `log-${index}`, // trip_id (သို့) index ကို id ထဲသို့ ထည့်ပေးပါသည်
+          id: item.trip_id || `log-${index}`,
         }),
       );
 
@@ -98,7 +96,6 @@ export default function VehicleLogPage() {
             <p className={styles.gridBoxTitle}>Log Sheet Filter</p>
             <hr className={styles.cuttingLine} />
             <div className={styles.searchContainer}>
-              {/* 🌟 Inline Style အစား CSS Class ကို ပြောင်းသုံးထားပါသည် */}
               <input
                 type="text"
                 placeholder="Enter Vehicle ID"
@@ -116,14 +113,11 @@ export default function VehicleLogPage() {
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
               />
-              <ActionBtn
-                variant="action"
-                fullWidth
-                onClick={fetchReport}
-                style={{ marginTop: "10px" }}
-              >
-                Generate Log
-              </ActionBtn>
+              <div className={styles.btnMarginTop}>
+                <ActionBtn variant="action" fullWidth onClick={fetchReport}>
+                  Generate Log
+                </ActionBtn>
+              </div>
             </div>
           </div>
         </div>
@@ -132,7 +126,6 @@ export default function VehicleLogPage() {
       <div>
         <div className={styles.tableHeaderArea}>
           <p className={styles.tableTitle}>Vehicle Detailed Logs</p>
-          {/* 🌟 Inline Style အစား CSS Class ကို ပြောင်းသုံးထားပါသည် */}
           <input
             type="text"
             placeholder="Search Remark..."
@@ -143,7 +136,6 @@ export default function VehicleLogPage() {
         </div>
 
         {isLoading ? (
-          // 🌟 Loading Text အတွက် CSS Class ကို ပြောင်းသုံးထားပါသည်
           <div className={styles.loadingText}>Loading...</div>
         ) : (
           <DataTable

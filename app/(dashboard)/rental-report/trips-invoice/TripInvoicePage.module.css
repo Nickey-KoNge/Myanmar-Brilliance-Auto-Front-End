@@ -1,0 +1,487 @@
+/* Sidebar Setup (Mirrored from CompanyPage) */
+.sidebarWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.topSection {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing-m) / 2);
+}
+
+.gridBoxTitle {
+  color: var(--text-main);
+  text-align: center;
+  font-weight: var(--font-weight-bold);
+  padding: var(--spacing-m) 0;
+  margin: 0;
+}
+
+.searchContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-m);
+}
+
+.filterRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: calc(var(--spacing-m) / 2);
+}
+
+.bottomSection {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-m);
+}
+
+/* Utilities */
+.cuttingLine {
+  border: none;
+  height: 0.5px;
+  background: var(--color-primary);
+  margin: 0;
+}
+
+.textSmall {
+  font-size: calc(12 / 16 * 1rem);
+}
+
+.textBold {
+  font-weight: var(--font-weight-bold);
+}
+
+.textDanger {
+  color: var(--danger);
+}
+
+.textWarning {
+  color: var(--warning);
+}
+
+.textSuccess {
+  color: var(--success);
+}
+
+.textMuted {
+  color: var(--text-muted);
+}
+
+.textInfo {
+  color: var(--info);
+}
+
+/* Recent Records / Stats */
+.recentRecord {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--spacing-m);
+  align-items: center;
+}
+
+.recentRecord span:nth-of-type(1) {
+  background: var(--color-primary);
+  padding: calc(var(--spacing-m) / 2);
+  border-radius: var(--radius-m);
+}
+
+.recentTitle,
+.statLabel {
+  color: var(--text-main);
+  margin: 0;
+}
+
+.stat {
+  display: grid;
+  align-items: center;
+  gap: calc(var(--spacing-m) / 2);
+  font-size: var(--font-size-m);
+}
+
+.stat div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.stat p {
+  margin: 0;
+}
+
+/* Table Area */
+.tableArea {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-s);
+}
+
+.tableHeaderArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  min-height: 50px;
+}
+
+.paginationInfoWrapper {
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+  font-size: var(--font-size-s);
+}
+
+.tableTitle {
+  color: var(--text-main);
+  font-weight: var(--font-weight-bold);
+  margin: 0;
+  font-size: var(--font-size-l);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* Inner Table UI Enhancements */
+.badgeSuccess {
+  padding: 4px 10px;
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-s);
+  font-weight: var(--font-weight-bold);
+  color: var(--success);
+  border: 1px solid var(--success);
+}
+
+.badgeWarning {
+  padding: 4px 10px;
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-s);
+  font-weight: var(--font-weight-bold);
+  color: var(--warning);
+  border: 1px solid var(--warning);
+}
+
+.actionBtn {
+  padding: 6px 12px;
+  cursor: pointer;
+  border: var(--border);
+  border-radius: var(--radius-s);
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  font-size: var(--font-size-s);
+  transition: var(--transition);
+}
+
+.actionBtn:hover {
+  background-color: var(--bg-secondary);
+}
+
+/* ========================================= */
+/* Invoice Modal Custom Print Styles         */
+/* ========================================= */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--spacing-xl);
+}
+
+.modalContent {
+  background-color: var(--bg-primary);
+  width: 100%;
+  max-width: 850px;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  border: var(--border);
+  position: relative;
+}
+
+.modalHeader {
+  padding: var(--spacing-l) var(--spacing-xl);
+  border-bottom: var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--bg-secondary);
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: var(--font-size-l);
+  color: var(--text-main);
+}
+
+.iconCloseBtn {
+  background: none;
+  border: none;
+  font-size: var(--font-size-xxl);
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+
+.iconCloseBtn:hover {
+  color: var(--danger);
+}
+
+.modalBody {
+  padding: 32px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.loadingText {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-muted);
+}
+
+.invHeaderRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.invBrandName {
+  margin: 0;
+  color: var(--color-primary);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bolder);
+}
+
+.invMetaLabel {
+  margin: 4px 0;
+  color: var(--text-muted);
+  font-size: var(--font-size-m);
+}
+
+.invMetaValue {
+  margin: 0;
+  font-weight: var(--font-weight-bold);
+  color: var(--text-main);
+  font-size: var(--font-size-l);
+}
+
+.gridTwoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-xl);
+  margin-bottom: 32px;
+}
+
+.infoPanel {
+  padding: var(--spacing-xl);
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-m);
+  border: var(--border);
+}
+
+.panelTitle {
+  margin: 0 0 16px 0;
+  color: var(--text-main);
+  font-size: var(--font-size-l);
+  border-bottom: var(--border);
+  padding-bottom: 8px;
+}
+
+.infoGrid {
+  display: grid;
+  gap: 12px;
+  font-size: var(--font-size-m);
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.infoLabel {
+  color: var(--text-muted);
+}
+
+.infoValue {
+  font-weight: var(--font-weight-normal);
+  text-align: right;
+  color: var(--text-main);
+}
+
+.infoHighlight {
+  font-weight: var(--font-weight-bold);
+  color: var(--info);
+}
+
+.plateBadge {
+  font-weight: var(--font-weight-bold);
+  padding: 2px 8px;
+  background-color: var(--bg-primary);
+  border: var(--border);
+  border-radius: var(--radius-xs);
+  color: var(--text-main);
+}
+
+.simpleTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--spacing-m);
+}
+
+.simpleTable th,
+.simpleTable td {
+  padding: 10px;
+  border-bottom: var(--border);
+  text-align: left;
+  color: var(--text-main);
+}
+
+.simpleTable th {
+  background-color: var(--bg-head);
+  font-weight: bold;
+}
+
+.summaryAlignRight {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.summaryBox {
+  width: 350px;
+  background-color: var(--bg-secondary);
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-m);
+  border: var(--border);
+}
+
+.cardIcon {
+  margin-right: 6px;
+  color: var(--text-muted);
+}
+
+.grandTotalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 2px dashed var(--border-color);
+  margin-top: 8px;
+}
+
+.grandTotalLabel {
+  font-size: var(--font-size-l);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-main);
+}
+
+.grandTotalValue {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bolder);
+  color: var(--success);
+}
+
+.modalFooter {
+  padding: var(--spacing-m) var(--spacing-xl);
+  border-top: var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-m);
+  background-color: var(--bg-secondary);
+}
+
+.cancelBtn {
+  padding: 10px 20px;
+  border: var(--border);
+  border-radius: var(--radius-m);
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.cancelBtn:hover {
+  background-color: var(--bg-secondary);
+}
+
+.printBtn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-m);
+  background-color: var(--color-primary);
+  color: white;
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.printBtn:hover {
+  opacity: 0.85;
+}
+
+.printBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media print {
+  :global(body) {
+    visibility: hidden !important;
+    background: white !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  :global(#invoice-print-area) {
+    visibility: visible !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    background: white !important;
+    display: block !important;
+  }
+
+  :global(#invoice-print-area) * {
+    visibility: visible !important;
+    color: black !important;
+    background: transparent !important;
+    opacity: 1 !important;
+  }
+
+  .modalOverlay,
+  .modalContent,
+  .summaryBox,
+  .infoPanel,
+  :global(.modal-backdrop) {
+    background: white !important;
+    background-color: white !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  .invMetaValue,
+  .invBrandName,
+  .infoLabel,
+  .infoValue {
+    color: black !important;
+    font-weight: bold !important;
+  }
+
+  .modalHeader,
+  .modalFooter {
+    display: none !important;
+  }
+
+  @page {
+    size: A4;
+    margin: 10mm;
+  }
+}
